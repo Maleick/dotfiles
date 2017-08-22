@@ -1,6 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+# Set your shell to ZSH
+# chsh -s /usr/bin/zsh
+
 # Path to your oh-my-zsh installation.
   export ZSH=/root/.oh-my-zsh
 
@@ -48,9 +51,9 @@ COMPLETION_WAITING_DOTS="true"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
+# Custom plugins that I added to ~/.oh-my-zsh/custom/plugins/
+# https://github.com/zsh-users/zsh-autosuggestions
+# https://github.com/zsh-users/zsh-syntax-highlighting
 plugins=(zsh-autosuggestions zsh-syntax-highlighting  git)
 
 source $ZSH/oh-my-zsh.sh
@@ -75,14 +78,7 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# Aliases
 # Public IP
 alias myip='curl ipinfo.io/ip'
 # ICMP Scan
