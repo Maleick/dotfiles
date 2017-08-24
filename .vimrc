@@ -1,7 +1,20 @@
-" Colors
+" .vimrc
+"
+" Maleick
+" Updated 8/24/17
+"
+" Enable Syntax and Plugins
 syntax enable
-set background=dark
 filetype indent plugin on
+
+" Enter the current Millenium
+set nocompatible
+
+" Fuzzy Finding
+set path+=**
+
+" Display all matching files when we tab complete
+set wildmenu
 
 " Numbers
 set rnu
