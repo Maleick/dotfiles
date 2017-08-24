@@ -54,7 +54,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins that I added to ~/.oh-my-zsh/custom/plugins/
 # https://github.com/zsh-users/zsh-autosuggestions
 # https://github.com/zsh-users/zsh-syntax-highlighting
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting web-search)
+plugins=(git web-search zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -85,10 +85,10 @@ alias myip='curl ipinfo.io/ip'
 alias icmp='nmap -sn -PE -PP -PM -iL iplist --reason'
 # Nmap TCP
 alias tcp='nmap -sSV -Pn -iL iplist -oG tcp.gnmap'
-alias tcpr='/root/tools/trace_nmapparser/trace_nmapparser.py tcp.gnmap'
+alias tcpr='/root/Tools/trace_nmapparser/trace_nmapparser.py tcp.gnmap'
 # Nmap UDP
 alias udp='nmap -sUV -Pn -p 53,69,123,161,500 -iL iplist -oG udp.gnmap'
-alias udpr='/root/tools/trace_nmapparser/trace_nmapparser.py udp.gnmap'
+alias udpr='/root/Tools/trace_nmapparser/trace_nmapparser.py udp.gnmap'
 # Harvester
 alias harvest='theharvester -l 1000 -b all -d'
 # Update & Upgrade
