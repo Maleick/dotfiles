@@ -1,10 +1,10 @@
-# ███╗   ███╗ █████╗ ██╗     ███████╗██╗ ██████╗██╗  ██╗
-# ████╗ ████║██╔══██╗██║     ██╔════╝██║██╔════╝██║ ██╔╝
-# ██╔████╔██║███████║██║     █████╗  ██║██║     █████╔╝ 
-# ██║╚██╔╝██║██╔══██║██║     ██╔══╝  ██║██║     ██╔═██╗ 
-# ██║ ╚═╝ ██║██║  ██║███████╗███████╗██║╚██████╗██║  ██╗
-# ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝╚═╝  ╚═╝
-                                                      
+# # ███╗   ███╗ █████╗ ██╗     ███████╗██╗ ██████╗██╗  ██╗
+# # ████╗ ████║██╔══██╗██║     ██╔════╝██║██╔════╝██║ ██╔╝
+# # ██╔████╔██║███████║██║     █████╗  ██║██║     █████╔╝ 
+# # ██║╚██╔╝██║██╔══██║██║     ██╔══╝  ██║██║     ██╔═██╗ 
+# # ██║ ╚═╝ ██║██║  ██║███████╗███████╗██║╚██████╗██║  ██╗
+# # ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝╚═╝  ╚═╝
+# #          
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -90,15 +90,9 @@ source $ZSH/oh-my-zsh.sh
 alias myip='curl ipinfo.io/ip'
 # ICMP Scan
 alias icmp='nmap -sn -PE -PP -PM -iL iplist --reason'
-# Nmap TCP
-alias tcp='nmap -sSV -Pn -iL iplist -oG tcp.gnmap'
-alias tcpr='/root/Tools/trace_nmapparser/trace_nmapparser.py tcp.gnmap'
-# Nmap UDP
-alias udp='nmap -sUV -Pn -p 53,69,123,161,500 -iL iplist -oG udp.gnmap'
-alias udpr='/root/Tools/trace_nmapparser/trace_nmapparser.py udp.gnmap'
-# Harvester
-alias harvest='theharvester -l 1000 -b all -d'
+# Nmap Parser 
+alias gnmap='/root/Tools/trace_nmapparser/trace_nmapparser.py gnmap'
 # Update & Upgrade
-alias sysupdate='apt-get update && apt-get upgrade -y'
-# Ike-Scan
-alias ikes='ike-scan -M --pskcrack --aggressive --id=peer -Ppsk'
+alias sysupdate='apt update && apt full-upgrade -y'
+# Mount Share
+alias mmiles='mount -t cifs //172.24.254.57/mmiles /mnt/mmiles -o vers=2.0,credentials=/etc/cifs/credentials'
