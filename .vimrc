@@ -4,8 +4,11 @@
 " ██║╚██╔╝██║██╔══██║██║     ██╔══╝  ██║██║     ██╔═██╗ 
 " ██║ ╚═╝ ██║██║  ██║███████╗███████╗██║╚██████╗██║  ██╗
 " ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝╚═╝  ╚═╝
-" Updated 10/5/17
-"
+" Updated 5/28/18
+
+" set background
+set background=dark
+
 " Enable Syntax and Plugins
 syntax enable
 filetype indent plugin on
