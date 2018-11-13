@@ -1,11 +1,6 @@
-# # ███╗   ███╗ █████╗ ██╗     ███████╗██╗ ██████╗██╗  ██╗
-# # ████╗ ████║██╔══██╗██║     ██╔════╝██║██╔════╝██║ ██╔╝
-# # ██╔████╔██║███████║██║     █████╗  ██║██║     █████╔╝ 
-# # ██║╚██╔╝██║██╔══██║██║     ██╔══╝  ██║██║     ██╔═██╗ 
-# # ██║ ╚═╝ ██║██║  ██║███████╗███████╗██║╚██████╗██║  ██╗
-# # ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝╚═╝  ╚═╝
-# # 
-# # Updated 10/5/17
+# .zshrc
+# Maleick
+# Updated 11/13/18
 #
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -92,8 +87,6 @@ source $ZSH/oh-my-zsh.sh
 alias myip='curl ipinfo.io/ip'
 # ICMP Scan
 alias icmp='nmap -sn -PE -PP -PM -iL iplist --reason'
-# Nmap Parser 
-alias gnmap='/root/Tools/trace_nmapparser/trace_nmapparser.py gnmap'
 # Update & Upgrade
 alias sysupdate='apt update && apt full-upgrade -y'
 # Mount Share
