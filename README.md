@@ -1,3 +1,2 @@
 # dotfiles
 
-#~ git clone --recursive
