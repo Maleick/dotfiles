@@ -1,11 +1,10 @@
 " .vimrc
 " maleick
-" 2/19/20
+" 3/24/20
 
 " general vim settings
-filetype indent plugin on
 syntax on
-set background=dark
+filetype plugin indent on
 set nocompatible
 set autoindent
 set tabstop=4
