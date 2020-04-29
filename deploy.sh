@@ -18,6 +18,10 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git \
 git clone https://github.com/zdharma/fast-syntax-highlighting.git \
 	~ZSH_CUSTOM/plugins/fast-syntax-highlighting
 
+# dotfiles install
+git clone https://github.com/Maleick/dotfiles.git \
+	~/dotfiles
+
 cp ~/dotfiles/zsh/.zshrc ~
 cp ~/dotfiles/tmux/.tmux.conf ~
 cp ~/dotfiles/vim/.vimrc ~
