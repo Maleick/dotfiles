@@ -1,6 +1,6 @@
 # .zshrc
 # maleick
-# 3/4/20
+# 05/06/20
 #
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/michaelmiles/.oh-my-zsh"
@@ -13,7 +13,7 @@ ZSH_THEME="dracula-pro"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fast-syntax-highlighting zsh-autosuggestions) 
+plugins=(fast-syntax-highlighting zsh-autosuggestions) 
 
 source $ZSH/oh-my-zsh.sh
  
