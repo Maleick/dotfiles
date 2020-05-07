@@ -3,7 +3,7 @@
 # 05/06/20
 #
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/michaelmiles/.oh-my-zsh"
+export ZSH="/home/maleick/.oh-my-zsh"
 
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="dracula-pro" 
