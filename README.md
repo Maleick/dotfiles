@@ -1,12 +1,5 @@
 # dotfiles
 
-### Installation
-
-#### via curl
-```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/Maleick/dotfiles/master/deploy.sh)"
-```
-
 deploy.sh installs the following repositories
 
 - [Oh-My-ZSH](https://github.com/ohmyzsh/ohmyzsh)

@@ -1,8 +1,8 @@
 # !/usr/bin/env bash
 #
-# deploy.sh version: 1.0
+# deploy.sh version: 1.1
 # author: Maleick
-# date: 4/29/20
+# date: 06/22/20
 
 # Oh My ZSH install and plugins
 # curl all the things
@@ -17,10 +17,6 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git \
 # Feature rich syntax highlighting for Zsh.
 git clone https://github.com/zdharma/fast-syntax-highlighting.git \
 	~ZSH_CUSTOM/plugins/fast-syntax-highlighting
-
-# dotfiles install
-git clone https://github.com/Maleick/dotfiles.git \
-	~/dotfiles
 
 cp ~/dotfiles/zsh/.zshrc ~
 cp ~/dotfiles/tmux/.tmux.conf ~
