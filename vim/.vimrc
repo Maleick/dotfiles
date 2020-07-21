@@ -1,9 +1,9 @@
 " .vimrc
 " maleick
-" 05/05/20
+" 07/21/20
 
 " general vim settings
-syntax on
+syntax enable
 filetype plugin indent on
 set nocompatible
 set autoindent
@@ -11,4 +11,8 @@ set tabstop=4
 set shiftwidth=4
 set relativenumber 
 set number
-set background=dark
+
+" vim plugin
+packadd! dracula_pro
+let g:dracula_colorterm = 0
+colorscheme dracula_pro_van_helsing
