@@ -1,6 +1,6 @@
 " .vimrc
 " maleick
-" 08/25/20
+" 10/2/20
 
 " general vim settings
 syntax enable
@@ -11,4 +11,3 @@ set tabstop=4
 set shiftwidth=4
 set relativenumber 
 set number
-
