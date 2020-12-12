@@ -16,17 +16,7 @@ WORDCHARS=${WORDCHARS//\/} # Don't consider certain characters part of the word
 PROMPT_EOL_MARK=""
 
 # configure key keybindings
-bindkey -e                                        # emacs key bindings
-bindkey ' ' magic-space                           # do history expansion on space
-bindkey '^[[3;5~' kill-word                       # ctrl + Supr
-bindkey '^[[3~' delete-char                       # delete
-bindkey '^[[1;5C' forward-word                    # ctrl + ->
-bindkey '^[[1;5D' backward-word                   # ctrl + <-
-bindkey '^[[5~' beginning-of-buffer-or-history    # page up
-bindkey '^[[6~' end-of-buffer-or-history          # page down
-bindkey '^[[H' beginning-of-line                  # home
-bindkey '^[[F' end-of-line                        # end
-bindkey '^[[Z' undo                               # shift + tab undo last action
+bindkey -v                                        # vim key bindings
 
 # enable completion features
 autoload -Uz compinit
@@ -168,6 +158,8 @@ precmd() {
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
+alias offshore='ssh -i .ssh/id_rsa root@offshore.verified-safelink.com'
+alias dropper='ssh -i .ssh/id_rsa root@dropper.verified-safelink.com'
 
 # enable auto-suggestions based on the history
 if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -175,3 +167,9 @@ if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     # change suggestion color
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
+
+# PATH Updates
+export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+export PATH=$PATH:/Users/michaelmiles/Library/Python/2.7/bin
+
+export HOMEBREW_GITHUB_API_TOKEN=8cd9a654f8c758b79ebda9d4aa9992f5e8c1cc16
