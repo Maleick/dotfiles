@@ -158,9 +158,6 @@ precmd() {
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
-alias offshore='ssh -i .ssh/id_rsa root@offshore.verified-safelink.com'
-alias dropper='ssh -i .ssh/id_rsa root@dropper.verified-safelink.com'
-alias cybernetics='ssh -i .ssh/id_rsa_digitalocean root@cybernetics.htb-prolabs.com'
 
 # enable auto-suggestions based on the history
 if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -169,8 +166,3 @@ if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
 
-# PATH Updates
-export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
-export PATH=$PATH:/Users/michaelmiles/Library/Python/2.7/bin
-
-export HOMEBREW_GITHUB_API_TOKEN=8cd9a654f8c758b79ebda9d4aa9992f5e8c1cc16
