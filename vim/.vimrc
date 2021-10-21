@@ -1,49 +1,40 @@
 " .vimrc
 " maleick
-" 1/15/21
+" 10/21/21
 
-set nocompatible              " be iMproved, required
-filetype off                  " required
+" Theme
+packadd! dracula_pro
+syntax enable
+let g:dracula_colorterm = 0
+colorscheme dracula_pro_van_helsing
 
-" The following section is in use on my Macbook but I don't
-" need it on my Parrot images.
-
-" set the runtime path to include Vundle and initialize
-" set rtp+=~/.vim/bundle/Vundle.vim
-" call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-" call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-" Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" Plugin 'ycm-core/YouCompleteMe'
-
-" All of your Plugins must be added before the following line
-" call vundle#end()            " required
-
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just
-" :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to
-" auto-approve removal
-
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
-" general vim settings
-syntax on
-set autoindent
-set tabstop=4
-set shiftwidth=4
+" General VIM settings
+set nocompatible
+filetype indent on
+filetype plugin indent on
+set ignorecase
+set nowrap
+set number
 set relativenumber
 set ruler
-set list
+set showcmd
+set smartindent
+set shiftwidth=2
+set tabstop=2
+set backspace=indent,eol,start
+
+" Enable lsp for go by using gopls
+let g:completor_filetype_map = {}
+let g:completor_filetype_map.go = {'ft': 'lsp', 'cmd': 'gopls -remote=auto'}"
+
+" Common Go commands
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+au FileType go nmap <Leader>e <Plug>(go-rename)
+au FileType go nmap <Leader>s <Plug>(go-implements)
+au FileType go nmap <Leader>i <Plug>(go-info)
+
+" Use 8.2 popup windows for Go Doc
+let g:go_doc_popup_window = 1
