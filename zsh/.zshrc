@@ -1,6 +1,13 @@
 # ~/.zshrc file for zsh interactive shells.
 # see /usr/share/doc/zsh/examples/zshrc for examples
 
+# ----------------------
+# Red Team Shell
+# ----------------------
+if command -v figlet &> /dev/null; then
+    figlet -f slant "Red Team Shell" | lolcat
+fi
+
 setopt autocd              # change directory just by typing its name
 setopt correct            # auto correct mistakes
 setopt interactivecomments # allow comments in interactive mode
@@ -78,8 +85,8 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)──}(%B%F{%(#.red.blue)}%n%(#.💀.㉿)%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-    RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
+    PROMPT='%F{%(#.blue.green)}%n@%m%b %F{blue}%~%f %F{red}$%f '
+    RPROMPT='%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
 
 
     # enable syntax-highlighting
@@ -222,17 +229,142 @@ get_tun0_ip() {
     ip addr show tun0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1
 }
 
-PROMPT+='%(?.%F{red}%B$(get_tun0_ip)%b%F{reset})'
+
 
 
 # -- Tool Check --
-# Check for the presence of common red team tools
+# Check for Homebrew and install if not found
+install_homebrew() {
+    if ! command -v brew &> /dev/null; then
+        read "response?Homebrew not found. Install it now? [y/N] "
+        if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        fi
+    fi
+}
+
+# Check for the presence of common red team tools and prompt to install them
 check_tools() {
-    tools=("nmap" "msfconsole" "chisel" "socat" "bloodhound" "gobuster" "feroxbuster" "impacket-smbserver" "evil-winrm")
-    for tool in "${tools[@]}"; do
-        if ! command -v $tool &> /dev/null; then
-            echo "$tool is not installed. Consider installing it."
+    install_homebrew
+    brew_tools=("nmap" "socat" "gobuster" "feroxbuster" "figlet" "lolcat")
+    pip_tools=()
+    gem_tools=()
+    installed_brew_tools=()
+    installed_pip_tools=()
+    installed_gem_tools=()
+    missing_brew_tools=()
+    missing_pip_tools=()
+    missing_gem_tools=()
+
+    for tool in "${brew_tools[@]}"; do
+        if command -v $tool &> /dev/null; then
+            installed_brew_tools+=($tool)
+        else
+            missing_brew_tools+=($tool)
         fi
     done
+
+    for tool in "${pip_tools[@]}"; do
+        if python3 -m pip show $tool &> /dev/null; then
+            installed_pip_tools+=($tool)
+        else
+            missing_pip_tools+=($tool)
+        fi
+    done
+
+    for tool in "${gem_tools[@]}"; do
+        if gem list -i $tool &> /dev/null; then
+            installed_gem_tools+=($tool)
+        else
+            missing_gem_tools+=($tool)
+        fi
+    done
+
+    if [ ${#installed_brew_tools[@]} -gt 0 ] || [ ${#installed_pip_tools[@]} -gt 0 ] || [ ${#installed_gem_tools[@]} -gt 0 ]; then
+        echo "The following tools are already installed:"
+        if [ ${#installed_brew_tools[@]} -gt 0 ]; then
+            echo "  Homebrew: ${installed_brew_tools[@]}"
+        fi
+        if [ ${#installed_pip_tools[@]} -gt 0 ]; then
+            echo "  Pip: ${installed_pip_tools[@]}"
+        fi
+        if [ ${#gem_tools[@]} -gt 0 ]; then
+            echo "  Gem: ${installed_gem_tools[@]}"
+        fi
+    fi
+
+    if [ ${#missing_brew_tools[@]} -gt 0 ] || [ ${#missing_pip_tools[@]} -gt 0 ] || [ ${#missing_gem_tools[@]} -gt 0 ]; then
+        echo "The following tools are not installed:"
+        if [ ${#missing_brew_tools[@]} -gt 0 ]; then
+            echo "  Homebrew: ${missing_brew_tools[@]}"
+        fi
+        if [ ${#missing_pip_tools[@]} -gt 0 ]; then
+            echo "  Pip: ${missing_pip_tools[@]}"
+        fi
+        if [ ${#missing_gem_tools[@]} -gt 0 ]; then
+            echo "  Gem: ${missing_gem_tools[@]}"
+        fi
+
+        read "response?Install them now? [y/N] "
+        if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+            if [ ${#missing_brew_tools[@]} -gt 0 ]; then
+                # Note: metasploit is deprecated and will be removed from Homebrew in the future
+                brew install ${missing_brew_tools[@]}
+            fi
+            if [ ${#missing_pip_tools[@]} -gt 0 ]; then
+                python3 -m pip install ${missing_pip_tools[@]}
+            fi
+            if [ ${#missing_gem_tools[@]} -gt 0 ]; then
+                gem install ${missing_gem_tools[@]}
+            fi
+        fi
+    fi
 }
+
+# Homebrew Maintenance
+run_brew_maintenance() {
+    if [ -f ~/.brew_last_update ]; then
+        last_update=$(cat ~/.brew_last_update)
+        now=$(date +%s)
+        if [ $((now - last_update)) -gt 86400 ]; then
+            echo "Running Homebrew maintenance..."
+            brew update && brew upgrade && brew cleanup -s
+            echo $(date +%s) > ~/.brew_last_update
+        fi
+    else
+        echo $(date +%s) > ~/.brew_last_update
+    fi
+}
+
+# Run the tool check and brew maintenance
+check_tools
+run_brew_maintenance
+echo "Type /help for a list of commands."
+
+# -- Help Command --
+# Display a list of aliases and functions
+/help() {
+    echo "
+    Available Aliases and Functions:
+
+    http-server: Start a simple HTTP server
+    https-server: Start a simple HTTPS server
+    nmap-top-ports: Scan top 1000 TCP ports with service and version detection
+    rev-shell <type> <lhost> <lport>: Generate a reverse shell one-liner
+    check_tools: Check for and install missing tools
+    run_brew_maintenance: Run Homebrew maintenance (update, upgrade, cleanup)
+    /help: Display this help message
+
+    Tmux:
+
+    Prefix + P: Start/Stop asciinema recording of the current pane to ~/Logs/.
+                Use 'asciinema play FILENAME' to play back.
+    N: Create a new tmux session.
+    p: Switch to previous tmux window.
+    n: Switch to next tmux window.
+    "
+}
+
+
+
 
