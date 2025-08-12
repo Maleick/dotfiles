@@ -219,7 +219,7 @@ rev-shell() {
 # -- Prompt --
 # Show tun0 IP in prompt
 get_tun0_ip() {
-    ip addr show tun0 2>/dev/null | grep -oP 'inet \K[\d.]+'
+    ip addr show tun0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1
 }
 
 PROMPT+='%(?.%F{red}%B$(get_tun0_ip)%b%F{reset})'
