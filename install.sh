@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
-cp /opt/dotfiles/tmux/.tmux.conf ~
-cp /opt/dotfiles/vim/.vimrc ~
+echo "Copying dotfiles to home directory..."
+
+cp tmux/.tmux.conf ~/.tmux.conf
+cp vim/.vimrc ~/.vimrc
+cp zsh/.zshrc ~/.zshrc
+
+echo "Done."
