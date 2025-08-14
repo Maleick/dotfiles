@@ -20,7 +20,7 @@ link_file() {
     fi
 
     echo "Linking $src to $dest"
-    ln -s "$(readlink -f "$src")" "$dest"
+    ln -s "$src" "$dest"
 }
 
 echo "Copying dotfiles to home directory..."
