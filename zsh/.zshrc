@@ -228,66 +228,6 @@ get_tun0_ip() {
     ip addr show tun0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1
 }
 
-# -- Tool Check --
-# Check for Homebrew and install if not found
-install_homebrew() {
-    if ! command -v brew &> /dev/null; then
-        read "response?Homebrew not found. Install it now? [y/N] "
-        if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-    fi
-}
-
-# Check for the presence of common red team tools and prompt to install them
-check_tools() {
-    install_homebrew
-    brew_tools=("nmap" "socat" "gobuster" "feroxbuster" "figlet" "lolcat")
-    installed_brew_tools=()
-    missing_brew_tools=()
-
-    for tool in "${brew_tools[@]}"; do
-        if command -v $tool &> /dev/null; then
-            installed_brew_tools+=($tool)
-        else
-            missing_brew_tools+=($tool)
-        fi
-    done
-
-    if [ ${#installed_brew_tools[@]} -gt 0 ]; then
-        echo "The following tools are already installed:"
-        echo "  Homebrew: ${installed_brew_tools[@]}"
-    fi
-
-    if [ ${#missing_brew_tools[@]} -gt 0 ]; then
-        echo "The following tools are not installed:"
-        echo "  Homebrew: ${missing_brew_tools[@]}"
-
-        read "response?Install them now? [y/N] "
-        if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-            brew install ${missing_brew_tools[@]}
-        fi
-    fi
-}
-
-# Homebrew Maintenance
-run_brew_maintenance() {
-    if [ -f ~/.brew_last_update ]; then
-        last_update=$(cat ~/.brew_last_update)
-        now=$(date +%s)
-        if [ $((now - last_update)) -gt 86400 ]; then
-            echo "Running Homebrew maintenance..."
-            brew update && brew upgrade && brew cleanup -s
-            echo $(date +%s) > ~/.brew_last_update
-        fi
-    else
-        echo $(date +%s) > ~/.brew_last_update
-    fi
-}
-
-# Run the tool check and brew maintenance
-check_tools
-run_brew_maintenance
 echo "Type /help for a list of commands."
 
 # -- Help Command --
@@ -300,8 +240,6 @@ echo "Type /help for a list of commands."
     https-server: Start a simple HTTPS server
     nmap-top-ports: Scan top 1000 TCP ports with service and version detection
     rev-shell <type> <lhost> <lport>: Generate a reverse shell one-liner
-    check_tools: Check for and install missing tools
-    run_brew_maintenance: Run Homebrew maintenance (update, upgrade, cleanup)
     /help: Display this help message
 
     Tmux:
