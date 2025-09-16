@@ -224,9 +224,9 @@ alias webserver='python3 -m http.server 8080'
 alias smbserver='impacket-smbserver share . -smb2support'
 alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))"'
 alias urldecode='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
-# Fixed base64 functions
-base64encode() { echo -n "$1" | base64; }
-base64decode() { echo -n "$1" | base64 -d; }
+# Fixed base64 functions (macOS compatible)
+function base64encode() { echo -n "$1" | base64; }
+function base64decode() { echo -n "$1" | base64 -D; }
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 alias hexdump='xxd'
 alias strings='strings -a'
