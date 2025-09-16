@@ -1,11 +1,25 @@
-# ~/.zshrc file for zsh interactive shells.
-# see /usr/share/doc/zsh/examples/zshrc for examples
+# ~/.zshrc - Optimized for Warp Terminal
+# Red Team dotfiles configuration
 
 # ----------------------
-# Red Team Shell
+# Warp Terminal Detection and Optimization
 # ----------------------
-if command -v figlet &> /dev/null; then
+# Detect if we're running in Warp
+if [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then
+    export WARP_TERMINAL=1
+    # Optimize for Warp's features
+    export DISABLE_AUTO_TITLE="true"
+fi
+
+# ----------------------
+# Red Team Shell Banner
+# ----------------------
+if command -v figlet &> /dev/null && command -v lolcat &> /dev/null; then
     figlet -f slant "Red Team Shell" | lolcat
+elif command -v figlet &> /dev/null; then
+    figlet -f slant "Red Team Shell"
+else
+    echo "🔴 Red Team Shell Ready"
 fi
 
 setopt autocd              # change directory just by typing its name
@@ -36,20 +50,37 @@ bindkey '^[[H' beginning-of-line                  # home
 bindkey '^[[F' end-of-line                        # end
 bindkey '^[[Z' undo                               # shift + tab undo last action
 
-# enable completion features
+# enable completion features - Enhanced for red team tools
 autoload -Uz compinit
-compinit -d ~/.cache/zcompdump
+# Speed up compinit by checking cache once per day
+if [[ -n ~/.cache/zcompdump(#qN.mh+24) ]]; then
+    compinit -d ~/.cache/zcompdump
+else
+    compinit -C -d ~/.cache/zcompdump
+fi
+
+# Completion styling
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # case insensitive tab completion
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}" # colorize completions
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:warnings' format 'No matches found'
+zstyle ':completion:*' group-name ''
 
-# History configurations
+# Red team tool specific completions
+zstyle ':completion:*:*:nmap:*' file-patterns '*.xml:xml-files *.gnmap:gnmap-files *:all-files'
+zstyle ':completion:*:*:gobuster:*' file-patterns '*.txt:wordlists *:all-files'
+
+# History configurations - Enhanced for Red Team operations
 HISTFILE=~/.zsh_history
-HISTSIZE=1000
-SAVEHIST=2000
+HISTSIZE=10000
+SAVEHIST=10000
 setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
 setopt hist_ignore_dups       # ignore duplicated commands history list
-setopt hist_ignore_space      # ignore commands that start with space
+setopt hist_ignore_space      # ignore commands that start with space (good for sensitive commands)
 setopt hist_verify            # show command with history expansion to user before running it
+setopt hist_reduce_blanks     # remove superfluous blanks from history items
+setopt inc_append_history     # write to history file immediately, not when shell exits
 #setopt share_history         # share command history data
 
 # force zsh to show the complete history
@@ -80,9 +111,17 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PROMPT='%F{%(#.blue.green)}%n@%m%b %F{blue}%~%f %F{red}$%f '
-    RPROMPT='%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
-
+    # Warp-optimized prompt with red team context
+    if [[ -n "$WARP_TERMINAL" ]]; then
+        # Simplified prompt for Warp (it handles directory display)
+        PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{red}$%f '
+    else
+        # Full prompt for other terminals
+        PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{cyan}%~%f %F{red}$%f '
+    fi
+    
+    # Right prompt with exit code and job count
+    RPROMPT='%(?.. %? %F{red}%B✘%b%f)%(1j. %j %F{yellow}%B⚙%b%f.)'
 
     # enable syntax-highlighting
     if [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
@@ -169,10 +208,28 @@ precmd() {
     alias diff='diff --color=auto'
     alias ip='ip --color=auto'
 
-# some more ls aliases
-alias ll='ls -l'
+# Enhanced ls aliases with colors
+alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias lt='ls -altr'  # sort by time, newest last
+alias lh='ls -alh'   # human readable sizes
+
+# Red team specific aliases
+alias myip='curl -s ifconfig.me'
+alias localip='ipconfig getifaddr en0 2>/dev/null || ip route get 1 | awk "{print \$7}" | head -1'
+alias ports='netstat -tuln'
+alias listening='netstat -an | grep LISTEN'
+alias webserver='python3 -m http.server 8080'
+alias smbserver='impacket-smbserver share . -smb2support'
+alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))"'
+alias urldecode='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
+# Fixed base64 functions
+base64encode() { echo -n "$1" | base64; }
+base64decode() { echo -n "$1" | base64 -d; }
+alias rot13='tr a-zA-Z n-za-mN-ZA-M'
+alias hexdump='xxd'
+alias strings='strings -a'
 
 # enable auto-suggestions based on the history
 if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -222,10 +279,61 @@ rev-shell() {
     esac
 }
 
-# -- Prompt --
+# -- Red Team Functions --
 # Show tun0 IP in prompt
 get_tun0_ip() {
     ip addr show tun0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1
+}
+
+# Quick port scanner
+quickscan() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: quickscan <target>"
+        return 1
+    fi
+    nmap -T4 -F "$1"
+}
+
+# Extract various archive types
+extract() {
+    if [[ -f $1 ]]; then
+        case $1 in
+            *.tar.bz2)   tar xjf "$1"     ;;
+            *.tar.gz)    tar xzf "$1"     ;;
+            *.tar.xz)    tar xJf "$1"     ;;
+            *.bz2)       bunzip2 "$1"     ;;
+            *.rar)       unrar e "$1"     ;;
+            *.gz)        gunzip "$1"      ;;
+            *.tar)       tar xf "$1"      ;;
+            *.tbz2)      tar xjf "$1"     ;;
+            *.tgz)       tar xzf "$1"     ;;
+            *.zip)       unzip "$1"       ;;
+            *.Z)         uncompress "$1"  ;;
+            *.7z)        7z x "$1"        ;;
+            *)           echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# Find files containing specific text
+findtext() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: findtext <search_term> [directory]"
+        return 1
+    fi
+    local dir="${2:-.}"
+    grep -r "$1" "$dir" 2>/dev/null
+}
+
+# Network information
+netinfo() {
+    echo "=== Network Information ==="
+    echo "External IP: $(curl -s ifconfig.me)"
+    echo "Local IP: $(ipconfig getifaddr en0 2>/dev/null || ip route get 1 | awk '{print $7}' | head -1)"
+    echo "Gateway: $(route -n get default 2>/dev/null | grep gateway | awk '{print $2}' || ip route | grep default | awk '{print $3}' | head -1)"
+    echo "DNS Servers: $(scutil --dns 2>/dev/null | grep nameserver | awk '{print $3}' | sort -u | tr '\n' ' ' || cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | tr '\n' ' ')"
 }
 
 echo "Type /help for a list of commands."
@@ -234,20 +342,44 @@ echo "Type /help for a list of commands."
 # Display a list of aliases and functions
 /help() {
     echo "
-    Available Aliases and Functions:
+🔴 Red Team Shell - Available Commands:
 
-    http-server: Start a simple HTTP server
-    https-server: Start a simple HTTPS server
-    nmap-top-ports: Scan top 1000 TCP ports with service and version detection
-    rev-shell <type> <lhost> <lport>: Generate a reverse shell one-liner
-    /help: Display this help message
+🚀 Web Servers:
+    http-server / webserver: Start HTTP server (port 8000/8080)
+    https-server: Start HTTPS server (requires cert.pem/key.pem)
+    smbserver: Start SMB server in current directory
 
-    Tmux:
+🔍 Network & Scanning:
+    nmap-top-ports <target>: Quick nmap scan of top 1000 ports
+    quickscan <target>: Fast nmap scan (-T4 -F)
+    myip: Show external IP address
+    localip: Show local IP address
+    netinfo: Display comprehensive network information
+    ports / listening: Show open ports
 
-    Prefix + P: Start/Stop asciinema recording of the current pane to ~/Logs/.
-                Use 'asciinema play FILENAME' to play back.
-    N: Create a new tmux session.
-    p: Switch to previous tmux window.
-    n: Switch to next tmux window.
+📜 Encoding/Decoding:
+    base64encode <text>: Base64 encode
+    base64decode <text>: Base64 decode
+    urlencode <text>: URL encode
+    urldecode <text>: URL decode
+    rot13: ROT13 cipher
+    hexdump <file>: Hexadecimal dump
+
+🛠️ Red Team Tools:
+    rev-shell <type> <lhost> <lport>: Generate reverse shell
+        Types: bash, nc, python, perl, php
+    extract <file>: Extract various archive formats
+    findtext <term> [dir]: Search for text in files
+
+📁 File Operations:
+    ll, la, l, lt, lh: Enhanced ls variants
+
+🎥 Tmux (if available):
+    Prefix + P: Start/Stop asciinema recording
+    Prefix + N: Create new session
+    Prefix + p/n: Previous/Next window
+
+📚 Documentation:
+    /help: This help message
     "
 }
