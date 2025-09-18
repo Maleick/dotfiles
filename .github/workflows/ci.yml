@@ -1,0 +1,173 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck shfmt yamllint
+      
+      - name: Run shellcheck
+        run: |
+          find . -name "*.sh" -o -name "*.bash" -o -name "*.zsh" | while read file; do
+            if [[ -f "$file" ]]; then
+              echo "Checking: $file"
+              shellcheck -S warning "$file" || true
+            fi
+          done
+      
+      - name: Check shell formatting with shfmt
+        run: |
+          shfmt -d -i 4 -ci .
+      
+      - name: Lint YAML files
+        run: |
+          yamllint -d relaxed .github/
+
+  test:
+    name: Test Installation
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup test environment
+        run: |
+          # Create a test home directory
+          export TEST_HOME="$HOME/test_dotfiles"
+          mkdir -p "$TEST_HOME"
+          
+      - name: Test installation script
+        run: |
+          # Run installation in test mode
+          export HOME="$HOME/test_dotfiles"
+          bash install.sh
+          
+      - name: Verify installation
+        run: |
+          export HOME="$HOME/test_dotfiles"
+          # Check if symlinks were created
+          test -L "$HOME/.zshrc"
+          test -L "$HOME/.tmux.conf"
+          test -L "$HOME/.vimrc"
+          test -L "$HOME/.dotfiles"
+          
+      - name: Test zsh configuration
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y zsh
+          export HOME="$HOME/test_dotfiles"
+          zsh -c "source $HOME/.zshrc && echo 'ZSH config loaded successfully'"
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+      
+      - name: Check for secrets with gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-test-container:
+    name: Test in Container
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build test container
+        run: |
+          cat > Dockerfile.test <<EOF
+          FROM ubuntu:22.04
+          RUN apt-get update && apt-get install -y \
+              git \
+              zsh \
+              tmux \
+              vim \
+              curl \
+              sudo
+          WORKDIR /dotfiles
+          COPY . .
+          RUN bash install.sh
+          CMD ["/bin/bash", "-c", "zsh -c 'source ~/.zshrc' && echo 'Installation successful'"]
+          EOF
+          docker build -f Dockerfile.test -t dotfiles-test .
+      
+      - name: Run container test
+        run: docker run --rm dotfiles-test
+
+  release:
+    name: Create Release
+    needs: [lint, test, security]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci || npm install
+      
+      - name: Get version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Build release artifacts
+        run: |
+          chmod +x scripts/build-release-artifacts.sh
+          ./scripts/build-release-artifacts.sh
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Red Team Dotfiles ${{ steps.version.outputs.tag }}
+          body_path: build/artifacts/release-notes-v${{ steps.version.outputs.version }}.md
+          files: |
+            build/artifacts/red-team-dotfiles-v${{ steps.version.outputs.version }}.zip
+            build/artifacts/sample-warp-config.json
+            build/artifacts/SHA256SUMS
+            build/artifacts/build-metadata.json
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

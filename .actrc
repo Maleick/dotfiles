@@ -1,0 +1,20 @@
+# Act configuration for local GitHub Actions testing
+# This file configures nektos/act to run GitHub Actions locally
+
+# Use Ubuntu 22.04 for ubuntu-latest
+-P ubuntu-latest=catthehacker/ubuntu:act-22.04
+-P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+
+# Use specific runners for consistency
+-P macos-latest=sickcodes/docker-osx:auto
+-P macos-12=sickcodes/docker-osx:monterey
+
+# Environment variables
+--env GITHUB_TOKEN
+--env CI=true
+
+# Default event
+--eventpath .github/workflows/push.json
+
+# Platform mappings for our workflows
+--platform ubuntu-latest=catthehacker/ubuntu:act-22.04

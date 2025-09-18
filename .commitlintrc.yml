@@ -1,0 +1,60 @@
+# Commitlint Configuration
+# Enforces conventional commit format for automated versioning
+
+extends:
+  - '@commitlint/config-conventional'
+
+rules:
+  # Type rules
+  type-enum:
+    - 2
+    - always
+    - [
+        'feat',     # New feature
+        'fix',      # Bug fix
+        'docs',     # Documentation changes
+        'style',    # Code style changes (formatting, etc.)
+        'refactor', # Code refactoring
+        'perf',     # Performance improvements
+        'test',     # Test changes
+        'build',    # Build system or dependency changes
+        'ci',       # CI/CD changes
+        'chore',    # Maintenance tasks
+        'revert',   # Revert commits
+        'security', # Security-related changes (red team specific)
+        'config',   # Configuration changes (red team specific)
+        'tools'     # Tool additions/updates (red team specific)
+      ]
+
+  # Subject rules
+  subject-max-length: [2, 'always', 72]
+  subject-min-length: [2, 'always', 10]
+  subject-case: [2, 'always', 'lower-case']
+  subject-empty: [2, 'never']
+  subject-full-stop: [2, 'never', '.']
+
+  # Header rules
+  header-max-length: [2, 'always', 100]
+
+  # Body rules
+  body-max-line-length: [1, 'always', 100]
+
+  # Footer rules
+  footer-max-line-length: [1, 'always', 100]
+
+  # Scope rules (optional but encouraged)
+  scope-case: [2, 'always', 'lower-case']
+
+# Custom scopes for red team dotfiles
+defaultIgnores: false
+ignores:
+  - message => message.includes('WIP')
+  - message => message.includes('[skip ci]')
+
+# Example commit messages:
+# feat(zsh): add modular configuration system
+# fix(install): resolve symlink creation on macOS
+# docs(security): update OPSEC guidelines for engagement isolation
+# security(config): prevent real IP addresses in examples
+# config(tmux): add session recording keybindings
+# tools(nmap): add comprehensive scanning aliases

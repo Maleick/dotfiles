@@ -1,0 +1,138 @@
+# Pre-commit hooks for Red Team Dotfiles
+# Install: pip install pre-commit && pre-commit install
+
+default_language_version:
+  python: python3
+
+repos:
+  # General file fixes
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '^test/fixtures/'
+      - id: end-of-file-fixer
+        exclude: '^test/fixtures/'
+      - id: check-yaml
+        args: ['--unsafe']
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+      - id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        args: ['-S', 'warning']
+        exclude: '^(test/fixtures/|\.zshrc$|.*\.zsh$)'
+        types: ['shell', 'bash']
+
+  # Shell script formatting
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.7.0-1
+    hooks:
+      - id: shfmt
+        args: ['-i', '4', '-ci', '-w']
+        exclude: '^(test/fixtures/|Makefile)'
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.33.0
+    hooks:
+      - id: yamllint
+        args: ['-d', 'relaxed']
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.38.0
+    hooks:
+      - id: markdownlint
+        args: ['--fix']
+        exclude: '^test/fixtures/'
+
+  # Security checks
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: '^(test/fixtures/|.*\.md$)'
+
+  # Git commit message linting
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.11.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ['@commitlint/config-conventional']
+
+  # EditorConfig compliance
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 2.7.3
+    hooks:
+      - id: editorconfig-checker
+        exclude: '^(test/fixtures/|\.git/)'
+
+  # Check for common security issues
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: v3.63.7
+    hooks:
+      - id: trufflehog
+        entry: trufflehog filesystem --only-verified --fail
+        exclude: '^test/fixtures/'
+
+  # Dockerfile linting (if we add Docker support)
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        args: ['--ignore', 'DL3008', '--ignore', 'DL3009']
+
+  # Custom local hooks
+  - repo: local
+    hooks:
+      - id: check-redacted-ips
+        name: Check for non-redacted IPs
+        entry: bash -c 'grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" --exclude="*.md" --exclude-dir=".git" -r . | grep -v -E "(127\.0\.|192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.|0\.0\.0\.0|255\.255\.255\.255|\*\*\*)" && echo "Found non-RFC1918 IP addresses!" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      - id: check-todo-format
+        name: Check TODO format
+        entry: bash -c 'grep -rn "TODO\|FIXME\|XXX" --include="*.sh" --include="*.zsh" --include="*.bash" . | grep -v "# TODO(.*): " && echo "TODOs must follow format: # TODO(username): description" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      - id: validate-aliases
+        name: Validate shell aliases
+        entry: bash -c 'if [ -f zsh/lib/aliases.zsh ]; then zsh -n zsh/lib/aliases.zsh || exit 1; fi'
+        language: system
+        files: 'aliases\.zsh$'
+
+      - id: check-sensitive-functions
+        name: Check for sensitive function exposure
+        entry: bash -c 'grep -r "function.*password\|function.*secret\|function.*token\|function.*key" --include="*.sh" --include="*.zsh" . && echo "Warning: Found potentially sensitive function names" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [shellcheck, trufflehog]  # These require special setup in CI
+  submodules: false

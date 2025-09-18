@@ -1,0 +1,89 @@
+# Docker Compose for Red Team Dotfiles Cross-Platform Testing
+# Run with: docker-compose -f docker-compose.test.yml up --build
+
+version: '3.8'
+
+services:
+  # Ubuntu 22.04 LTS testing
+  test-ubuntu:
+    build:
+      context: .
+      dockerfile: docker/ubuntu.Dockerfile
+      cache_from:
+        - ubuntu:22.04
+    image: redteam-dotfiles:ubuntu
+    container_name: dotfiles-test-ubuntu
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=UTC
+      - CI=true
+    volumes:
+      - .:/workspace:ro
+    working_dir: /workspace
+    command: >
+      bash -c "
+        echo '=== Ubuntu 22.04 Testing ===' &&
+        make ci-local &&
+        echo '=== Testing modular configuration ===' &&
+        zsh -c 'source config/zshrc.new && /help' &&
+        echo '=== Ubuntu testing completed successfully ==='
+      "
+
+  # Arch Linux testing  
+  test-archlinux:
+    build:
+      context: .
+      dockerfile: docker/archlinux.Dockerfile
+      cache_from:
+        - archlinux:latest
+    image: redteam-dotfiles:archlinux
+    container_name: dotfiles-test-archlinux
+    environment:
+      - CI=true
+    volumes:
+      - .:/workspace:ro
+    working_dir: /workspace
+    command: >
+      bash -c "
+        echo '=== Arch Linux Testing ===' &&
+        make ci-local &&
+        echo '=== Testing modular configuration ===' &&
+        zsh -c 'source config/zshrc.new && /help' &&
+        echo '=== Arch Linux testing completed successfully ==='
+      "
+
+  # Performance benchmarking service
+  benchmark:
+    build:
+      context: .
+      dockerfile: docker/ubuntu.Dockerfile
+    image: redteam-dotfiles:benchmark
+    container_name: dotfiles-benchmark
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - CI=true
+      - BENCHMARK_MODE=true
+    volumes:
+      - .:/workspace:ro
+    working_dir: /workspace
+    command: >
+      bash -c "
+        echo '=== Performance Benchmark ===' &&
+        echo 'Testing startup time...' &&
+        time zsh -c 'source config/zshrc.new' &&
+        echo 'Testing legacy configuration...' &&
+        time zsh -c 'source zsh/.zshrc' &&
+        echo '=== Testing plugin loading performance ===' &&
+        ZSHRC_DEBUG=1 zsh -c 'source config/zshrc.new' &&
+        echo '=== Benchmark completed ==='
+      "
+
+# Shared volumes for caching
+volumes:
+  dotfiles-cache:
+    driver: local
+
+# Networks
+networks:
+  default:
+    name: dotfiles-testing

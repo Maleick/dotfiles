@@ -1,0 +1,21 @@
+{
+  "repository": {
+    "name": "dotfiles",
+    "full_name": "redteam/dotfiles",
+    "private": false,
+    "default_branch": "main"
+  },
+  "ref": "refs/heads/main",
+  "head_commit": {
+    "id": "1234567890abcdef",
+    "message": "test: local GitHub Actions testing",
+    "author": {
+      "name": "Red Team Developer",
+      "email": "developer@redteam.local"
+    }
+  },
+  "pusher": {
+    "name": "developer",
+    "email": "developer@redteam.local"
+  }
+}

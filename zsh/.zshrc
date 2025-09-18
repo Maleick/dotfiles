@@ -2,6 +2,16 @@
 # Red Team dotfiles configuration
 
 # ----------------------
+# Homebrew Configuration (macOS)
+# ----------------------
+# Auto-configure Homebrew environment on macOS systems
+if [[ -d "/opt/homebrew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -d "/usr/local/Homebrew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# ----------------------
 # Warp Terminal Detection and Optimization
 # ----------------------
 # Detect if we're running in Warp
@@ -383,3 +393,12 @@ echo "Type /help for a list of commands."
     /help: This help message
     "
 }
+
+# ----------------------
+# Homebrew Configuration
+# ----------------------
+# Add Homebrew to PATH and set environment variables
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Added by Windsurf
+export PATH="/Users/MMiles/.codeium/windsurf/bin:$PATH"

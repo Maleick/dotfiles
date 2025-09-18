@@ -1,0 +1,95 @@
+{
+  "types": [
+    {
+      "type": "feat",
+      "section": "🚀 Features"
+    },
+    {
+      "type": "fix",
+      "section": "🐛 Bug Fixes"
+    },
+    {
+      "type": "security",
+      "section": "🔒 Security"
+    },
+    {
+      "type": "perf",
+      "section": "⚡ Performance"
+    },
+    {
+      "type": "refactor",
+      "section": "♻️ Refactoring"
+    },
+    {
+      "type": "docs",
+      "section": "📚 Documentation"
+    },
+    {
+      "type": "test",
+      "section": "🧪 Testing"
+    },
+    {
+      "type": "build",
+      "section": "🏗️ Build System"
+    },
+    {
+      "type": "ci",
+      "section": "👷 CI/CD"
+    },
+    {
+      "type": "config",
+      "section": "⚙️ Configuration"
+    },
+    {
+      "type": "tools",
+      "section": "🛠️ Tools"
+    },
+    {
+      "type": "chore",
+      "section": "🔧 Maintenance",
+      "hidden": false
+    },
+    {
+      "type": "style",
+      "hidden": true
+    },
+    {
+      "type": "revert",
+      "hidden": true
+    }
+  ],
+  "commitUrlFormat": "https://github.com/redteam/dotfiles/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/redteam/dotfiles/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "https://github.com/redteam/dotfiles/issues/{{id}}",
+  "userUrlFormat": "https://github.com/{{user}}",
+  "releaseCommitMessageFormat": "chore(release): {{currentTag}}",
+  "skip": {
+    "bump": false,
+    "changelog": false,
+    "commit": false,
+    "tag": false
+  },
+  "tagPrefix": "v",
+  "scripts": {
+    "prerelease": "make ci-local",
+    "postchangelog": "make build-release-artifacts"
+  },
+  "bumpFiles": [
+    {
+      "filename": "VERSION",
+      "type": "plain-text"
+    },
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
+  ],
+  "packageFiles": [
+    {
+      "filename": "VERSION",
+      "type": "plain-text"
+    }
+  ],
+  "infile": "CHANGELOG.md",
+  "header": "# Changelog\n\nAll notable changes to the Red Team Dotfiles project will be documented in this file.\n\nThis project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\nCommit format follows [Conventional Commits](https://conventionalcommits.org/).\n\n"
+}
