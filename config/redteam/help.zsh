@@ -18,7 +18,11 @@
     quickscan <target>      Fast nmap scan (-T4 -F)
     tcpscan <target> [ports] TCP SYN scan with service detection
     udpscan <target>        UDP scan for common services
-    myip                    Show external IP address
+    myip / myip4            Show external IPv4 address
+    myip6                   Show external IPv6 address
+    myip-alt                Alternative external IPv4 service (ipinfo.io)
+    myip-check              Backup external IPv4 service (icanhazip.com)
+    get_external_ip         Get IP and store in $EXTERNAL_IP variable for scripts
     localip                 Show local IP address
     netinfo                 Display comprehensive network information
     get_tun0_ip             Show VPN tunnel IP (tun0)
@@ -138,7 +142,7 @@ commands() {
 
 ⚡ Quick Command Reference:
 
-Network Recon:        myip | localip | netinfo | quickscan <target>
+Network Recon:        myip | myip4 | myip6 | myip-alt | localip | netinfo | quickscan <target>
 Port Scanning:        nmap-top-ports <target> | tcpscan <target>
 Web Services:         webserver | http-server | smbserver
 Reverse Shells:       rev-shell bash <ip> <port>

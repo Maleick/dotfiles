@@ -5,6 +5,36 @@ All notable changes to the Red Team Dotfiles project will be documented in this 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit format follows [Conventional Commits](https://conventionalcommits.org/).
 
+## [2.1.0] - 2025-10-01
+
+### 🚀 Features
+
+- **enhanced-ip-detection**: Comprehensive IPv4/IPv6 external IP address detection system
+  - `myip4` - Explicit IPv4 address detection
+  - `myip6` - IPv6 address detection  
+  - `myip-alt` - Alternative IP service (ipinfo.io)
+  - `myip-check` - Backup IP service (icanhazip.com)
+  - `get_external_ip()` - Function to store IP in $EXTERNAL_IP variable for scripting
+- **ip-service-redundancy**: Multiple IP detection services for enhanced reliability
+- **scripting-support**: IP variable storage function for automation workflows
+
+### ♻️ Refactoring
+
+- **ip-consistency**: Updated existing `myip` command to explicitly force IPv4 with `-4` flag
+- **netinfo-enhancement**: Enhanced `netinfo()` function to show "External IPv4" specifically
+- **help-system-updates**: Updated both `/help` command systems with new IP detection commands
+
+### 📚 Documentation
+
+- **readme-enhancement**: Added comprehensive network reconnaissance section to README
+- **help-integration**: Updated both inline and comprehensive help systems
+- **usage-examples**: Enhanced quick start examples with new IP commands
+
+### 🔧 Maintenance
+
+- **repo-cleanup**: Removed redundant completion and summary documentation files
+- **structure-optimization**: Streamlined repository organization for better maintainability
+
 ## [2.0.0] - 2024-09-18
 
 ### 🚀 Features

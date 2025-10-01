@@ -226,8 +226,19 @@ alias lt='ls -altr'  # sort by time, newest last
 alias lh='ls -alh'   # human readable sizes
 
 # Red team specific aliases
-alias myip='curl -s ifconfig.me'
+# External IP address commands
+alias myip='curl -s -4 ifconfig.me'  # Force IPv4
+alias myip4='curl -s -4 ifconfig.me'
+alias myip6='curl -s -6 ifconfig.me'
+alias myip-alt='curl -s -4 ipinfo.io/ip'  # Alternative service
+alias myip-check='curl -s -4 icanhazip.com'  # Backup service
 alias localip='ipconfig getifaddr en0 2>/dev/null || ip route get 1 | awk "{print \$7}" | head -1'
+
+# Function to get IP and store in variable for scripting
+get_external_ip() {
+    EXTERNAL_IP=$(curl -s -4 ifconfig.me)
+    echo "External IP: $EXTERNAL_IP (stored in \$EXTERNAL_IP variable)"
+}
 alias ports='netstat -tuln'
 alias listening='netstat -an | grep LISTEN'
 alias webserver='python3 -m http.server 8080'
@@ -340,7 +351,7 @@ findtext() {
 # Network information
 netinfo() {
     echo "=== Network Information ==="
-    echo "External IP: $(curl -s ifconfig.me)"
+    echo "External IPv4: $(curl -s -4 ifconfig.me)"
     echo "Local IP: $(ipconfig getifaddr en0 2>/dev/null || ip route get 1 | awk '{print $7}' | head -1)"
     echo "Gateway: $(route -n get default 2>/dev/null | grep gateway | awk '{print $2}' || ip route | grep default | awk '{print $3}' | head -1)"
     echo "DNS Servers: $(scutil --dns 2>/dev/null | grep nameserver | awk '{print $3}' | sort -u | tr '\n' ' ' || cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | tr '\n' ' ')"
@@ -362,7 +373,11 @@ echo "Type /help for a list of commands."
 🔍 Network & Scanning:
     nmap-top-ports <target>: Quick nmap scan of top 1000 ports
     quickscan <target>: Fast nmap scan (-T4 -F)
-    myip: Show external IP address
+    myip / myip4: Show external IPv4 address
+    myip6: Show external IPv6 address
+    myip-alt: Alternative external IPv4 service (ipinfo.io)
+    myip-check: Backup external IPv4 service (icanhazip.com)
+    get_external_ip: Get IP and store in $EXTERNAL_IP variable
     localip: Show local IP address
     netinfo: Display comprehensive network information
     ports / listening: Show open ports
@@ -402,3 +417,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Added by Windsurf
 export PATH="/Users/MMiles/.codeium/windsurf/bin:$PATH"
+alias evilgophish-tunnel="ssh -R 3333:localhost:3333 evilgophish -N -f"
+alias evilgophish-tunnel-kill="pkill -f \"ssh.*evilgophish.*3333\""
+alias evilgophish-tunnel-status="ps aux | grep \"ssh.*evilgophish\" | grep -v grep"

@@ -104,8 +104,15 @@ The dotfiles use a modern modular architecture for maintainability and performan
 
 #### 🎯 Red Team Tools (50+ utilities)
 ```bash
-# Reconnaissance
+# Network Reconnaissance
 quickscan 192.168.1.***     # Fast nmap scan
+nmap-top-ports 192.168.1.*** # Scan top 1000 ports
+netinfo                      # Complete network information
+myip / myip4 / myip6         # External IP detection (IPv4/IPv6)
+myip-alt / myip-check        # Alternative IP services
+get_external_ip              # Store IP in variable for scripts
+
+# Domain/Web Reconnaissance  
 subdomains example.com       # Subdomain enumeration
 webdir https://example.com   # Directory discovery
 
@@ -140,9 +147,17 @@ redact-logs /path/to/logs   # Remove sensitive data
 
 ### Quick Network Reconnaissance
 ```bash
-netinfo                    # Get network overview
+netinfo                    # Get network overview (includes IPv4 external IP)
 quickscan 192.168.1.0/24   # Fast subnet scan
-myip && localip            # Show IP addresses
+
+# External IP Detection (IPv4/IPv6)
+myip                       # External IPv4 address (force IPv4)
+myip4                      # Explicit IPv4 version
+myip6                      # External IPv6 address
+myip-alt                   # Alternative service (ipinfo.io)
+myip-check                 # Backup service (icanhazip.com)
+get_external_ip            # Store IP in $EXTERNAL_IP variable
+localip                    # Local IP address
 ```
 
 ### Instant Web Server
