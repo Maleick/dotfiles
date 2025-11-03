@@ -98,9 +98,9 @@ set background=dark
 
 " Try to set the best available colorscheme
 silent! colorscheme catppuccin_mocha
-if g:colors_name !=# 'catppuccin_mocha'
+if exists("g:colors_name") && g:colors_name !=# 'catppuccin_mocha'
     silent! colorscheme dracula
-    if g:colors_name !=# 'dracula'
+    if exists("g:colors_name") && g:colors_name !=# 'dracula'
         silent! colorscheme molokai
     endif
 endif
