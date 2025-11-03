@@ -417,6 +417,4 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Added by Windsurf
 export PATH="/Users/MMiles/.codeium/windsurf/bin:$PATH"
-alias evilgophish-tunnel="ssh -R 3333:localhost:3333 evilgophish -N -f"
-alias evilgophish-tunnel-kill="pkill -f \"ssh.*evilgophish.*3333\""
-alias evilgophish-tunnel-status="ps aux | grep \"ssh.*evilgophish\" | grep -v grep"
+
