@@ -416,10 +416,7 @@ export NODE_OPTIONS="--no-deprecation"
 export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
 
 # Ludus API Configuration
-# Load from secure location if available
-if [[ -f "$HOME/.config/ludus/env" ]]; then
-    source "$HOME/.config/ludus/env"
-fi
+# Loaded from ~/.zshrc.local (not synced to git)
 
 # OpenClaw Completion
 if command -v openclaw >/dev/null 2>&1; then
@@ -430,3 +427,12 @@ fi
 if command -v tailscale >/dev/null 2>&1; then
   tailscale serve --bg --https 27123 http://localhost:27123 >/dev/null 2>&1 || true
 fi
+
+# Load local overrides (sensitive data, machine-specific configs)
+# This file is NOT synced to git - create it manually on each machine
+if [[ -f "$HOME/.zshrc.local" ]]; then
+    source "$HOME/.zshrc.local"
+fi
+
+# Created by `pipx` on 2026-02-02 17:25:57
+export PATH="$PATH:/Users/maleick/.local/bin"

@@ -49,6 +49,11 @@ TEST_*.md
 *.backup
 *.old
 
+# Local overrides with sensitive data
+.zshrc.local
+.tmux.local
+.vimrc.local
+
 # OS specific
 .DS_Store
 .DS_Store?
