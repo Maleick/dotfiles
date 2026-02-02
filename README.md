@@ -45,6 +45,23 @@ source ~/.zshrc
 /help
 ```
 
+### Local Overrides (Optional)
+
+For machine-specific or sensitive configurations (API keys, local paths, etc.), create `~/.zshrc.local`:
+
+```bash
+# Create local overrides file
+cat > ~/.zshrc.local << 'EOF'
+# Machine-specific configurations
+export MY_API_KEY="your-secret-key"
+export CUSTOM_PATH="/path/to/tool"
+EOF
+
+chmod 600 ~/.zshrc.local
+```
+
+**Note**: `.zshrc.local` is automatically ignored by git and won't be synced to the repository.
+
 ## 💻 Usage Examples
 
 ### Network Reconnaissance
