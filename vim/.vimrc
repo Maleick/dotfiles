@@ -44,7 +44,6 @@ set laststatus=2            " Always show status line
 set showmatch               " Show matching brackets
 set cursorline              " Highlight current line
 set lazyredraw              " Don't redraw while executing macros (performance)
-set ttyfast                 " Fast terminal connection
 
 " Search
 set hlsearch                " Highlight search results
@@ -87,7 +86,6 @@ Plug 'sheerun/vim-polyglot'            " Language pack
 " Red Team Specific
 Plug 'vim-scripts/indentpython.vim'    " Python indentation
 Plug 'plasticboy/vim-markdown'         " Markdown support for reports
-Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 
 call plug#end()
 
@@ -131,17 +129,18 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#coc#enabled = 1
 
-" FZF settings
-nnoremap <C-p> :Files<CR>
-nnoremap <C-f> :Rg<CR>
-nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>h :History<CR>
-let g:fzf_preview_window = 'right:60%'
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+" FZF settings (keybindings only activate if fzf plugin loaded)
+if isdirectory(expand('~/.vim/plugged/fzf'))
+    nnoremap <C-p> :Files<CR>
+    nnoremap <C-f> :Rg<CR>
+    nnoremap <leader>b :Buffers<CR>
+    nnoremap <leader>h :History<CR>
+    let g:fzf_preview_window = 'right:60%'
+    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+endif
 
 " COC.nvim
-" TextEdit might fail if hidden is not set.
-set hidden
+" TextEdit might fail if hidden is not set (set above in General UI).
 " Some servers (e.g. gopls) require this to be set.
 set nobackup
 set nowritebackup
