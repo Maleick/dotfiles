@@ -7,10 +7,11 @@ Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red t
 ## ✨ Features
 
 - 🔴 **Red Team Focused**: Aliases and functions for penetration testing
-- 🎯 **Warp Terminal Optimized**: Enhanced for modern terminal experience
+- 🎯 **Terminal Agnostic**: Consistent prompt and behavior across modern terminals
 - 🌐 **Network Tools**: IPv4/IPv6 IP detection with service redundancy
 - 🛡️ **OPSEC Aware**: Commands starting with space aren't logged
 - 🧰 **aliasr Integration**: `a` alias in zsh and tmux keybindings for the aliasr pentest launcher
+- 🧪 **Startup Hardened**: `zsh` startup is resilient under `nounset` with safe optional loaders
 - ⚡ **Fast & Clean**: Minimal overhead, maximum functionality
 - 🔧 **Cross-Platform**: Works on macOS, Linux, and WSL2
 
@@ -68,7 +69,6 @@ chmod 600 ~/.zshrc.local
 ```bash
 # External IP Detection (IPv4/IPv6) 
 myip                       # External IPv4 address (force IPv4)
-myip4                      # Explicit IPv4 version
 myip6                      # External IPv6 address
 myip-alt                   # Alternative service (ipinfo.io)
 myip-check                 # Backup service (icanhazip.com)
@@ -84,7 +84,6 @@ nmap-top-ports 192.168.1.1 # Scan top 1000 ports
 ### Web Servers & Tools
 ```bash
 webserver                  # HTTP server on port 8080
-smbserver                  # SMB share current directory
 https-server               # HTTPS server (needs cert.pem/key.pem)
 ```
 

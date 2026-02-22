@@ -1,4 +1,4 @@
-# ~/.zshrc - Optimized for Warp Terminal
+# ~/.zshrc
 # Red Team dotfiles configuration
 
 # ----------------------
@@ -26,17 +26,6 @@ fi
 # Prefer Python 3.13 for compatibility with PyO3-based tools (NetExec, aardwolf)
 # Must come AFTER Homebrew shellenv to override python@3.14
 export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
-
-
-# ----------------------
-# Warp Terminal Detection and Optimization
-# ----------------------
-# Detect if we're running in Warp
-if [[ "$TERM_PROGRAM" == "WarpTerminal" ]]; then
-    export WARP_TERMINAL=1
-    # Optimize for Warp's features
-    export DISABLE_AUTO_TITLE="true"
-fi
 
 # ----------------------
 # Red Team Shell Banner
@@ -88,7 +77,9 @@ fi
 # Completion styling
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # case insensitive tab completion
-zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}" # colorize completions
+if [[ -n "${LS_COLORS:-}" ]]; then
+    zstyle ':completion:*' list-colors "${(s.:.)${LS_COLORS:-}}" # colorize completions
+fi
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:warnings' format 'No matches found'
 zstyle ':completion:*' group-name ''
@@ -132,14 +123,8 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    # Warp-optimized prompt with red team context
-    if [[ -n "$WARP_TERMINAL" ]]; then
-        # Simplified prompt for Warp (it handles directory display)
-        PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{red}$%f '
-    else
-        # Full prompt for other terminals
-        PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{cyan}%~%f %F{red}$%f '
-    fi
+    # Red team prompt
+    PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{cyan}%~%f %F{red}$%f '
     
     # Right prompt with exit code and job count
     RPROMPT='%(?.. %? %F{red}%B✘%b%f)%(1j. %j %F{yellow}%B⚙%b%f.)'
@@ -209,11 +194,11 @@ esac
 new_line_before_prompt=yes
 precmd() {
     # Print the previously configured title
-    print -Pnr -- "$TERM_TITLE"
+    print -Pnr -- "${TERM_TITLE:-}"
 
     # Print a new line before the prompt, but only if it is not the first line
     if [ "$new_line_before_prompt" = yes ]; then
-        if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
+        if [ -z "${_NEW_LINE_BEFORE_PROMPT:-}" ]; then
             _NEW_LINE_BEFORE_PROMPT=1
         else
             print ""
@@ -258,8 +243,20 @@ alias webserver='python3 -m http.server 8080'
 alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))"'
 alias urldecode='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
 # Fixed base64 functions (macOS compatible)
-function base64encode() { echo -n "$1" | base64; }
-function base64decode() { echo -n "$1" | base64 -D; }
+base64encode() {
+    if (( $# != 1 )); then
+        echo "Usage: base64encode <text>"
+        return 1
+    fi
+    echo -n "$1" | base64
+}
+base64decode() {
+    if (( $# != 1 )); then
+        echo "Usage: base64decode <text>"
+        return 1
+    fi
+    echo -n "$1" | base64 -D
+}
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 alias hexdump='xxd'
 alias strings='strings -a'
@@ -291,44 +288,52 @@ alias nmap-top-ports='nmap -sV -sC --top-ports=1000'
 # -- Red Team Functions --
 # Quick port scanner
 quickscan() {
-    if [[ -z "$1" ]]; then
+    if (( $# < 1 )); then
         echo "Usage: quickscan <target>"
         return 1
     fi
-    nmap -T4 -F "$1"
+    local target="$1"
+    nmap -T4 -F "$target"
 }
 
 # Extract various archive types
 extract() {
-    if [[ -f $1 ]]; then
-        case $1 in
-            *.tar.bz2)   tar xjf "$1"     ;;
-            *.tar.gz)    tar xzf "$1"     ;;
-            *.tar.xz)    tar xJf "$1"     ;;
-            *.bz2)       bunzip2 "$1"     ;;
-            *.rar)       unrar e "$1"     ;;
-            *.gz)        gunzip "$1"      ;;
-            *.tar)       tar xf "$1"      ;;
-            *.tbz2)      tar xjf "$1"     ;;
-            *.tgz)       tar xzf "$1"     ;;
-            *.zip)       unzip "$1"       ;;
-            *.Z)         uncompress "$1"  ;;
-            *.7z)        7z x "$1"        ;;
-            *)           echo "'$1' cannot be extracted via extract()" ;;
+    if (( $# < 1 )); then
+        echo "Usage: extract <file>"
+        return 1
+    fi
+
+    local archive="$1"
+    if [[ -f "$archive" ]]; then
+        case "$archive" in
+            *.tar.bz2)   tar xjf "$archive"     ;;
+            *.tar.gz)    tar xzf "$archive"     ;;
+            *.tar.xz)    tar xJf "$archive"     ;;
+            *.bz2)       bunzip2 "$archive"     ;;
+            *.rar)       unrar e "$archive"     ;;
+            *.gz)        gunzip "$archive"      ;;
+            *.tar)       tar xf "$archive"      ;;
+            *.tbz2)      tar xjf "$archive"     ;;
+            *.tgz)       tar xzf "$archive"     ;;
+            *.zip)       unzip "$archive"       ;;
+            *.Z)         uncompress "$archive"  ;;
+            *.7z)        7z x "$archive"        ;;
+            *)           echo "'$archive' cannot be extracted via extract()" ;;
         esac
     else
-        echo "'$1' is not a valid file"
+        echo "'$archive' is not a valid file"
     fi
 }
 
 # Find files containing specific text
 findtext() {
-    if [[ -z "$1" ]]; then
+    if (( $# < 1 )); then
         echo "Usage: findtext <search_term> [directory]"
         return 1
     fi
+    local search_term="$1"
     local dir="${2:-.}"
-    grep -r "$1" "$dir" 2>/dev/null
+    grep -r "$search_term" "$dir" 2>/dev/null
 }
 
 # Network information
@@ -342,7 +347,7 @@ netinfo() {
 
 # -- Reverse Shell Generator --
 rev-shell() {
-    if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
+    if (( $# < 3 )); then
         echo "Usage: rev-shell <type> <lhost> <lport>"
         echo "Types: bash, nc, python, perl, php"
         return 1
@@ -428,3 +433,16 @@ export PATH="$PATH:$HOME/.local/bin"
 if [[ -f "$HOME/.zshrc.local" ]]; then
     source "$HOME/.zshrc.local"
 fi
+
+# >>> VanguardForge env loader >>>
+__load_vanguardforge_env() {
+    setopt localoptions ksharrays
+    local -a BASH_SOURCE
+    BASH_SOURCE[0]='/opt/VanguardForge/load_env_from_secrets.sh'
+    source /opt/VanguardForge/load_env_from_secrets.sh >/dev/null 2>&1 || true
+}
+if [[ -f /opt/VanguardForge/load_env_from_secrets.sh ]]; then
+    __load_vanguardforge_env
+fi
+unset -f __load_vanguardforge_env
+# <<< VanguardForge env loader <<<
