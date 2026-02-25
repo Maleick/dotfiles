@@ -11,7 +11,9 @@ Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red t
 - 🌐 **Network Tools**: IPv4/IPv6 IP detection with service redundancy
 - 🛡️ **OPSEC Aware**: Commands starting with space aren't logged
 - 🧰 **aliasr Integration**: `a` alias in zsh and tmux keybindings for the aliasr pentest launcher
+- 🧭 **Warp-Aware Runtime**: Shell detects Warp and keeps prompt/title behavior compatible
 - 🧪 **Startup Hardened**: `zsh` startup is resilient under `nounset` with safe optional loaders
+- 🧱 **Helper Fallbacks**: Core helper commands use guarded fallback paths across host differences
 - ⚡ **Fast & Clean**: Minimal overhead, maximum functionality
 - 🔧 **Cross-Platform**: Works on macOS, Linux, and WSL2
 
@@ -53,6 +55,24 @@ Use the Phase 1 checklist for repeatable installer and runtime baseline checks:
 - `.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md`
 
 The checklist includes syntax checks, tmux/vim startup sanity, installer rerun validation, and expected symlink targets.
+
+### Shell Reliability Verification
+
+After shell-focused changes, run these checks from repo root:
+
+```bash
+zsh -n zsh/.zshrc
+TERM_PROGRAM=WarpTerminal ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'echo "${WARP_TERMINAL:-0}"'
+TERM_PROGRAM=Apple_Terminal ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'echo "${WARP_TERMINAL:-0}"'
+ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'base64decode dGVzdA=='
+ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'localip >/dev/null && netinfo >/dev/null'
+```
+
+Expected behavior:
+- Warp shell check prints `1`; non-Warp prints `0`.
+- `base64decode dGVzdA==` prints `test` on macOS and Linux.
+- `myip*`, `localip`, and `netinfo` use guarded fallbacks before failing.
+- `webserver`, `http-server`, `https-server`, and `quickscan` return actionable errors when dependencies are missing.
 
 ### Local Overrides (Optional)
 
