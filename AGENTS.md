@@ -9,7 +9,7 @@ This repo contains opinionated dotfiles for a red-team focused shell environment
 Key pieces:
 - `zsh/.zshrc` – primary shell configuration, including Warp-specific behavior, PATH/tool setup, aliases, and red-team helper functions.
 - `tmux/.tmux.conf` – tmux configuration optimized for Warp and red-team workflows, with recording/logging helpers and shortcuts.
-- `vim/.vimrc` – Vim configuration using `vim-plug`, with plugins and mappings tuned for terminal-heavy red-team work.
+- `vim/.vimrc` – Vim configuration with `vim-plug`-first behavior and fail-soft startup guards when plugin tooling is unavailable.
 - `install.sh` – idempotent installer that backs up existing dotfiles and symlinks these configs into `$HOME`.
 - `README.md` – high-level feature overview and usage examples for shell aliases and functions.
 - `CHANGELOG.md` and `VERSION` – semantic versioning and historical notes; some older tooling mentioned there (e.g., CI/test frameworks, Makefile) is not present in this slimmed-down repo.
@@ -90,8 +90,8 @@ Key aspects:
 - **Status bar theme**
   - Custom “red team” color scheme and powerline-style separators.
 - **Recording, logging, and sessions**
-  - Asciinema recording toggle on `Prefix + P` (records per-pane casts into `~/Logs`).
-  - `Prefix + S` saves pane history to `~/Logs`.
+  - Asciinema recording toggle on `Prefix + P` (records per-pane casts into `~/Logs`) with fail-soft messaging if `asciinema` is missing.
+  - `Prefix + S` saves pane history to `~/Logs` and ensures the log directory exists before write.
   - Session management helpers: `Prefix + N` (new session), `Prefix + p/n` (prev/next window), `Prefix + s` (fzf-based session switcher).
 - **Red-team shortcuts and aliasr integration**
   - `Prefix + C-n` – prompt for an `nmap` target and open a new window running `nmap`.
@@ -107,7 +107,7 @@ When editing tmux config:
 
 ## Vim configuration architecture (`vim/.vimrc`)
 
-This Vim config is tuned for terminal red-team usage and assumes `vim-plug` is available.
+This Vim config is tuned for terminal red-team usage with fail-soft startup behavior when `vim-plug` or plugin-provided functions are unavailable.
 
 High-level layout:
 - **Core editor behavior** – sensible defaults for search, indentation, status line, and performance in terminals.
@@ -116,13 +116,15 @@ High-level layout:
   - Themes (e.g., `catppuccin`, `dracula`, `molokai`).
   - General utilities (Git integration, commenting, NERDTree, airline, FZF, COC.nvim, language packs).
   - Red-team friendly plugins (markdown tooling for reports, Python indentation, etc.).
+- **Plugin bootstrap guards** – plugin manager bootstrap is guarded so startup degrades gracefully if `vim-plug` is not installed.
 - **Theme and airline setup** – prefers `catppuccin_mocha` but gracefully falls back to other themes.
-- **COC.nvim and language-specific mappings** – LSP-style navigation (`gd`, `gr`, `K`, etc.), format/rename bindings, and Go-specific shortcuts.
+- **COC.nvim and language-specific mappings** – LSP-style navigation (`gd`, `gr`, `K`, etc.), format/rename bindings, and Go-specific shortcuts, with guarded fallback behavior when COC functions are unavailable.
 - **Red-team operations section** – custom filetype associations (PowerShell, scripts, Dockerfiles, configs, logs), markdown report snippet mappings, and navigation bindings.
 
 Future agents editing Vim config should:
 - Keep plugin declarations consistent (no partial deletions that break `Plug` blocks).
 - Avoid introducing plugins that assume a GUI; this config is terminal-first.
+- Preserve startup guard behavior around plugin bootstrap and plugin-provided function calls.
 - Be aware that some plugins (e.g., `vim-instant-markdown`) introduce external dependencies (like `yarn`).
 
 ## aliasr tool expectations

@@ -14,6 +14,8 @@ Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red t
 - 🧭 **Warp-Aware Runtime**: Shell detects Warp and keeps prompt/title behavior compatible
 - 🧪 **Startup Hardened**: `zsh` startup is resilient under `nounset` with safe optional loaders
 - 🧱 **Helper Fallbacks**: Core helper commands use guarded fallback paths across host differences
+- 🎥 **Tmux Fail-Soft Ops**: Recording/history paths stay usable with clear fallback messaging
+- 📝 **Vim Startup Fallbacks**: Vim starts cleanly even when optional plugin tooling is unavailable
 - ⚡ **Fast & Clean**: Minimal overhead, maximum functionality
 - 🔧 **Cross-Platform**: Works on macOS, Linux, and WSL2
 
@@ -73,6 +75,42 @@ Expected behavior:
 - `base64decode dGVzdA==` prints `test` on macOS and Linux.
 - `myip*`, `localip`, and `netinfo` use guarded fallbacks before failing.
 - `webserver`, `http-server`, `https-server`, and `quickscan` return actionable errors when dependencies are missing.
+
+### Documentation & Release Verification Checklist
+
+Run this checklist after reliability or docs/release updates to verify end-to-end consistency:
+
+```bash
+# 1) Install/symlink baseline
+./install.sh
+ls -l ~/.zshrc ~/.tmux.conf ~/.vimrc
+
+# 2) Shell checks
+zsh -n zsh/.zshrc
+TERM_PROGRAM=WarpTerminal ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'echo "${WARP_TERMINAL:-0}"'
+TERM_PROGRAM=Apple_Terminal ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'echo "${WARP_TERMINAL:-0}"'
+ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'base64decode dGVzdA=='
+
+# 3) Tmux checks
+tmux -f /opt/dotfiles/tmux/.tmux.conf -L gsd-docs-check start-server \; kill-server
+rg -n '^bind (P|S|U|K|s) ' tmux/.tmux.conf
+rg -n 'Logs|asciinema|fzf' tmux/.tmux.conf
+
+# 4) Vim checks
+vim -Nu /opt/dotfiles/vim/.vimrc -n -es -c 'qa!'
+TMP_HOME="$(mktemp -d)" && HOME="$TMP_HOME" vim -Nu /opt/dotfiles/vim/.vimrc -n -es -c 'qa!' && rm -rf "$TMP_HOME"
+rg -n "catppuccin_mocha|dracula|molokai|plug#begin|coc#refresh" vim/.vimrc
+
+# 5) Docs/release integrity checks
+VER="$(cat VERSION)"
+rg -n "^## \\[$VER\\]" CHANGELOG.md
+rg -n "version-" README.md
+```
+
+Expected outcomes:
+- All commands exit successfully.
+- Runtime contract claims in docs map to current source files.
+- `VERSION` and latest changelog release header are consistent.
 
 ### Local Overrides (Optional)
 
