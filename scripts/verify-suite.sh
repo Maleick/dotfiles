@@ -7,6 +7,7 @@ FAIL_COUNT=0
 SKIP_COUNT=0
 QUICK_MODE=0
 FORCE_FAIL_REQUIRED="${VERIFY_SUITE_FORCE_FAIL_REQUIRED:-0}"
+QUICK_SKIP_REASON_PREFIX="Skipped in quick mode (full-only required check):"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
@@ -121,7 +122,7 @@ run_optional() {
 run_quick_skip() {
   local check_id="$1"
   local description="$2"
-  record_status "SKIP" "$check_id" "Skipped in quick mode: $description"
+  record_status "SKIP" "$check_id" "$QUICK_SKIP_REASON_PREFIX $description"
 }
 
 ensure_repo_root() {
