@@ -29,7 +29,8 @@ Pass criteria:
 Command:
 
 ```bash
-tmux -f tmux/.tmux.conf start-server \; kill-server
+tmux -f tmux/.tmux.conf new-session -d -s gsd_baseline_check
+tmux kill-session -t gsd_baseline_check
 ```
 
 Pass criteria:
