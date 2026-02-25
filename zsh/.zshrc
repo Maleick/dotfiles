@@ -405,7 +405,6 @@ get_external_ip() {
 }
 alias ports='lsof -iTCP -sTCP:LISTEN -P -n'  # macOS-compatible
 alias listening='lsof -iTCP -sTCP:LISTEN -P -n'
-alias webserver='python3 -m http.server 8080'
 alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))"'
 alias urldecode='python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))"'
 # Fixed base64 functions (macOS compatible)
@@ -449,10 +448,27 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
 # -- Web Servers --
 # Start a simple HTTP server
-alias http-server='python3 -m http.server'
+http-server() {
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo "Error: python3 is required for http-server." >&2
+        return 1
+    fi
+    python3 -m http.server "$@"
+}
+
+webserver() {
+    http-server 8080 "$@"
+}
+
 # Start a simple HTTPS server. Requires cert.pem and key.pem.
 # Generate with: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
-alias https-server='python3 -m http.server --cert-file=cert.pem --key-file=key.pem'
+https-server() {
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo "Error: python3 is required for https-server." >&2
+        return 1
+    fi
+    python3 -m http.server --cert-file=cert.pem --key-file=key.pem "$@"
+}
 
 # -- Nmap --
 # Scan top 1000 TCP ports with service and version detection
@@ -463,6 +479,10 @@ alias nmap-top-ports='nmap -sV -sC --top-ports=1000'
 quickscan() {
     if (( $# < 1 )); then
         echo "Usage: quickscan <target>"
+        return 1
+    fi
+    if ! command -v nmap >/dev/null 2>&1; then
+        echo "Error: nmap is required for quickscan." >&2
         return 1
     fi
     local target="$1"
