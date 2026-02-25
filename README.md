@@ -112,7 +112,7 @@ Expected outcomes:
 - Runtime contract claims in docs map to current source files.
 - `VERSION` and latest changelog release header are consistent.
 
-### Validation Wrapper (Phase 5 Baseline)
+### Validation Wrapper (Phase 7 Modes)
 
 Run the repo-root verification wrapper:
 
@@ -122,10 +122,29 @@ Run the repo-root verification wrapper:
 
 Wrapper contract:
 - Runs non-interactively from repository root (read-only verification; does not run `install.sh`).
-- Prints deterministic per-check statuses: `PASS`, `FAIL`, `SKIP`.
-- Prints a deterministic summary line with PASS/FAIL/SKIP counts.
+- Default mode (no flags) prints deterministic per-check statuses: `PASS`, `FAIL`, `SKIP`.
+- Default mode prints a deterministic summary line with PASS/FAIL/SKIP counts.
 - Exits `0` only if required checks pass; exits non-zero when any required check fails.
 - Optional dependency checks (`asciinema`, `fzf`) fail soft with actionable `SKIP` guidance.
+
+Additional modes:
+
+```bash
+# Quick mode: locked minimum required-check subset + explicit quick skips
+./scripts/verify-suite.sh --quick
+
+# Machine-readable mode (JSON payload)
+./scripts/verify-suite.sh --json
+
+# Combined mode: quick selection + JSON output
+./scripts/verify-suite.sh --quick --json
+```
+
+Mode behavior notes:
+- `--quick` preserves required failure semantics and surfaces full-only required checks as explicit quick-mode `SKIP` entries.
+- `--json` emits deterministic per-check records plus deterministic summary counts.
+- `--quick --json` uses quick-mode check selection with JSON output.
+- Backward compatibility is preserved for existing no-flag usage.
 
 ### Compatibility Matrix (Phase 6 Coverage)
 

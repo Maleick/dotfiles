@@ -32,8 +32,18 @@ Once installed:
 - Reload shell config: `source ~/.zshrc`
 - Show the current version of the dotfiles: `cat VERSION`
 - Use the built-in help for red-team commands: `/help`
-- Run wrapper baseline verification from repo root: `./scripts/verify-suite.sh` (deterministic `PASS`/`FAIL`/`SKIP` output, non-zero on required-check failure, fail-soft optional checks)
+- Run wrapper baseline verification from repo root:
+  - `./scripts/verify-suite.sh` (default full-mode text output)
+  - `./scripts/verify-suite.sh --quick` (quick subset + explicit quick-mode skips)
+  - `./scripts/verify-suite.sh --json` (deterministic machine-readable output)
+  - `./scripts/verify-suite.sh --quick --json` (quick selection + JSON output)
 - Review compatibility coverage in `.planning/compatibility/v1.1-matrix.md` before making cross-environment claims.
+
+Wrapper mode contract (maintainer-facing):
+- Keep no-flag default behavior backward compatible with full-mode output.
+- Keep required failure semantics non-zero across default, quick, json, and combined modes.
+- Keep optional dependency checks (`asciinema`, `fzf`) fail-soft with actionable guidance.
+- Keep output statuses constrained to `PASS` / `FAIL` / `SKIP`.
 
 ### Compatibility matrix maintenance
 
