@@ -12,8 +12,10 @@ tech-stack:
   added: []
   patterns: [checklist-driven validation, docs-to-artifact linking]
 key-files:
-  created: [.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md]
-  modified: [README.md]
+  created:
+    - .planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md
+  modified:
+    - README.md
 key-decisions:
   - "Keep checklist commands runnable from repository root without extra wrappers"
   - "Expose checklist in README installation flow for discoverability"

@@ -7,9 +7,9 @@
 
 ### Installation
 
-- [ ] **INST-01**: Running `install.sh` creates timestamped backups before replacing target dotfiles.
-- [ ] **INST-02**: Running `install.sh` creates/refreshes correct symlinks for `~/.zshrc`, `~/.tmux.conf`, and `~/.vimrc`.
-- [ ] **INST-03**: Re-running `install.sh` does not break shell/editor startup behavior.
+- [x] **INST-01**: Running `install.sh` creates timestamped backups before replacing target dotfiles.
+- [x] **INST-02**: Running `install.sh` creates/refreshes correct symlinks for `~/.zshrc`, `~/.tmux.conf`, and `~/.vimrc`.
+- [x] **INST-03**: Re-running `install.sh` does not break shell/editor startup behavior.
 
 ### Shell Reliability
 
@@ -27,7 +27,7 @@
 
 - [ ] **DOCS-01**: `README.md` and `AGENTS.md` match actual command/keybinding behavior.
 - [ ] **DOCS-02**: `CHANGELOG.md` and `VERSION` stay consistent with delivered reliability changes.
-- [ ] **VFY-01**: A repeatable local verification checklist exists for installer, shell, tmux, and vim checks.
+- [x] **VFY-01**: A repeatable local verification checklist exists for installer, shell, tmux, and vim checks.
 
 ## v2 Requirements
 
@@ -48,10 +48,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INST-01 | Phase 1 | Pending |
-| INST-02 | Phase 1 | Pending |
-| INST-03 | Phase 1 | Pending |
-| VFY-01 | Phase 1 | Pending |
+| INST-01 | Phase 1 | Complete |
+| INST-02 | Phase 1 | Complete |
+| INST-03 | Phase 1 | Complete |
+| VFY-01 | Phase 1 | Complete |
 | SHLL-01 | Phase 2 | Pending |
 | SHLL-02 | Phase 2 | Pending |
 | SHLL-03 | Phase 2 | Pending |

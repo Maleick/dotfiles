@@ -14,10 +14,11 @@ tech-stack:
   patterns: [stateful installer logging, branch-based symlink reconciliation]
 key-files:
   created: []
-  modified: [install.sh]
+  modified:
+    - install.sh
 key-decisions:
   - "Treat already-correct symlinks as no-op states instead of relinking"
-  - "Use a single link reconciliation path for ~/.dotfiles and managed dotfiles"
+  - "Use a single link reconciliation path for the home dotfiles symlink and managed dotfiles"
 patterns-established:
   - "Installer status lines use stable labels: [already linked], [backed up], [linked]"
   - "Backup behavior applies to regular files and mismatched symlinks before relinking"
@@ -57,7 +58,7 @@ Each task was committed atomically:
 
 ## Decisions Made
 - Keep backup behavior unconditional for any non-compliant destination (`-L` mismatched or existing file) before creating target symlink.
-- Reuse the same `link_file()` flow for `~/.dotfiles` to avoid divergent install semantics.
+- Reuse the same `link_file()` flow for the home dotfiles symlink to avoid divergent install semantics.
 
 ## Deviations from Plan
 

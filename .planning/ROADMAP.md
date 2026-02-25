@@ -12,7 +12,7 @@ This roadmap delivers reliability hardening in a dependency-aware order: install
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Installation Baseline** - Verify installer safety, idempotency, and baseline checks.
+- [x] **Phase 1: Installation Baseline** - Verify installer safety, idempotency, and baseline checks. (completed 2026-02-25)
 - [ ] **Phase 2: Shell Reliability Hardening** - Preserve OPSEC, Warp, aliasr, and helper command stability.
 - [ ] **Phase 3: Tmux/Vim Workflow Stability** - Keep keybindings and editor workflows dependable.
 - [ ] **Phase 4: Documentation and Release Hygiene** - Align public docs and release metadata to shipped behavior.
@@ -30,9 +30,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Harden installer idempotency and backup safety behavior.
-- [ ] 01-02-PLAN.md — Define and publish baseline verification checklist.
-- [ ] 01-03-PLAN.md — Execute baseline checks and capture evidence.
+- [x] 01-01-PLAN.md — Harden installer idempotency and backup safety behavior.
+- [x] 01-02-PLAN.md — Define and publish baseline verification checklist.
+- [x] 01-03-PLAN.md — Execute baseline checks and capture evidence.
 
 ### Phase 2: Shell Reliability Hardening
 **Goal**: Shell startup and helper command surface remain stable across hosts and edits.
@@ -84,7 +84,7 @@ Phases execute in numeric order: 1 → 1.1 → 1.2 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Installation Baseline | 0/3 | Not started | - |
+| 1. Installation Baseline | 3/3 | Complete    | 2026-02-25 |
 | 2. Shell Reliability Hardening | 0/3 | Not started | - |
 | 3. Tmux/Vim Workflow Stability | 0/2 | Not started | - |
 | 4. Documentation and Release Hygiene | 0/2 | Not started | - |
