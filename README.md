@@ -112,6 +112,21 @@ Expected outcomes:
 - Runtime contract claims in docs map to current source files.
 - `VERSION` and latest changelog release header are consistent.
 
+### Validation Wrapper (Phase 5 Baseline)
+
+Run the repo-root verification wrapper:
+
+```bash
+./scripts/verify-suite.sh
+```
+
+Wrapper contract:
+- Runs non-interactively from repository root (read-only verification; does not run `install.sh`).
+- Prints deterministic per-check statuses: `PASS`, `FAIL`, `SKIP`.
+- Prints a deterministic summary line with PASS/FAIL/SKIP counts.
+- Exits `0` only if required checks pass; exits non-zero when any required check fails.
+- Optional dependency checks (`asciinema`, `fzf`) fail soft with actionable `SKIP` guidance.
+
 ### Local Overrides (Optional)
 
 For machine-specific or sensitive configurations (API keys, local paths, etc.), create `~/.zshrc.local`:

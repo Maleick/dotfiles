@@ -93,6 +93,8 @@ main() {
   run_required "req.vim_temp_home" "vim starts with temporary HOME context" "TMP_HOME=\"\$(mktemp -d)\" && HOME=\"\$TMP_HOME\" vim -Nu vim/.vimrc -n -es -c 'qa!' && rm -rf \"\$TMP_HOME\""
   run_required_pattern "req.readme_verify_section" "README keeps verification checklist section" "README.md" "Documentation & Release Verification Checklist"
   run_required_pattern "req.agents_tmux_contract" "AGENTS keeps tmux contract notes" "AGENTS.md" "Prefix \\+ P|Prefix \\+ U|Prefix \\+ K|~/Logs"
+  run_optional "opt.asciinema" "asciinema is available for recording flow checks" "command -v asciinema >/dev/null 2>&1 && asciinema --version >/dev/null 2>&1" "Install asciinema to enable recording dependency checks"
+  run_optional "opt.fzf" "fzf is available for session-switch helper checks" "command -v fzf >/dev/null 2>&1 && fzf --version >/dev/null 2>&1" "Install fzf to enable session-switch dependency checks"
 
   printf 'SUMMARY | PASS=%s FAIL=%s SKIP=%s\n' "$PASS_COUNT" "$FAIL_COUNT" "$SKIP_COUNT"
   [ "$FAIL_COUNT" -eq 0 ]

@@ -32,6 +32,7 @@ Once installed:
 - Reload shell config: `source ~/.zshrc`
 - Show the current version of the dotfiles: `cat VERSION`
 - Use the built-in help for red-team commands: `/help`
+- Run wrapper baseline verification from repo root: `./scripts/verify-suite.sh` (deterministic `PASS`/`FAIL`/`SKIP` output, non-zero on required-check failure, fail-soft optional checks)
 
 ### Editing core configs
 
