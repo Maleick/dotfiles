@@ -5,6 +5,28 @@ All notable changes to the Red Team Dotfiles project will be documented in this 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit format follows [Conventional Commits](https://conventionalcommits.org/).
 
+## [2.1.1] - 2026-02-25
+
+### 📚 Documentation
+
+- **runtime-contract-sync**: Reconciled operator documentation with shipped runtime behavior
+  - Updated `README.md` verification guidance to include an end-to-end docs/release integrity checklist
+  - Updated `AGENTS.md` architecture notes to match current tmux fail-soft and vim startup fallback behavior
+- **contract-clarity**: Tightened command/keybinding references against source-of-truth files
+  - Shell contract alignment with `zsh/.zshrc` helper/fallback behavior
+  - Tmux contract alignment with `tmux/.tmux.conf` (`Prefix + P/S/U/K`, `~/Logs`, fail-soft optional dependencies)
+  - Vim contract alignment with `vim/.vimrc` plugin/bootstrap fallback behavior
+
+### 🔧 Release Hygiene
+
+- **metadata-alignment**: Synchronized release metadata across `CHANGELOG.md`, `VERSION`, and README version display
+- **traceability-improvements**: Added file-level release details to improve operator and maintainer auditability
+
+### 🗂️ Historical Context
+
+- Older entries (especially `2.0.0`) intentionally retain references to broader legacy tooling/CI structures from earlier repository states.
+- Historical release content is preserved for traceability; current runtime source-of-truth remains `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, and `install.sh`.
+
 ## [2.1.0] - 2025-10-01
 
 ### 🚀 Features

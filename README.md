@@ -1,6 +1,6 @@
 # Red Team Dotfiles
 
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](VERSION)
 
 Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red team operations and penetration testing. No over-engineering, just the essentials.
 
