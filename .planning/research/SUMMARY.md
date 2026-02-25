@@ -1,125 +1,111 @@
 # Project Research Summary
 
 **Project:** Red Team Dotfiles Reliability Sprint
-**Domain:** Red-team terminal dotfiles and operator workflow reliability
+**Domain:** Dotfiles reliability automation and compatibility planning
 **Researched:** 2026-02-25
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This project is a reliability-hardening effort for a terminal-first operator environment, not a new application build. The core strategy is to preserve existing workflow contracts (`zsh`, `tmux`, `vim`, installer behavior) while adding stronger validation and documentation discipline. Existing codebase mapping already provides high-quality local evidence, so research confidence is high for near-term roadmap decisions.
+The next milestone should focus on turning existing manual reliability checks into a repeatable command wrapper and a grounded compatibility matrix. The repo already has stable runtime contracts in `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`; the milestone value is operational speed and consistency, not introducing new runtime feature families.
 
-The recommended approach is to sequence work around failure risk: installer safety first, shell behavior stability second, tmux/vim workflow integrity third, and documentation/release hygiene last. This ordering aligns with dependency chains where incorrect install or shell behavior invalidates downstream workflows.
-
-Primary risks are configuration drift, cross-platform command mismatches, and silent keybinding regressions. These are mitigated by explicit verification checklists, compatibility guards, and phase-level acceptance criteria tied to observable operator behavior.
+Research indicates a shell-first orchestration approach is sufficient for this scope: use deterministic check ordering, clear PASS/FAIL/SKIP output, and strict exit code behavior. The main risk is drift between wrapper behavior, runtime contracts, and documentation. The roadmap should therefore pair wrapper implementation with explicit docs/matrix maintenance.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The current stack is already fit for purpose: `zsh`, `tmux`, and `vim` with curated plugins and helper tooling. Reliability improvements should avoid stack churn and instead focus on validation and controlled evolution.
+A shell-based command wrapper and check catalog aligns with existing repo patterns and keeps dependencies minimal.
 
 **Core technologies:**
-- **Zsh**: interactive shell runtime and helper command surface — stable baseline for operator ergonomics.
-- **Tmux**: session/pane orchestration and operational logging — required for multiplexed red-team workflows.
-- **Vim + vim-plug**: terminal-native editing and plugin management — keeps edits fast and scriptable.
+- POSIX shell (`bash`): orchestration entrypoint for the wrapper.
+- `zsh`/`tmux`/`vim` CLIs: direct runtime contract verification targets.
+- `rg` + basic shell tools: fast docs/runtime contract checks and output formatting.
 
 ### Expected Features
 
 **Must have (table stakes):**
-- Safe idempotent installer with backups and symlink correctness.
-- Stable shell/tmux/vim workflows aligned with documented behavior.
-- Local verification checklist for syntax/load/regression checks.
+- Single command wrapper for reliability checks.
+- Deterministic pass/fail/skip summary with non-zero failure behavior.
+- Compatibility matrix linked to validated check outcomes.
 
 **Should have (competitive):**
-- Structured compatibility checks for macOS/Linux command variants.
-- Improved release hygiene to prevent doc/runtime divergence.
+- Quick-mode optional path for faster local loops.
+- Concise output mode for easier log consumption.
 
 **Defer (v2+):**
-- Optional automation wrappers around validation tasks.
+- Auto-generated matrix from accumulated runs.
+- Broader ecosystem coverage beyond baseline zsh/tmux/vim contracts.
 
 ### Architecture Approach
 
-Use the existing source-of-truth pattern: repo config files feed runtime via installer symlinks, while planning docs track constraints and execution state. Keep architecture simple, explicit, and operator-auditable.
+Use a three-part design: wrapper entrypoint, explicit check catalog, and summary reporter. Keep checks read-only, fail-soft for optional dependencies, and contract-first so docs and runtime remain synchronized.
 
 **Major components:**
-1. Installer (`install.sh`) — backup and symlink orchestration.
-2. Runtime configs (`zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`) — operator behavior contracts.
-3. Planning artifacts (`.planning/*`) — scoped requirements, roadmap, and progress memory.
+1. Wrapper entrypoint — operator-facing command execution.
+2. Check catalog — ordered commands with pass criteria.
+3. Compatibility matrix artifact — environment documentation backed by executed checks.
 
 ### Critical Pitfalls
 
-1. **Installer drift** — prevent with repeated idempotency checks.
-2. **Cross-platform helper failures** — prevent with guarded fallbacks and compatibility tests.
-3. **Tmux/Vim keybinding regressions** — prevent with targeted keypath validation.
-4. **Documentation drift** — prevent with explicit release-phase doc audit.
+1. **Wrapper drift from runtime contracts** — avoid by anchoring checks to source-of-truth files.
+2. **Hard failure on optional tools** — avoid with explicit command probes and SKIP semantics.
+3. **Static matrix guesswork** — avoid by linking matrix rows to validated check runs and dates.
 
 ## Implications for Roadmap
 
 Based on research, suggested phase structure:
 
-### Phase 1: Installation Baseline
-**Rationale:** Installer correctness is foundational to every other behavior.
-**Delivers:** Reliable backup + symlink behavior and baseline verification commands.
-**Addresses:** Core table-stakes setup reliability.
-**Avoids:** Installer drift pitfall.
+### Phase 5: Validation Wrapper Baseline
+**Rationale:** One-command execution is prerequisite for reliable matrix generation.
+**Delivers:** Wrapper entrypoint, deterministic check ordering, explicit exit semantics.
+**Addresses:** `AUTO-01` and wrapper-related pitfalls.
+**Avoids:** Contract drift and hard optional-dependency failures.
 
-### Phase 2: Shell Behavior Integrity
-**Rationale:** Most operator workflows pass through shell helpers and prompt/runtime logic.
-**Delivers:** Stable OPSEC settings, Warp-aware behavior, and alias/function reliability.
-**Uses:** Existing zsh baseline with compatibility hardening.
-**Implements:** Shell runtime stabilization.
-
-### Phase 3: Tmux/Vim Workflow Stability
-**Rationale:** Session/editor regressions directly impact execution speed.
-**Delivers:** Preserved keybindings, logging behavior, and plugin/mapping consistency.
-
-### Phase 4: Documentation and Release Hygiene
-**Rationale:** Docs must reflect shipped behavior to sustain reliability over time.
-**Delivers:** Updated README/AGENTS/CHANGELOG and release consistency checks.
+### Phase 6: Compatibility Matrix and Verification Coverage
+**Rationale:** Matrix should be produced after stable check pipeline exists.
+**Delivers:** Environment matrix, docs linkage, and coverage verification updates.
+**Uses:** Phase 5 wrapper outputs and runtime contract checks.
+**Implements:** `AUTO-02` with traceable verification notes.
 
 ### Phase Ordering Rationale
 
-- Installer and shell reliability are prerequisite layers for all downstream workflows.
-- Tmux/Vim hardening depends on stable shell/bootstrap behavior for clean verification.
-- Documentation reconciliation is most effective after runtime behavior is stabilized.
+- Phase 5 establishes the executable contract needed by all later documentation.
+- Phase 6 publishes environment guidance grounded in verified checks, reducing stale documentation risk.
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 2:** Command compatibility specifics for mixed host profiles.
+- **Phase 6:** host/environment dimensions and matrix formatting conventions.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1, 3, 4:** Patterns are already well-established in existing repository context.
+- **Phase 5:** shell-based check orchestration is straightforward and already aligned with existing tooling.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Strong local evidence from codebase map and active configs |
-| Features | HIGH | Idea goals and existing constraints align clearly |
-| Architecture | HIGH | Current structure is simple and directly observable |
-| Pitfalls | HIGH | Existing concerns map and repository patterns provide clear risks |
+| Stack | HIGH | Uses existing repository runtime/tooling patterns |
+| Features | HIGH | Directly derived from carried-forward active milestone goals |
+| Architecture | HIGH | Low-complexity shell-first design with clear boundaries |
+| Pitfalls | HIGH | Backed by observed prior-phase reliability and docs-drift risks |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- Validate selected helper commands on each intended host profile before release.
-- Confirm optional tool assumptions (`aliasr`, `asciinema`, plugin dependencies) remain accurate.
+- Validate exact matrix dimensions (OS/shell/network assumptions) with concrete command outputs during execution.
+- Decide whether quick-mode lands in v1.1 or remains deferred based on implementation effort in Phase 5.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- `/opt/dotfiles/.planning/codebase/*.md` — repository-grounded architecture/conventions/concerns
-- `/opt/dotfiles/idea.md` — explicit project intent and scope
-- `/opt/dotfiles/AGENTS.md` and `/opt/dotfiles/README.md` — operational constraints and contracts
+- `.planning/PROJECT.md` (active goals and constraints)
+- Runtime contracts: `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, `install.sh`
+- Existing docs and verification artifacts: `README.md`, `AGENTS.md`, prior phase summaries
 
 ### Secondary (MEDIUM confidence)
-- Terminal tooling best-practice conventions derived from current project structure
-
-### Tertiary (LOW confidence)
-- None
+- `.planning/milestones/v1.0-ROADMAP.md` execution ordering and success criteria patterns
 
 ---
 *Research completed: 2026-02-25*

@@ -1,6 +1,6 @@
 # Feature Research
 
-**Domain:** Red-team terminal dotfiles and operator environment management
+**Domain:** Dotfiles reliability validation automation
 **Researched:** 2026-02-25
 **Confidence:** HIGH
 
@@ -8,104 +8,94 @@
 
 ### Table Stakes (Users Expect These)
 
-Features users assume exist. Missing these = product feels incomplete.
+Features operators should get by default in this milestone.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Safe installer with backups | Operators must not lose existing configs | MEDIUM | `install.sh` backup + symlink behavior is core contract |
-| Stable shell aliases/functions | Red-team workflows depend on predictable command behavior | MEDIUM | Includes network helpers, encoding helpers, reverse shell generation |
-| Tmux keybinding reliability | Session orchestration is core daily workflow | MEDIUM | Includes logging/recording and shortcut continuity |
-| Vim plugin/mapping consistency | Editing operations must stay predictable | MEDIUM | Theme fallback and plugin setup must not break startup |
-| Accurate docs and help entrypoints | Operators need fast recall under pressure | LOW | README and `/help` guidance must match reality |
+| Single command to run full validation suite | Removes manual command hopping | MEDIUM | Should orchestrate shell, tmux, vim, and docs checks |
+| Per-check pass/fail summary with non-zero exit on failure | Required for trust and automation use | MEDIUM | Needs deterministic exit-code contract |
+| Compatibility matrix documentation | Helps operators understand environment differences quickly | LOW | Must include macOS/Linux and network/runtime assumptions |
+| Clear skip/fail-soft handling for optional tools | Existing workflow uses optional dependencies | LOW | Must preserve tmux/vim fail-soft behavior |
 
 ### Differentiators (Competitive Advantage)
 
-Features that set the project apart. Not required, but valuable.
-
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Context-aware verification checklist | Reduces regressions before rollout | MEDIUM | Bridges gap between ad hoc checks and heavy CI |
-| Structured phase-driven planning artifacts | Enables resumable execution and clear scope | MEDIUM | Uses `.planning/` lifecycle documents |
-| Cross-platform command guards | Improves reliability across macOS/Linux hosts | MEDIUM | Catches utility flag differences early |
+| Fast mode for common checks | Speeds pre-flight edits and local iteration | LOW | Optional `--quick` mode can skip heavier checks |
+| Structured output mode (plain + concise summary) | Easier CI/log consumption | MEDIUM | Keep human-readable default output |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
-Features that seem good but create problems.
-
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| Large plugin explosion | “More tools means more power” | Startup slowdown and maintenance burden | Keep curated plugin set aligned to real workflows |
-| Hidden magic bootstrap layers | “One command should do everything automatically” | Harder debugging and poor failure visibility | Explicit install script + observable steps |
-| Embedding secrets in dotfiles | Convenience | High security risk, easy accidental leak | Local untracked overrides + external secret loaders |
+| Auto-install missing dependencies during verify run | Convenience | Hidden side effects and trust risk | Print actionable install guidance only |
+| Automatic config rewriting during validation | Self-healing appeal | Unexpected mutations in operator dotfiles | Keep verification read-only |
+| Monolithic "all-or-nothing" silent execution | Simplicity | Hard to debug failures | Show step-by-step status with explicit skipped checks |
 
 ## Feature Dependencies
 
 ```
-Installer safety
-    └──requires──> repo source-of-truth discipline
-                       └──requires──> documented reload workflow
+[Validation Wrapper Command]
+    ├──requires──> [Stable Check Catalog]
+    ├──requires──> [Exit Code Contract]
+    └──enhances──> [Compatibility Matrix Guidance]
 
-Shell/tmux/vim stability ──requires──> compatibility checks
-
-Documentation accuracy ──depends_on──> validated runtime behavior
+[Compatibility Matrix]
+    └──depends on──> [Verified check behavior on each environment]
 ```
 
 ### Dependency Notes
 
-- **Workflow reliability requires installer safety first:** configuration behavior is meaningless if bootstrap is unsafe.
-- **Docs depend on verified behavior:** documentation updates should follow successful checks, not assumptions.
-- **Compatibility hardening depends on baseline commands:** preserve behavior before adding stricter guards.
+- **Validation wrapper requires stable check catalog:** command list must be explicit and versioned.
+- **Compatibility matrix depends on verified behavior:** matrix should reflect actual command outcomes, not assumptions.
+- **Exit code contract supports automation:** CI/manual operators rely on strict success/failure signaling.
 
 ## MVP Definition
 
-### Launch With (v1)
+### Launch With (v1.1)
 
-Minimum viable product — what is needed to validate reliability sprint outcomes.
+- [ ] One command to run milestone reliability checks end-to-end.
+- [ ] Deterministic output and exit-code behavior.
+- [ ] Compatibility matrix for supported host/runtime combinations.
 
-- [ ] Installer idempotency and backup correctness verified
-- [ ] Zsh/tmux/vim core workflows validated against docs
-- [ ] Local verification checklist documented and runnable
-- [ ] Documentation drift corrected for active commands and bindings
+### Add After Validation (v1.1.x)
 
-### Add After Validation (v1.x)
-
-- [ ] Optional wrapper command for running full local verification set
-- [ ] Compatibility notes split by OS profile (macOS/Linux)
+- [ ] Optional quick-mode execution path.
+- [ ] Optional machine-readable output mode.
 
 ### Future Consideration (v2+)
 
-- [ ] Lightweight automation hook for pre-commit checks
-- [ ] Structured release checklist template for each version bump
+- [ ] Auto-generated compatibility matrix from repeated check runs.
+- [ ] Broader shell/editor matrix beyond zsh/tmux/vim baseline.
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Installer safety verification | HIGH | MEDIUM | P1 |
-| Shell/tmux/vim behavior validation | HIGH | MEDIUM | P1 |
-| Documentation alignment | HIGH | LOW | P1 |
-| Compatibility matrix expansion | MEDIUM | MEDIUM | P2 |
-| Automated validation wrappers | MEDIUM | MEDIUM | P2 |
+| Single command wrapper | HIGH | MEDIUM | P1 |
+| Exit-code + summary contract | HIGH | MEDIUM | P1 |
+| Compatibility matrix doc | HIGH | LOW | P1 |
+| Quick mode | MEDIUM | LOW | P2 |
+| Structured output mode | MEDIUM | MEDIUM | P2 |
 
 **Priority key:**
-- P1: Must have for launch
+- P1: Must have for this milestone
 - P2: Should have, add when possible
 - P3: Nice to have, future consideration
 
 ## Competitor Feature Analysis
 
-| Feature | Competitor A | Competitor B | Our Approach |
-|---------|--------------|--------------|--------------|
-| Dotfile bootstrap | Generic symlink scripts | Framework-driven bootstrap | Keep explicit, auditable shell installer |
-| Shell workflow curation | Broad/unfocused aliases | Minimal baseline only | Maintain red-team specific helpers + OPSEC defaults |
-| Validation strategy | CI-heavy | Manual only | Local-first checklist with future optional automation |
+| Feature | Conventional dotfiles repos | Reliability-focused tooling | Our Approach |
+|---------|-----------------------------|-----------------------------|--------------|
+| Validation entrypoint | Usually ad hoc manual commands | Scripted smoke suites | Add one explicit wrapper command |
+| Compatibility guidance | Often implicit or absent | Matrix/checklist docs | Add matrix tied to executed checks |
 
 ## Sources
 
-- `/opt/dotfiles/.planning/codebase/CONCERNS.md`
-- `/opt/dotfiles/.planning/codebase/CONVENTIONS.md`
-- `/opt/dotfiles/idea.md`
+- `.planning/PROJECT.md` active requirements (`AUTO-01`, `AUTO-02`)
+- Existing docs/contracts: `README.md`, `AGENTS.md`, `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`
+- Prior verification artifacts from milestone `v1.0`
 
 ---
-*Feature research for: red-team terminal dotfiles*
+*Feature research for: dotfiles reliability automation milestone*
 *Researched: 2026-02-25*

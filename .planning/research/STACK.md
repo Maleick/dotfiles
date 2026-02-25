@@ -1,6 +1,6 @@
 # Stack Research
 
-**Domain:** Red-team terminal dotfiles and operator environment management
+**Domain:** Dotfiles reliability automation and compatibility coverage
 **Researched:** 2026-02-25
 **Confidence:** HIGH
 
@@ -10,79 +10,73 @@
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| Zsh | 5.8+ | Interactive shell runtime | Mature shell scripting, strong completion and prompt features, existing repo baseline |
-| Tmux | 3.2+ | Session and pane orchestration | Stable multiplexer primitives for repeatable operator workflows |
-| Vim | 9.x | Terminal-native editor | Fast, scriptable editing and plugin ecosystem aligned with existing config |
+| POSIX shell (`bash`) | 3.2+ | Primary wrapper runtime for cross-host checks | Already used by `install.sh`; broad portability across macOS/Linux |
+| `zsh` | 5.8+ | Shell syntax and behavior verification target | `zsh/.zshrc` is a core runtime contract |
+| `tmux` | 3.2+ | Session startup/config verification target | `tmux/.tmux.conf` behavior must stay stable |
+| `vim` | 8.2+ | Editor startup/config verification target | `vim/.vimrc` fallback behavior is milestone-critical |
 
 ### Supporting Libraries
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| vim-plug | latest stable | Vim plugin management | Required to install/update plugin set from `vim/.vimrc` |
-| fzf | latest stable | Fuzzy discovery/navigation | Used for tmux session switching and vim fuzzy file workflows |
-| aliasr | latest stable | Red-team command launcher | Required for `alias a='aliasr'` and tmux split-pane send/execute bindings |
+| `mktemp` | system | Isolated temp-home checks for deterministic startup tests | Required for safe vim/zsh checks without mutating user state |
+| `awk`/`sed`/`grep` | system | Lightweight check output shaping and summary formatting | Use for report aggregation in wrapper output |
+| `rg` (ripgrep) | latest available | Fast contract/pattern checks in docs and configs | Use when validating docs/runtime parity and keybinding presence |
 
 ### Development Tools
 
 | Tool | Purpose | Notes |
 |------|---------|-------|
-| shellcheck | Shell linting | Use for targeted `install.sh` and helper-function quality checks |
-| shfmt | Shell formatting | Apply selectively to avoid behavior regressions in existing scripts |
-| git | Versioned change control | Required for atomic docs/config commits in GSD workflow |
+| `shellcheck` | Lint verification wrapper scripts | Optional but useful before release |
+| `bats-core` | Script-level smoke tests | Optional if wrapper complexity grows |
 
 ## Installation
 
 ```bash
-# Core runtime tools (platform package manager)
-# zsh tmux vim fzf
-
-# Python package launcher dependency for aliasr (if using pipx/uv workflow)
-# pipx install aliasr  OR  uv tool install aliasr
-
-# Vim plugin bootstrap after install
-vim +PlugInstall +qall
+# Core runtime dependencies are already expected in operator environments.
+# Optional tooling for script quality gates:
+brew install shellcheck bats-core ripgrep || true
 ```
 
 ## Alternatives Considered
 
 | Recommended | Alternative | When to Use Alternative |
 |-------------|-------------|-------------------------|
-| Zsh | Fish | Use Fish only if team standard is Fish and POSIX/Zsh compatibility is not required |
-| Vim | Neovim | Use Neovim when plugin stack explicitly requires Lua-first workflows |
-| vim-plug | lazy.nvim | Prefer lazy.nvim only when migrating editor baseline to Neovim |
+| POSIX shell wrapper | Python wrapper | Use Python only if orchestration needs structured JSON output and richer parsing |
+| Inline command list | Makefile task runner | Use `make` only if broader build/test workflows are reintroduced |
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| One-off local edits to `~/.zshrc`/`~/.tmux.conf`/`~/.vimrc` | Creates drift from repository source of truth | Edit repo files and re-run `./install.sh` |
-| Committing secret values into dotfiles | Credential exposure risk | External secret store + local override files (`~/.zshrc.local`) |
-| Heavy framework abstraction around simple config files | Increases complexity without operator value | Keep direct text config + clear docs |
+| Interactive-only prompts in verification wrapper | Breaks automation and CI execution | Non-interactive flags and deterministic exit codes |
+| Hardcoded host-specific paths | Fails across systems | Parameterized paths with `$HOME` and repo-root detection |
+| Silent failure for optional checks | Hides drift and regressions | Fail-soft messages with explicit skipped-state output |
 
 ## Stack Patterns by Variant
 
-**If prioritizing fast local onboarding:**
-- Use shell script install (`install.sh`) plus symlinks.
-- Because it keeps setup explicit, auditable, and easy to rollback.
+**If running on macOS:**
+- Prefer Homebrew-provided tools when present
+- Keep BSD/GNU flag differences explicit in helper checks
 
-**If prioritizing strict reproducibility across hosts:**
-- Add validation wrappers and compatibility checks per host class.
-- Because command behavior differs across macOS/Linux utility variants.
+**If running on Linux:**
+- Prefer distro-native utilities first
+- Keep command probes (`command -v`) before execution for optional tools
 
 ## Version Compatibility
 
 | Package A | Compatible With | Notes |
 |-----------|-----------------|-------|
-| tmux 3.2+ | `tmux-256color` + truecolor terminals | Needed for status theme and focus event behavior |
-| vim 9.x | vim-plug ecosystem in `vim/.vimrc` | Some plugins require external binaries (for example `fzf`, node/yarn) |
-| zsh 5.8+ | plugin sourcing + modern setopt usage | Needed for current prompt/completion setup |
+| `zsh` 5.8+ | Current `zsh/.zshrc` patterns | `zsh -n` and sourced checks expected to pass |
+| `tmux` 3.2+ | Current `tmux/.tmux.conf` contracts | Truecolor and keybinding checks rely on modern tmux options |
+| `vim` 8.2+ | Current `vim/.vimrc` fallback logic | Guarded startup path should still work with missing plugins |
 
 ## Sources
 
-- `/opt/dotfiles/.planning/codebase/STACK.md` — repository-specific stack baseline
-- `/opt/dotfiles/AGENTS.md` — workflow and compatibility constraints
-- `/opt/dotfiles/README.md` — operator-facing prerequisites and usage contracts
+- Local runtime contracts: `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, `install.sh`
+- Existing verification guidance: `README.md`, `.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md`
+- Prior milestone outcomes: `.planning/MILESTONES.md`, `.planning/milestones/v1.0-ROADMAP.md`
 
 ---
-*Stack research for: red-team terminal dotfiles*
+*Stack research for: dotfiles reliability automation milestone*
 *Researched: 2026-02-25*

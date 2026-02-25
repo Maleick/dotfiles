@@ -1,6 +1,6 @@
 # Architecture Research
 
-**Domain:** Red-team terminal dotfiles and operator environment management
+**Domain:** Dotfiles verification orchestration for milestone updates
 **Researched:** 2026-02-25
 **Confidence:** HIGH
 
@@ -10,19 +10,21 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     User Shell Environment                  │
+│                   Operator Invocation Layer                │
 ├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │ zsh runtime │  │ tmux server │  │ vim runtime │         │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘         │
-│         │                │                │                │
-├─────────┴────────────────┴────────────────┴────────────────┤
-│                    Repository Source Layer                 │
+│  `./install.sh`   `source ~/.zshrc`   `verify wrapper`     │
+└───────────────┬─────────────────────────────────────────────┘
+                │
+┌───────────────▼─────────────────────────────────────────────┐
+│                Verification Orchestration Layer             │
 ├─────────────────────────────────────────────────────────────┤
-│  zsh/.zshrc   tmux/.tmux.conf   vim/.vimrc   install.sh    │
+│  check catalog -> command runner -> result aggregator       │
+└───────────────┬─────────────────────────────────────────────┘
+                │
+┌───────────────▼─────────────────────────────────────────────┐
+│                Runtime Contract Layer                       │
 ├─────────────────────────────────────────────────────────────┤
-│                    Planning/Quality Layer                  │
-│  .planning/codebase/*  PROJECT/REQUIREMENTS/ROADMAP/STATE  │
+│  zsh/.zshrc   tmux/.tmux.conf   vim/.vimrc   README/AGENTS  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -30,108 +32,108 @@
 
 | Component | Responsibility | Typical Implementation |
 |-----------|----------------|------------------------|
-| Installer | Backup + symlink setup | `install.sh` with timestamped backup and link logic |
-| Shell config | Aliases, functions, prompt, completion, OPSEC options | `zsh/.zshrc` |
-| Tmux config | Session navigation, logging, keybinding automation | `tmux/.tmux.conf` |
-| Vim config | Plugin management, mappings, language ergonomics | `vim/.vimrc` |
-| Planning docs | Requirements and execution memory | `.planning/*.md` |
+| Verification wrapper entrypoint | Run full suite with deterministic ordering and exit codes | `scripts/verify-suite.sh` style shell command |
+| Check catalog | Define executable checks and pass criteria | Ordered shell functions or declarative check list |
+| Result formatter | Print per-check result and final summary | Plain text reporter with explicit PASS/FAIL/SKIP |
+| Compatibility matrix source | Document supported environments and caveats | Markdown table in `.planning/` and README linkage |
 
 ## Recommended Project Structure
 
 ```
-repo-root/
-├── zsh/                 # Shell behavior and helper commands
-│   └── .zshrc
-├── tmux/                # Multiplexer behavior and bindings
-│   └── .tmux.conf
-├── vim/                 # Editor behavior and plugin setup
-│   └── .vimrc
-├── install.sh           # Bootstrap and symlink orchestration
-├── README.md            # User-facing setup and usage docs
-└── .planning/           # Planning, mapping, and execution state
+scripts/
+├── verify-suite.sh              # One-command validation wrapper
+└── verify/
+    ├── checks.sh                # Ordered check catalog
+    └── report.sh                # Summary and exit-code handling
+.planning/
+├── REQUIREMENTS.md              # Milestone requirements + traceability
+├── ROADMAP.md                   # Phase structure
+└── compatibility/
+    └── v1.1-matrix.md           # Environment matrix artifact
+README.md                        # Operator entrypoint and usage guidance
+AGENTS.md                        # Maintainer contract and architecture notes
 ```
 
 ### Structure Rationale
 
-- **Tool-domain split:** each runtime config is isolated by subsystem for low-friction updates.
-- **Central installer:** one authoritative bootstrap path reduces drift.
-- **Planning alongside source:** keeps design intent and execution state close to implementation.
+- **`scripts/verify-suite.sh`:** Single user-facing interface for milestone reliability checks.
+- **`scripts/verify/`:** Keeps check logic and output logic isolated for easier updates.
+- **`.planning/compatibility/`:** Stores matrix artifacts with planning history rather than runtime config.
 
 ## Architectural Patterns
 
-### Pattern 1: Source-of-Truth Config Repository
+### Pattern 1: Ordered Check Pipeline
 
-**What:** Edit configs only in repository paths and publish via symlink installer.
-**When to use:** Any change that should survive across machines/sessions.
-**Trade-offs:** Slightly more setup steps than direct `$HOME` editing, but much better consistency.
+**What:** Execute checks in a fixed sequence and aggregate outcomes.
+**When to use:** Any reliability run requiring deterministic behavior.
+**Trade-offs:** Simple and debuggable, but less parallel execution speed.
 
-### Pattern 2: Guarded Optional Integrations
+**Example:**
+```bash
+run_check "zsh syntax" "zsh -n zsh/.zshrc"
+run_check "tmux config" "tmux -f tmux/.tmux.conf -L verify start-server \; kill-server"
+```
 
-**What:** Conditional enablement for optional tools/plugins.
-**When to use:** Features like `aliasr`, `fzf`, syntax-highlighting plugins, or local overrides.
-**Trade-offs:** More branching logic, but graceful degradation on hosts missing dependencies.
+### Pattern 2: Fail-Soft Optional Dependency Checks
 
-### Pattern 3: Operator-Centric Shortcut Layer
+**What:** Skip optional tools with explicit notes instead of hard failures.
+**When to use:** Checks involving `asciinema`, `fzf`, or environment-specific tools.
+**Trade-offs:** Better usability, but requires careful PASS/SKIP semantics.
 
-**What:** Alias/function/keybinding curation around common red-team tasks.
-**When to use:** Repetitive operational commands needing speed and consistency.
-**Trade-offs:** Requires documentation and drift checks as command surface grows.
+### Pattern 3: Contract-First Verification
+
+**What:** Validate documented behavior and runtime behavior together.
+**When to use:** Milestones touching docs and operational workflows.
+**Trade-offs:** Slightly more checks, but prevents docs/runtime drift.
 
 ## Data Flow
 
 ### Request Flow
 
 ```
-Operator command
+[Operator runs wrapper]
     ↓
-zsh alias/function
+[Load check catalog]
     ↓
-local CLI or tmux/vim action
+[Execute command checks]
     ↓
-terminal output/log artifact
-```
-
-### State Management
-
-```
-Repository files
-    ↓ install.sh symlink
-$HOME runtime config
-    ↓ reload/session restart
-active shell/tmux/vim state
+[Capture pass/fail/skip results]
+    ↓
+[Print summary + return exit code]
 ```
 
 ### Key Data Flows
 
-1. **Bootstrap flow:** repo config files → `install.sh` symlinks → `$HOME` configs.
-2. **Execution flow:** operator input → shell/tmux/vim mapping → command execution/log output.
+1. **Runtime validation flow:** command execution against `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`.
+2. **Doc parity flow:** grep/path checks against `README.md` and `AGENTS.md` to ensure contract alignment.
+3. **Matrix publication flow:** validated command outcomes feed environment compatibility documentation.
 
 ## Scaling Considerations
 
 | Scale | Architecture Adjustments |
 |-------|--------------------------|
-| Single operator / few hosts | Current monorepo layout is sufficient |
-| Multiple host profiles | Add host-profile overlays and compatibility notes |
-| Team usage | Introduce stricter validation and role-specific docs |
+| Solo operator | Simple shell wrapper and markdown matrix are sufficient |
+| Multi-host environment | Add host-profile arguments and per-host check subsets |
+| Team usage | Add CI wrapper integration and machine-readable output |
 
 ### Scaling Priorities
 
-1. **First bottleneck:** configuration drift between docs and runtime behavior.
-2. **Second bottleneck:** cross-platform command incompatibilities in helper functions.
+1. **First bottleneck:** drifting checks vs docs; fix by co-locating check definitions and matrix updates.
+2. **Second bottleneck:** platform flag differences; fix with explicit platform branches in check catalog.
 
 ## Anti-Patterns
 
-### Anti-Pattern 1: Direct Home Config Editing
+### Anti-Pattern 1: Implicit Check Contracts
 
-**What people do:** Edit `~/.zshrc` directly and forget repo mirror.
-**Why it's wrong:** Breaks reproducibility and makes troubleshooting inconsistent.
-**Do this instead:** Edit repo file then run `./install.sh`.
+**What people do:** Keep check commands only in chat/history.
+**Why it's wrong:** Behavior drifts and future edits break validation.
+**Do this instead:** Store check catalog in repo scripts with documented pass criteria.
 
-### Anti-Pattern 2: Unbounded Shortcut Growth
+### Anti-Pattern 2: Wrapper That Mutates Runtime Config
 
-**What people do:** Add aliases/bindings without grouping, docs, or collision checks.
-**Why it's wrong:** Raises cognitive load and keybinding conflicts.
-**Do this instead:** Add by section with doc sync and quick validation.
+**What people do:** Auto-edit dotfiles during verify runs.
+**Why it's wrong:** Creates side effects and erodes trust.
+**Do this instead:** Keep verification read-only and report remediation steps separately.
 
 ## Integration Points
 
@@ -139,23 +141,22 @@ active shell/tmux/vim state
 
 | Service | Integration Pattern | Notes |
 |---------|---------------------|-------|
-| `aliasr` | Shell alias + tmux split bindings | Must preserve `a` alias and `Prefix + U/K` workflow |
-| `asciinema` | Tmux pipe-pane recording | Optional, should fail gracefully when absent |
-| IP check services | Shell `curl` helpers | Keep multiple fallbacks to reduce service dependency |
+| Local shell tools (`zsh`, `tmux`, `vim`) | Command invocation with exit-code capture | Required runtime dependencies |
+| Optional CLI tools (`rg`, `asciinema`, `fzf`) | Capability probes before use | Must fail soft when absent |
 
 ### Internal Boundaries
 
 | Boundary | Communication | Notes |
 |----------|---------------|-------|
-| `install.sh` ↔ runtime configs | Symlink and filesystem operations | Must remain idempotent |
-| docs ↔ config files | Manual synchronization | Requires explicit release hygiene pass |
+| wrapper -> check catalog | shell function calls | Keep check names stable for docs |
+| checks -> docs artifacts | markdown updates | Ensure matrix/docs updated with validated results |
 
 ## Sources
 
-- `/opt/dotfiles/.planning/codebase/ARCHITECTURE.md`
-- `/opt/dotfiles/.planning/codebase/STRUCTURE.md`
-- `/opt/dotfiles/AGENTS.md`
+- Runtime contracts: `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`
+- Existing verification docs: `README.md`, `AGENTS.md`, `.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md`
+- Milestone history: `.planning/MILESTONES.md`, `.planning/milestones/v1.0-ROADMAP.md`
 
 ---
-*Architecture research for: red-team terminal dotfiles*
+*Architecture research for: dotfiles reliability automation milestone*
 *Researched: 2026-02-25*
