@@ -1,6 +1,6 @@
 {
-  "mode": "interactive",
-  "depth": "standard",
+  "mode": "yolo",
+  "depth": "quick",
   "model_profile": "balanced",
   "commit_docs": true,
   "search_gitignored": false,
@@ -8,10 +8,10 @@
   "phase_branch_template": "gsd/phase-{phase}-{slug}",
   "milestone_branch_template": "gsd/{milestone}-{slug}",
   "workflow": {
-    "research": false,
+    "research": true,
     "plan_check": true,
     "verifier": true,
-    "auto_advance": false,
+    "auto_advance": true,
     "nyquist_validation": false
   },
   "parallelization": true,
