@@ -8,6 +8,15 @@ This project hardens and evolves a red-team-focused dotfiles repository so setup
 
 An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 
+## Current Milestone: v1.1 automation
+
+**Goal:** Automate reliability verification and publish an operator-safe compatibility matrix so environment validation is faster and repeatable.
+
+**Target features:**
+- Single-command validation wrapper that runs shell/tmux/vim/docs checks and returns a clear pass/fail summary.
+- Compatibility matrix documenting expected behavior across macOS/Linux and common network/runtime conditions.
+- Documentation alignment so operators can choose the right checks per environment without ambiguity.
+
 ## Requirements
 
 ### Validated
@@ -49,6 +58,7 @@ Milestone `v1.0` shipped on 2026-02-25 with all 4 planned phases complete (10 pl
 | Keep research enabled in auto mode | Captures ecosystem guidance before final roadmap structure | ✓ Good |
 | Preserve existing codebase map while resetting init docs | Avoids losing verified architectural context | ✓ Good |
 | Archive `v1.0` with milestone artifacts before new scope definition | Keeps active planning files concise while preserving traceable history | ✓ Good |
+| Start `v1.1` scope from carried-forward automation requirements (`AUTO-01`, `AUTO-02`) | Maintains continuity from validated v1.0 outcomes and reduces re-discovery overhead | ✓ Good |
 
 ---
-*Last updated: 2026-02-25 after v1.0 milestone completion*
+*Last updated: 2026-02-25 after v1.1 milestone kickoff*
