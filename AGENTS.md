@@ -49,6 +49,7 @@ High-level structure (order matters in some sections):
   - Homebrew shell environment on macOS (auto-detection of `/opt/homebrew` vs `/usr/local`).
   - Python 3.13 and OpenJDK 17 added to `PATH` for compatibility with offensive tooling (e.g., PyO3 tools, Cobalt Strike client).
   - Docker CLI completions, pdtm-related Go paths, and other tool-specific PATH adjustments near the end.
+  - PATH mutations are guarded to avoid duplicate entries during repeated shell reloads.
 - **Warp-specific behavior**
   - Detects Warp via `TERM_PROGRAM == "WarpTerminal"` and sets `WARP_TERMINAL=1` plus disables auto title for better integration.
   - Prompt logic branches on `WARP_TERMINAL` to keep the Warp prompt simpler (Warp handles directory display itself).
@@ -59,8 +60,9 @@ High-level structure (order matters in some sections):
 - **Aliases and red-team helpers**
   - Standard colored `ls`/`grep`/`diff` family aliases plus convenience `ll`, `lt`, `lh`, etc.
   - **aliasr integration:** `alias a='aliasr'` provides a short alias for the `aliasr` TUI launcher (installed via `pipx`/`uv tool`). Future agents must preserve this alias when refactoring.
-  - Network and recon helpers (`myip*`, `localip`, `netinfo`, `quickscan`, `ports`, `listening`, `webserver`, `http-server`, `https-server`, `smbserver`, etc.).
-  - Encoding/decoding utilities (`base64encode`, `base64decode`, `urlencode`, `urldecode`, `rot13`, `hexdump`, `strings`).
+  - Network and recon helpers (`myip*`, `localip`, `netinfo`, `quickscan`, `ports`, `listening`, `webserver`, `http-server`, `https-server`, `smbserver`, etc.) now use guarded fallback behavior instead of brittle single-command assumptions.
+  - Encoding/decoding utilities (`base64encode`, `base64decode`, `urlencode`, `urldecode`, `rot13`, `hexdump`, `strings`) include cross-platform decode flag handling (`-D`/`-d`) for macOS/Linux reliability.
+  - Commands with external dependencies (`quickscan`, `http-server`, `https-server`) emit actionable error messages when prerequisites are missing.
   - Reverse-shell generator `rev-shell` for multiple languages.
   - Archive extraction (`extract`), text search (`findtext`), and other small helpers.
 - **User guidance**
@@ -71,6 +73,7 @@ When modifying this file:
 - Keep Warp-specific behavior (`WARP_TERMINAL` checks, prompt branches) intact.
 - Keep OPSEC-related history settings (e.g., `hist_ignore_space`) and help messaging intact unless the user explicitly requests changes.
 - Respect existing PATH order: Homebrew first, then Python 3.13, then OpenJDK 17, then pdtm and Go-related paths.
+- Preserve helper fallback/error guard behavior; prefer compatibility wrappers over removing established helper entrypoints.
 
 ## Tmux configuration architecture (`tmux/.tmux.conf`)
 
