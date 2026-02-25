@@ -208,6 +208,20 @@ def build_row(args: argparse.Namespace, status: str) -> List[str]:
         fail("`--caveat` must be non-empty")
     if not command_ref:
         fail("`--command-ref` must be non-empty")
+
+    for label, value in (
+        ("env-profile", env_profile),
+        ("check-scope", check_scope),
+        ("caveat", caveat),
+        ("command-ref", command_ref),
+    ):
+        if "\n" in value or "\r" in value:
+            fail(f"`--{label}` must be single-line text")
+
+    if len(command_ref) > 240:
+        fail("`--command-ref` is too long; provide a concise command or evidence reference")
+    if command_ref.lstrip().startswith("{"):
+        fail("`--command-ref` must be a command/reference string, not raw JSON content")
     if not DATE_RE.match(date_value):
         fail("`--date` must match YYYY-MM-DD")
     if status == "SKIP" and len(caveat) < 3:
