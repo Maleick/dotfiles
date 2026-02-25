@@ -16,10 +16,12 @@
 
 | # | Phase | Goal | Requirements | Success Criteria |
 |---|-------|------|--------------|------------------|
-| 7 | Verification Wrapper Modes and Output Contracts | Add quick mode and machine-readable output while preserving default behavior contracts | `AUTO-04`, `AUTO-05` | 4 |
+| 7 | ✅ Verification Wrapper Modes and Output Contracts | Add quick mode and machine-readable output while preserving default behavior contracts | `AUTO-04`, `AUTO-05` | 4 (completed 2026-02-25) |
 | 8 | Compatibility Matrix Evidence Automation | Generate and maintain matrix rows from observed verification evidence with schema/provenance guardrails | `COMP-03` | 4 |
 
 ### Phase 7: Verification Wrapper Modes and Output Contracts
+
+**Status:** Complete (2026-02-25)
 
 **Goal:** `./scripts/verify-suite.sh` supports quick mode and machine-readable output while preserving existing deterministic default behavior.
 
@@ -50,4 +52,4 @@
 
 ## Next Step
 
-`$gsd-discuss-phase 7 --auto`
+`$gsd-discuss-phase 8 --auto`

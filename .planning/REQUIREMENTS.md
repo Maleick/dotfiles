@@ -9,8 +9,8 @@ Requirements for the v1.2 milestone. Each maps to exactly one roadmap phase.
 
 ### Wrapper Modes and Contracts
 
-- [ ] **AUTO-04**: Operator can run a quick verification mode from repo root that completes faster while preserving a locked minimum required-check signal.
-- [ ] **AUTO-05**: Operator can run a machine-readable output mode that reports per-check `PASS`/`FAIL`/`SKIP` statuses and deterministic summary counts without changing default human-readable output behavior.
+- [x] **AUTO-04**: Operator can run a quick verification mode from repo root that completes faster while preserving a locked minimum required-check signal.
+- [x] **AUTO-05**: Operator can run a machine-readable output mode that reports per-check `PASS`/`FAIL`/`SKIP` statuses and deterministic summary counts without changing default human-readable output behavior.
 
 ### Compatibility Evidence Automation
 
@@ -42,8 +42,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTO-04 | Phase 7 | Pending |
-| AUTO-05 | Phase 7 | Pending |
+| AUTO-04 | Phase 7 | Complete |
+| AUTO-05 | Phase 7 | Complete |
 | COMP-03 | Phase 8 | Pending |
 
 **Coverage:**
@@ -53,4 +53,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after roadmap creation*
+*Last updated: 2026-02-25 after Phase 7 completion*
