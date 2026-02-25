@@ -30,9 +30,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Validate and harden backup/symlink idempotency behavior.
-- [ ] 01-02: Define and document installer + runtime verification checklist.
-- [ ] 01-03: Execute baseline checks and capture expected outcomes.
+- [ ] 01-01-PLAN.md — Harden installer idempotency and backup safety behavior.
+- [ ] 01-02-PLAN.md — Define and publish baseline verification checklist.
+- [ ] 01-03-PLAN.md — Execute baseline checks and capture evidence.
 
 ### Phase 2: Shell Reliability Hardening
 **Goal**: Shell startup and helper command surface remain stable across hosts and edits.
