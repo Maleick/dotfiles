@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: automation-expansion
 status: planning
-last_updated: "2026-02-25T22:16:51Z"
+last_updated: "2026-02-25T22:27:04Z"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
-**Current focus:** Phase 7 executed and verified; ready to discuss Phase 8 compatibility automation
+**Current focus:** Phase 8 context captured; ready to plan matrix evidence automation
 
 ## Current Position
 
 Phase: 8 (not started)
 Plan: phase 7 complete; phase 8 planning pending
-Status: Ready for `$gsd-discuss-phase 8 --auto`
-Last activity: 2026-02-25 — Completed Phase 7 execution and verification for `AUTO-04` and `AUTO-05`
+Status: Ready for `$gsd-plan-phase 8 --auto`
+Last activity: 2026-02-25 — Captured Phase 8 context with locked evidence automation decisions for `COMP-03`
 
 Progress: [█████░░░░░] 50%
 
@@ -73,6 +73,7 @@ Recent decisions affecting current work:
 - [Phase 7 Context]: Locked wrapper mode/output decisions (`--quick`, `--json`, combined mode) while preserving default contract behavior.
 - [Phase 7 Execution]: Implemented `--quick`, `--json`, and `--quick --json` in `scripts/verify-suite.sh` while preserving default deterministic behavior.
 - [Phase 7 Verification]: Confirmed targeted smoke checks pass for default/quick/json/combined modes and forced required-failure semantics.
+- [Phase 8 Context]: Locked matrix evidence automation contracts (canonical path, row identity, schema/provenance enforcement, and fail-fast behavior).
 
 ### Pending Todos
 
@@ -84,6 +85,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-25 16:16
-Stopped at: Phase 7 execution complete
-Resume file: .planning/ROADMAP.md
+Last session: 2026-02-25 16:27
+Stopped at: Phase 8 context gathered
+Resume file: .planning/phases/08-compatibility-matrix-evidence-automation/08-CONTEXT.md
