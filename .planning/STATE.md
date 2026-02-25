@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: automation
 status: active
-last_updated: "2026-02-25T20:17:15Z"
+last_updated: "2026-02-25T20:29:22Z"
 progress:
   total_phases: 2
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 0
+  completed_plans: 2
 ---
 
 # Project State
@@ -18,22 +18,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
-**Current focus:** Define v1.1 requirements and roadmap
+**Current focus:** Advance to Phase 6 compatibility matrix planning and execution
 
 ## Current Position
 
-Phase: 5 of 6 (Validation Wrapper Baseline)
+Phase: 6 of 6 (Compatibility Matrix and Coverage)
 Plan: 0 of 2 in current phase
-Status: Roadmap created for v1.1 automation; ready for discuss/planning
-Last activity: 2026-02-25 — Defined requirements and mapped roadmap phases 5-6
+Status: Phase 5 executed and verified; ready for Phase 6 discuss/planning
+Last activity: 2026-02-25 — Completed Phase 5 execution, verification, and closeout updates
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 1.7 min
+- Total plans completed: 12
+- Average duration: 1.6 min
 - Total execution time: 0.3 hours
 
 **By Phase:**
@@ -44,9 +44,10 @@ Progress: [░░░░░░░░░░] 0%
 | 2. Shell Reliability Hardening | 3 | 5 min | 1.7 min |
 | 3. Tmux/Vim Workflow Stability | 2 | 5 min | 2.5 min |
 | 4. Documentation and Release Hygiene | 2 | 5 min | 2.5 min |
+| 5. Validation Wrapper Baseline | 2 | 2 min | 1.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03, 03-01, 03-02, 04-01, 04-02
+- Last 5 plans: 03-02, 04-01, 04-02, 05-01, 05-02
 - Trend: On pace
 
 *Updated after each plan completion*
@@ -75,6 +76,9 @@ Recent decisions affecting current work:
 - [Milestone Completion]: Archived v1.0 roadmap/requirements and condensed active roadmap to next-milestone handoff state.
 - [Milestone Kickoff]: Started v1.1 `automation` milestone centered on validation wrapper and compatibility matrix outcomes.
 - [Roadmap]: Mapped `AUTO-01`/`AUTO-02`/`AUTO-03` to Phase 5 and `COMP-01`/`COMP-02` to Phase 6.
+- [Phase 5 Context]: Locked wrapper invocation, output semantics, and fail-soft optional dependency policy in `05-CONTEXT.md`.
+- [Phase 5 Execution]: Implemented `scripts/verify-suite.sh` baseline checks and optional dependency handling; aligned wrapper docs in `README.md` and `AGENTS.md`.
+- [Phase 5 Verification]: Verified `AUTO-01`/`AUTO-02`/`AUTO-03` as passed in `05-VERIFICATION.md`.
 
 ### Pending Todos
 
@@ -86,6 +90,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-25 14:17
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-validation-wrapper-baseline/05-CONTEXT.md
+Last session: 2026-02-25 14:27
+Stopped at: Phase 5 execution complete
+Resume file: .planning/phases/05-validation-wrapper-baseline/05-VERIFICATION.md

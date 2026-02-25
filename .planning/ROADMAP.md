@@ -11,7 +11,7 @@ This roadmap converts manual reliability checks into a repeatable operator comma
 
 ## Phases
 
-- [ ] **Phase 5: Validation Wrapper Baseline** - Build one-command reliability verification with deterministic summary and exit-code contracts.
+- [x] **Phase 5: Validation Wrapper Baseline** - Build one-command reliability verification with deterministic summary and exit-code contracts. (completed 2026-02-25)
 - [ ] **Phase 6: Compatibility Matrix and Coverage** - Publish validated environment matrix and integrate matrix/docs verification flow.
 
 ## Phase Details
@@ -27,8 +27,8 @@ This roadmap converts manual reliability checks into a repeatable operator comma
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Implement wrapper orchestration and check catalog contracts.
-- [ ] 05-02-PLAN.md — Harden output semantics, fail-soft handling, and wrapper documentation.
+- [x] 05-01-PLAN.md — Implement wrapper orchestration and check catalog contracts.
+- [x] 05-02-PLAN.md — Harden output semantics, fail-soft handling, and wrapper documentation.
 
 ### Phase 6: Compatibility Matrix and Coverage
 **Goal**: Compatibility guidance is grounded in validated check outcomes and remains easy for operators to follow.
@@ -51,5 +51,5 @@ Phases execute in numeric order: 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 5. Validation Wrapper Baseline | 0/2 | Not started | - |
+| 5. Validation Wrapper Baseline | 2/2 | Complete    | 2026-02-25 |
 | 6. Compatibility Matrix and Coverage | 0/2 | Not started | - |

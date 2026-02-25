@@ -9,9 +9,9 @@ Requirements for the v1.1 milestone. Each maps to exactly one roadmap phase.
 
 ### Automation Enhancements
 
-- [ ] **AUTO-01**: Operator can run a single repository command from repo root that executes the reliability validation suite.
-- [ ] **AUTO-02**: Validation wrapper reports deterministic per-check PASS/FAIL/SKIP results and returns non-zero when required checks fail.
-- [ ] **AUTO-03**: Validation wrapper preserves fail-soft behavior for optional dependencies and emits actionable skip guidance.
+- [x] **AUTO-01**: Operator can run a single repository command from repo root that executes the reliability validation suite.
+- [x] **AUTO-02**: Validation wrapper reports deterministic per-check PASS/FAIL/SKIP results and returns non-zero when required checks fail.
+- [x] **AUTO-03**: Validation wrapper preserves fail-soft behavior for optional dependencies and emits actionable skip guidance.
 
 ### Compatibility Matrix
 
@@ -44,9 +44,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTO-01 | Phase 5 | Pending |
-| AUTO-02 | Phase 5 | Pending |
-| AUTO-03 | Phase 5 | Pending |
+| AUTO-01 | Phase 5 | Complete |
+| AUTO-02 | Phase 5 | Complete |
+| AUTO-03 | Phase 5 | Complete |
 | COMP-01 | Phase 6 | Pending |
 | COMP-02 | Phase 6 | Pending |
 
@@ -57,4 +57,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after milestone v1.1 roadmap mapping*
+*Last updated: 2026-02-25 after Phase 5 completion*
