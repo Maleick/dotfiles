@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Installation Baseline** - Verify installer safety, idempotency, and baseline checks. (completed 2026-02-25)
 - [x] **Phase 2: Shell Reliability Hardening** - Preserve OPSEC, Warp, aliasr, and helper command stability. (completed 2026-02-25)
 - [x] **Phase 3: Tmux/Vim Workflow Stability** - Keep keybindings and editor workflows dependable. (completed 2026-02-25)
-- [ ] **Phase 4: Documentation and Release Hygiene** - Align public docs and release metadata to shipped behavior.
+- [x] **Phase 4: Documentation and Release Hygiene** - Align public docs and release metadata to shipped behavior. (completed 2026-02-25)
 
 ## Phase Details
 
@@ -71,11 +71,11 @@ Plans:
   1. README and AGENTS accurately describe current commands and keybindings.
   2. CHANGELOG and VERSION are consistent with shipped reliability work.
   3. Operators can follow docs without hitting stale or missing references.
-**Plans**: 2 plans
+**Plans**: 2/2 plans complete
 
 Plans:
-- [ ] 04-01: Reconcile README/AGENTS with runtime behavior.
-- [ ] 04-02: Finalize changelog/version hygiene for release readiness.
+- [x] 04-01-PLAN.md — Reconcile README/AGENTS with runtime behavior.
+- [x] 04-02-PLAN.md — Finalize changelog/version hygiene for release readiness.
 
 ## Progress
 
@@ -87,4 +87,4 @@ Phases execute in numeric order: 1 → 1.1 → 1.2 → 2 → 3 → 4
 | 1. Installation Baseline | 3/3 | Complete    | 2026-02-25 |
 | 2. Shell Reliability Hardening | 3/3 | Complete    | 2026-02-25 |
 | 3. Tmux/Vim Workflow Stability | 2/2 | Complete    | 2026-02-25 |
-| 4. Documentation and Release Hygiene | 0/2 | Not started | - |
+| 4. Documentation and Release Hygiene | 2/2 | Complete    | 2026-02-25 |

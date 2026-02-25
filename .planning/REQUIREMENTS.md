@@ -25,8 +25,8 @@
 
 ### Documentation and Verification
 
-- [ ] **DOCS-01**: `README.md` and `AGENTS.md` match actual command/keybinding behavior.
-- [ ] **DOCS-02**: `CHANGELOG.md` and `VERSION` stay consistent with delivered reliability changes.
+- [x] **DOCS-01**: `README.md` and `AGENTS.md` match actual command/keybinding behavior.
+- [x] **DOCS-02**: `CHANGELOG.md` and `VERSION` stay consistent with delivered reliability changes.
 - [x] **VFY-01**: A repeatable local verification checklist exists for installer, shell, tmux, and vim checks.
 
 ## v2 Requirements
@@ -58,8 +58,8 @@
 | SHLL-04 | Phase 2 | Complete |
 | TVIM-01 | Phase 3 | Complete |
 | TVIM-02 | Phase 3 | Complete |
-| DOCS-01 | Phase 4 | Pending |
-| DOCS-02 | Phase 4 | Pending |
+| DOCS-01 | Phase 4 | Complete |
+| DOCS-02 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 12 total
@@ -68,4 +68,4 @@
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after Phase 3 tmux/vim stability completion*
+*Last updated: 2026-02-25 after Phase 4 documentation/release hygiene completion*
