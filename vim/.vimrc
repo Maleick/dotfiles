@@ -60,6 +60,8 @@ let maplocalleader = "\\"   " Set localleader key to backslash
 " =============================================================================
 " Plugin Management (vim-plug)
 " =============================================================================
+let g:dotfiles_has_plug = exists('*plug#begin') && exists('*plug#end')
+if g:dotfiles_has_plug
 call plug#begin('~/.vim/plugged')
 
 " Theme - Dark themes optimized for terminal work
@@ -88,6 +90,10 @@ Plug 'vim-scripts/indentpython.vim'    " Python indentation
 Plug 'plasticboy/vim-markdown'         " Markdown support for reports
 
 call plug#end()
+else
+    " Fail-soft startup when vim-plug is unavailable.
+    echom "vim-plug not found; plugin features disabled."
+endif
 
 " =============================================================================
 " Theme Configuration - Warp Optimized
@@ -112,14 +118,16 @@ syntax sync minlines=256    " Start syntax highlighting from 256 lines back
 " =============================================================================
 
 " NERDTree
-map <C-n> :NERDTreeToggle<CR>
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
-let g:NERDTreeWinSize = 30
-let g:NERDTreeShowHidden = 1
-let g:NERDTreeMinimalUI = 1
-let g:NERDTreeDirArrows = 1
-let g:NERDTreeIgnore = ['\~$', '\.swp$', '\.git$', '__pycache__', '.DS_Store']
+if exists(':NERDTreeToggle')
+    map <C-n> :NERDTreeToggle<CR>
+    let g:NERDTreeDirArrowExpandable = '▸'
+    let g:NERDTreeDirArrowCollapsible = '▾'
+    let g:NERDTreeWinSize = 30
+    let g:NERDTreeShowHidden = 1
+    let g:NERDTreeMinimalUI = 1
+    let g:NERDTreeDirArrows = 1
+    let g:NERDTreeIgnore = ['\~$', '\.swp$', '\.git$', '__pycache__', '.DS_Store']
+endif
 
 " vim-airline
 let g:airline_theme='catppuccin_mocha'
@@ -147,48 +155,52 @@ set nowritebackup
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear.
 set signcolumn=yes
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to see where tab is mapped.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+if exists('*coc#refresh')
+    " Use tab for trigger completion with characters ahead and navigate.
+    " Use command ':verbose imap <tab>' to see where tab is mapped.
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1] =~ '\s'
-endfunction
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1] =~ '\s'
+    endfunction
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+    " Use <c-space> to trigger completion.
+    inoremap <silent><expr> <c-space> coc#refresh()
 
-" Use `gd` for goto definition (and `gy` for type definition, `gi` for implementation)
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+    " Use `gd` for goto definition (and `gy` for type definition, `gi` for implementation)
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
 
-" Use K for show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+    " Use K for show documentation in preview window
+    nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+    function! s:show_documentation()
+      if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+      else
+        call CocAction('doHover')
+      endif
+    endfunction
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Apply TextEdit to current buffer.
-nmap <leader>rn <Plug>(coc-rename)
+    " Apply TextEdit to current buffer.
+    nmap <leader>rn <Plug>(coc-rename)
 
-" Formatting selected code
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+    " Formatting selected code
+    xmap <leader>f  <Plug>(coc-format-selected)
+    nmap <leader>f  <Plug>(coc-format-selected)
+else
+    nnoremap <silent> K :echo "coc.nvim unavailable; hover disabled"<CR>
+endif
 
 " Go specific settings
 au FileType go nmap <leader>r <Plug>(go-run)
