@@ -58,6 +58,14 @@ The compatibility matrix is a maintained contract artifact:
   - `./scripts/verify-suite.sh`
   - `.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md`
   - `.planning/phases/05-validation-wrapper-baseline/05-VERIFICATION.md`
+- For deterministic matrix automation, use:
+  - `./scripts/verify-suite.sh --json` to capture observed evidence
+  - `./scripts/update-compat-matrix.sh --evidence <json> --env-profile <...> --check-scope <...> --caveat <...> --command-ref <...> --date YYYY-MM-DD`
+- Automation contract:
+  - Row identity key is `Environment Profile` + `Check Scope`.
+  - Existing keys update in place; new keys insert at deterministic position.
+  - Malformed evidence or schema mismatch must fail fast (no silent rewrite).
+  - `Command Set Reference` and `Last Validated` are mandatory provenance fields.
 - Refresh matrix entries after relevant verification/runtime/docs changes and before milestone closeout.
 - Do not publish inferred platform compatibility as `PASS`/`FAIL` without observed command evidence.
 

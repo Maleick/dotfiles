@@ -152,6 +152,35 @@ Compatibility guidance is tracked in:
 
 - `.planning/compatibility/v1.1-matrix.md`
 
+Automated row update flow (Phase 8):
+
+```bash
+# Capture observed evidence from current host
+./scripts/verify-suite.sh --json > /tmp/verify-evidence.json
+
+# Update an existing matrix key (Environment Profile + Check Scope)
+./scripts/update-compat-matrix.sh \
+  --evidence /tmp/verify-evidence.json \
+  --env-profile "macOS (Darwin arm64, current host)" \
+  --check-scope "install/shell/tmux/vim/docs parity" \
+  --caveat "host-specific: observed wrapper JSON run from current host" \
+  --command-ref "./scripts/verify-suite.sh --json" \
+  --date 2026-02-25
+```
+
+Automation behavior:
+- Uses observed wrapper evidence only (`./scripts/verify-suite.sh --json` payloads).
+- Uses matrix row identity key `Environment Profile` + `Check Scope`.
+- Updates existing key rows in place; inserts new key rows deterministically.
+- Fails fast on malformed evidence input or malformed matrix schema.
+- Preserves status vocabulary constraints (`PASS` / `SKIP` / `FAIL`) and required fields:
+  - `Environment Profile`
+  - `Check Scope`
+  - `Status`
+  - `Caveat`
+  - `Command Set Reference`
+  - `Last Validated`
+
 How to use it:
 - Treat matrix rows as observed command-run outcomes, not inferred platform claims.
 - Interpret statuses as:
