@@ -20,6 +20,9 @@ test/
 tests/
 docs/
 scripts/
+!scripts/
+scripts/*
+!scripts/verify-suite.sh
 Makefile
 package.json
 package-lock.json
