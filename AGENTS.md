@@ -33,6 +33,23 @@ Once installed:
 - Show the current version of the dotfiles: `cat VERSION`
 - Use the built-in help for red-team commands: `/help`
 - Run wrapper baseline verification from repo root: `./scripts/verify-suite.sh` (deterministic `PASS`/`FAIL`/`SKIP` output, non-zero on required-check failure, fail-soft optional checks)
+- Review compatibility coverage in `.planning/compatibility/v1.1-matrix.md` before making cross-environment claims.
+
+### Compatibility matrix maintenance
+
+The compatibility matrix is a maintained contract artifact:
+- Canonical file: `.planning/compatibility/v1.1-matrix.md`
+- Preserve row schema fields: `Environment Profile`, `Check Scope`, `Status`, `Caveat`, `Command Set Reference`, `Last Validated`.
+- Preserve status semantics:
+  - `PASS` = observed command run succeeded
+  - `FAIL` = observed command run failed
+  - `SKIP` = not observed in this context; caveat required
+- Keep matrix updates evidence-backed (observed runs only) using command references such as:
+  - `./scripts/verify-suite.sh`
+  - `.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md`
+  - `.planning/phases/05-validation-wrapper-baseline/05-VERIFICATION.md`
+- Refresh matrix entries after relevant verification/runtime/docs changes and before milestone closeout.
+- Do not publish inferred platform compatibility as `PASS`/`FAIL` without observed command evidence.
 
 ### Editing core configs
 
