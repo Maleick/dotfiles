@@ -259,8 +259,14 @@ export CLICOLOR=YES
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias diff='diff --color=auto'
-alias ip='ip --color=auto'
+if diff --color=auto /dev/null /dev/null >/dev/null 2>&1; then
+    alias diff='diff --color=auto'
+fi
+if command -v ip >/dev/null 2>&1; then
+    if ip --help 2>&1 | grep -q -- '--color'; then
+        alias ip='ip --color=auto'
+    fi
+fi
 
 # Enhanced ls aliases with colors
 alias ll='ls -alF'
@@ -273,16 +279,128 @@ alias lh='ls -alh'   # human readable sizes
 alias a='aliasr'
 
 # Red team specific aliases
-# External IP address commands
-alias myip='curl -s -4 ifconfig.me'  # Force IPv4
-alias myip6='curl -s -6 ifconfig.me'
-alias myip-alt='curl -s -4 ipinfo.io/ip'  # Alternative service
-alias myip-check='curl -s -4 icanhazip.com'  # Backup service
-alias localip='ipconfig getifaddr en0 2>/dev/null || ip route get 1 | awk "{print \$7}" | head -1'
+# External IP/local network commands with guarded fallbacks
+_get_public_ip_from_url() {
+    local family="$1"
+    local provider_url="$2"
+    local ip=""
+
+    if command -v curl >/dev/null 2>&1; then
+        if [[ "$family" == "6" ]]; then
+            ip="$(curl -fsS -6 --max-time 4 "$provider_url" 2>/dev/null | tr -d '\r\n')"
+        else
+            ip="$(curl -fsS -4 --max-time 4 "$provider_url" 2>/dev/null | tr -d '\r\n')"
+        fi
+    elif command -v wget >/dev/null 2>&1; then
+        ip="$(wget -qO- "$provider_url" 2>/dev/null | tr -d '\r\n')"
+    else
+        echo "Error: curl or wget is required for external IP lookup." >&2
+        return 1
+    fi
+
+    if [[ -n "$ip" ]]; then
+        print -r -- "$ip"
+        return 0
+    fi
+
+    return 1
+}
+
+_get_public_ip() {
+    local family="$1"
+    local -a providers
+    if [[ "$family" == "6" ]]; then
+        providers=(
+            "https://ifconfig.me/ip"
+            "https://icanhazip.com"
+            "https://api64.ipify.org"
+        )
+    else
+        providers=(
+            "https://ifconfig.me/ip"
+            "https://ipinfo.io/ip"
+            "https://icanhazip.com"
+            "https://api.ipify.org"
+        )
+    fi
+
+    local provider
+    for provider in "${providers[@]}"; do
+        if _get_public_ip_from_url "$family" "$provider"; then
+            return 0
+        fi
+    done
+
+    echo "Error: unable to determine external IPv${family} address from known providers." >&2
+    return 1
+}
+
+myip() {
+    _get_public_ip "4"
+}
+
+myip6() {
+    _get_public_ip "6"
+}
+
+myip_alt() {
+    _get_public_ip_from_url "4" "https://ipinfo.io/ip" || _get_public_ip "4"
+}
+alias myip-alt='myip_alt'
+
+myip_check() {
+    _get_public_ip_from_url "4" "https://icanhazip.com" || _get_public_ip "4"
+}
+alias myip-check='myip_check'
+
+localip() {
+    local ip=""
+    if command -v ipconfig >/dev/null 2>&1; then
+        ip="$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null)"
+    fi
+    if [[ -z "$ip" ]] && command -v hostname >/dev/null 2>&1; then
+        ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
+    fi
+    if [[ -z "$ip" ]] && command -v ip >/dev/null 2>&1; then
+        ip="$(ip route get 1 2>/dev/null | awk '{print $7; exit}')"
+    fi
+    if [[ -n "$ip" ]]; then
+        print -r -- "$ip"
+        return 0
+    fi
+    echo "Error: unable to determine local IP address." >&2
+    return 1
+}
+
+_default_gateway() {
+    local gateway=""
+    if command -v route >/dev/null 2>&1; then
+        gateway="$(route -n get default 2>/dev/null | awk '/gateway:/{print $2; exit}')"
+    fi
+    if [[ -z "$gateway" ]] && command -v ip >/dev/null 2>&1; then
+        gateway="$(ip route 2>/dev/null | awk '/default/{print $3; exit}')"
+    fi
+    [[ -n "$gateway" ]] && print -r -- "$gateway"
+}
+
+_dns_servers() {
+    local dns=""
+    if command -v scutil >/dev/null 2>&1; then
+        dns="$(scutil --dns 2>/dev/null | awk '/nameserver\\[[0-9]+\\]/{print $3}' | sort -u | tr '\n' ' ')"
+    fi
+    if [[ -z "$dns" ]] && [[ -f /etc/resolv.conf ]]; then
+        dns="$(awk '/^nameserver/{print $2}' /etc/resolv.conf | tr '\n' ' ')"
+    fi
+    [[ -n "$dns" ]] && print -r -- "${dns% }"
+}
 
 # Function to get IP and store in variable for scripting
 get_external_ip() {
-    EXTERNAL_IP=$(curl -s -4 ifconfig.me)
+    EXTERNAL_IP="$(myip)"
+    if [[ -z "${EXTERNAL_IP:-}" ]]; then
+        echo "Error: failed to resolve external IPv4 address." >&2
+        return 1
+    fi
     echo "External IP: $EXTERNAL_IP (stored in \$EXTERNAL_IP variable)"
 }
 alias ports='lsof -iTCP -sTCP:LISTEN -P -n'  # macOS-compatible
@@ -303,7 +421,14 @@ base64decode() {
         echo "Usage: base64decode <text>"
         return 1
     fi
-    echo -n "$1" | base64 -D
+    if echo -n "dGVzdA==" | base64 -D >/dev/null 2>&1; then
+        echo -n "$1" | base64 -D
+    elif echo -n "dGVzdA==" | base64 -d >/dev/null 2>&1; then
+        echo -n "$1" | base64 -d
+    else
+        echo "Error: unsupported base64 decode flags on this host." >&2
+        return 1
+    fi
 }
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 alias hexdump='xxd'
@@ -386,11 +511,19 @@ findtext() {
 
 # Network information
 netinfo() {
+    local external_ipv4 local_ipv4 gateway dns_servers
+    external_ipv4="$(myip 2>/dev/null || echo unavailable)"
+    local_ipv4="$(localip 2>/dev/null || echo unavailable)"
+    gateway="$(_default_gateway 2>/dev/null || true)"
+    dns_servers="$(_dns_servers 2>/dev/null || true)"
+    [[ -z "$gateway" ]] && gateway="unavailable"
+    [[ -z "$dns_servers" ]] && dns_servers="unavailable"
+
     echo "=== Network Information ==="
-    echo "External IPv4: $(curl -s -4 ifconfig.me)"
-    echo "Local IP: $(ipconfig getifaddr en0 2>/dev/null || ip route get 1 | awk '{print $7}' | head -1)"
-    echo "Gateway: $(route -n get default 2>/dev/null | grep gateway | awk '{print $2}' || ip route | grep default | awk '{print $3}' | head -1)"
-    echo "DNS Servers: $(scutil --dns 2>/dev/null | grep nameserver | awk '{print $3}' | sort -u | tr '\n' ' ' || cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | tr '\n' ' ')"
+    echo "External IPv4: $external_ipv4"
+    echo "Local IP: $local_ipv4"
+    echo "Gateway: $gateway"
+    echo "DNS Servers: $dns_servers"
 }
 
 # -- Reverse Shell Generator --
