@@ -5,6 +5,7 @@ set -u
 PASS_COUNT=0
 FAIL_COUNT=0
 SKIP_COUNT=0
+FORCE_FAIL_REQUIRED="${VERIFY_SUITE_FORCE_FAIL_REQUIRED:-0}"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
@@ -19,6 +20,12 @@ run_required() {
   local check_id="$1"
   local description="$2"
   local cmd="$3"
+
+  if [ "$FORCE_FAIL_REQUIRED" = "1" ] && [ "$check_id" = "req.install_syntax" ]; then
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+    status_line "FAIL" "$check_id" "Forced required failure via VERIFY_SUITE_FORCE_FAIL_REQUIRED=1"
+    return
+  fi
 
   if eval "$cmd" >/dev/null 2>&1; then
     PASS_COUNT=$((PASS_COUNT + 1))
