@@ -44,17 +44,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTO-01 | TBD | Pending |
-| AUTO-02 | TBD | Pending |
-| AUTO-03 | TBD | Pending |
-| COMP-01 | TBD | Pending |
-| COMP-02 | TBD | Pending |
+| AUTO-01 | Phase 5 | Pending |
+| AUTO-02 | Phase 5 | Pending |
+| AUTO-03 | Phase 5 | Pending |
+| COMP-01 | Phase 6 | Pending |
+| COMP-02 | Phase 6 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 5 total
-- Mapped to phases: 0
-- Unmapped: 5 ⚠️
+- Mapped to phases: 5
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after milestone v1.1 requirement definition*
+*Last updated: 2026-02-25 after milestone v1.1 roadmap mapping*

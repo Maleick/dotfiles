@@ -3,11 +3,11 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: automation
 status: active
-last_updated: "2026-02-25T19:57:00Z"
+last_updated: "2026-02-25T20:00:00Z"
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
-  total_plans: 0
+  total_plans: 4
   completed_plans: 0
 ---
 
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements for v1.1 automation scope
-Last activity: 2026-02-25 — Started milestone v1.1 kickoff from carried-forward active goals
+Phase: 5 of 6 (Validation Wrapper Baseline)
+Plan: 0 of 2 in current phase
+Status: Roadmap created for v1.1 automation; ready for discuss/planning
+Last activity: 2026-02-25 — Defined requirements and mapped roadmap phases 5-6
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -74,6 +74,7 @@ Recent decisions affecting current work:
 - [Phase 4 Verification]: Documentation and release hygiene requirements DOCS-01 and DOCS-02 verified as passed.
 - [Milestone Completion]: Archived v1.0 roadmap/requirements and condensed active roadmap to next-milestone handoff state.
 - [Milestone Kickoff]: Started v1.1 `automation` milestone centered on validation wrapper and compatibility matrix outcomes.
+- [Roadmap]: Mapped `AUTO-01`/`AUTO-02`/`AUTO-03` to Phase 5 and `COMP-01`/`COMP-02` to Phase 6.
 
 ### Pending Todos
 
@@ -85,6 +86,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-25 13:57
-Stopped at: Milestone v1.1 kickoff
-Resume file: .planning/PROJECT.md
+Last session: 2026-02-25 14:00
+Stopped at: v1.1 roadmap defined
+Resume file: .planning/ROADMAP.md
