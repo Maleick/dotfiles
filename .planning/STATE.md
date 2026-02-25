@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: automation
-status: archived
-last_updated: "2026-02-25T21:15:40Z"
+milestone: v1.2
+milestone_name: automation-expansion
+status: planning
+last_updated: "2026-02-25T21:22:44Z"
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
-**Current focus:** Milestone v1.1 archived; initialize next milestone scope
+**Current focus:** Define v1.2 requirements and roadmap for automation expansion
 
 ## Current Position
 
-Phase: none (milestone archived)
-Plan: none (awaiting next milestone setup)
-Status: Milestone v1.1 archival complete; roadmap and requirements moved to milestone archives
-Last activity: 2026-02-25 — Archived v1.1 roadmap/requirements, tagged release `v1.1`, and prepared next-cycle routing
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-25 — Milestone v1.2 automation expansion started
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -68,6 +68,7 @@ Recent decisions affecting current work:
 - [Phase 6 Verification]: Verified `COMP-01` and `COMP-02` as passed in `06-VERIFICATION.md`.
 - [Milestone v1.1 Completion]: Archived milestone artifacts, removed active requirements file for fresh next-cycle definition, and created local release tag `v1.1`.
 - [Audit Policy]: Proceeded without formal v1.1 audit artifact as accepted process debt, documented in milestone records.
+- [Milestone v1.2 Kickoff]: Carry forward deferred requirements `AUTO-04`, `AUTO-05`, and `COMP-03` into active scope.
 
 ### Pending Todos
 
@@ -79,6 +80,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-25 15:15
-Stopped at: Milestone v1.1 archived
-Resume file: .planning/PROJECT.md
+Last session: 2026-02-25 21:22
+Stopped at: Milestone v1.2 kickoff started
+Resume file: .planning/REQUIREMENTS.md

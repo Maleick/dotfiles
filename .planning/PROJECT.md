@@ -8,24 +8,14 @@ This project hardens and evolves a red-team-focused dotfiles repository so setup
 
 An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 
-## Current State
+## Current Milestone: v1.2 automation expansion
 
-**Milestone `v1.1 automation` shipped on 2026-02-25.**
+**Goal:** Extend verification automation and compatibility evidence workflows while preserving the read-only reliability contract.
 
-Delivered outcomes:
-- One-command verification wrapper (`./scripts/verify-suite.sh`) with deterministic `PASS`/`FAIL`/`SKIP` semantics.
-- Evidence-backed compatibility matrix at `.planning/compatibility/v1.1-matrix.md`.
-- README/AGENTS guidance for matrix interpretation and maintenance policy.
-- Phase-level verification reports confirming completion of `AUTO-01`, `AUTO-02`, `AUTO-03`, `COMP-01`, and `COMP-02`.
-
-## Next Milestone Goals
-
-Pending definition via `$gsd-new-milestone`.
-
-Suggested starting areas:
-- Decide whether to prioritize `AUTO-04` quick-mode execution.
-- Decide whether to prioritize `AUTO-05` machine-readable output mode.
-- Evaluate `COMP-03` matrix generation automation from repeatable run evidence.
+**Target features:**
+- `AUTO-04`: Add quick-mode execution for fast local pre-commit checks.
+- `AUTO-05`: Add machine-readable verify output mode for tooling and log ingestion.
+- `COMP-03`: Add repeatable compatibility-matrix row generation from observed verification runs.
 
 ## Requirements
 
@@ -40,21 +30,31 @@ Suggested starting areas:
 
 ### Active
 
-- [ ] Next milestone scope not defined yet (run `$gsd-new-milestone`).
+- [ ] `AUTO-04`: Quick-mode execution path for fast local pre-commit checks.
+- [ ] `AUTO-05`: Machine-readable output mode for CI/log ingestion.
+- [ ] `COMP-03`: Compatibility matrix row generation from repeatable observed verification runs.
 
 ### Out of Scope
 
 - Converting this repo into a compiled application or service.
 - Storing secrets, tokens, or credential material in tracked files.
 - Introducing enterprise process overhead (sprint ceremonies, stakeholder workflows).
+- Redesigning established operator keybindings or changing aliasr integration contracts.
+
+## Context
+
+- v1.1 shipped deterministic wrapper verification (`./scripts/verify-suite.sh`) and canonical matrix documentation at `.planning/compatibility/v1.1-matrix.md`.
+- Next delivery should deepen automation without introducing new runtime feature families.
+- Existing reliability contracts in `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc` remain the source of truth.
+- Documentation and maintainer guidance (`README.md`, `AGENTS.md`) must stay synchronized with wrapper/matrix behavior.
 
 ## Constraints
 
 - **Compatibility**: Preserve existing operator workflows and keybindings (`alias a='aliasr'`, tmux `Prefix + U`/`Prefix + K`) — changing these breaks daily usage.
 - **Security**: Never commit secret values or credential payloads — protects operator and infrastructure exposure.
 - **Terminal-first**: All outcomes must work in terminal environments (macOS first, Linux-compatible where intended).
+- **Read-only verification**: Verification commands must not mutate runtime config by default.
 - **Source-of-truth**: Changes are made in repo files, then linked into `$HOME` via `install.sh`.
-- **Incremental delivery**: Work is phased so each stage has observable reliability improvements.
 
 ## Key Decisions
 
@@ -68,6 +68,7 @@ Suggested starting areas:
 | Start `v1.1` scope from carried-forward automation requirements | Maintains continuity from validated v1.0 outcomes and reduces re-discovery overhead | ✓ Good |
 | Use evidence-backed compatibility matrix contract in v1.1 | Prevents inferred claims and keeps operator trust high | ✓ Good |
 | Archive `v1.1` without formal audit artifact | Explicitly accepted process debt to preserve delivery momentum | ⚠ Revisit |
+| Start `v1.2` from deferred automation/matrix items (`AUTO-04`, `AUTO-05`, `COMP-03`) | Aligns new work to explicitly deferred backlog with low discovery risk | — Pending |
 
 <details>
 <summary>v1.1 Development Context Archive</summary>
@@ -85,4 +86,4 @@ Suggested starting areas:
 </details>
 
 ---
-*Last updated: 2026-02-25 after v1.1 milestone archival*
+*Last updated: 2026-02-25 after v1.2 milestone kickoff*
