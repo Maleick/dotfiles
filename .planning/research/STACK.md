@@ -1,6 +1,6 @@
 # Stack Research
 
-**Domain:** Dotfiles reliability automation and compatibility coverage
+**Domain:** Dotfiles verification wrapper expansion and compatibility evidence automation
 **Researched:** 2026-02-25
 **Confidence:** HIGH
 
@@ -10,73 +10,75 @@
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| POSIX shell (`bash`) | 3.2+ | Primary wrapper runtime for cross-host checks | Already used by `install.sh`; broad portability across macOS/Linux |
-| `zsh` | 5.8+ | Shell syntax and behavior verification target | `zsh/.zshrc` is a core runtime contract |
-| `tmux` | 3.2+ | Session startup/config verification target | `tmux/.tmux.conf` behavior must stay stable |
-| `vim` | 8.2+ | Editor startup/config verification target | `vim/.vimrc` fallback behavior is milestone-critical |
+| POSIX shell (`bash`) | 3.2+ | Wrapper orchestration, mode routing, and deterministic exits | Already the repo automation baseline (`install.sh`, `scripts/verify-suite.sh`) and portable across macOS/Linux targets |
+| `zsh`, `tmux`, `vim` CLIs | Existing host versions | Runtime contract checks | Current required checks already validate these contracts directly from source-of-truth config files |
+| `date`, `mktemp`, `awk`, `sed`, `grep`/`rg` | system | Stable evidence formatting and check execution helpers | Available by default in terminal-first environments and consistent with current verification strategy |
+| `jq` (optional but recommended) | 1.6+ | Validate machine-readable output contract in smoke checks | Simplifies output contract verification without requiring custom parsers |
 
 ### Supporting Libraries
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| `mktemp` | system | Isolated temp-home checks for deterministic startup tests | Required for safe vim/zsh checks without mutating user state |
-| `awk`/`sed`/`grep` | system | Lightweight check output shaping and summary formatting | Use for report aggregation in wrapper output |
-| `rg` (ripgrep) | latest available | Fast contract/pattern checks in docs and configs | Use when validating docs/runtime parity and keybinding presence |
+| `shellcheck` | 0.9+ | Static checks for wrapper scripts | Before release or when mode logic complexity increases |
+| `shfmt` | 3.8+ | Formatting consistency for shell scripts | Keep wrapper and helper scripts reviewable as files grow |
+| `bats-core` | 1.11+ | Script-level behavior tests | Add when quick/full mode branching and output formats require repeatable assertions |
 
 ### Development Tools
 
 | Tool | Purpose | Notes |
 |------|---------|-------|
-| `shellcheck` | Lint verification wrapper scripts | Optional but useful before release |
-| `bats-core` | Script-level smoke tests | Optional if wrapper complexity grows |
+| `git` | Milestone-scoped change tracking | Keep wrapper and docs contract changes atomic by phase |
+| `node .../gsd-tools.cjs` | Planning-state commits and workflow metadata | Existing docs workflow contracts already depend on this tooling |
+| `./scripts/verify-suite.sh` | Canonical behavior probe | Must remain the primary evidence source for compatibility matrix rows |
 
 ## Installation
 
 ```bash
-# Core runtime dependencies are already expected in operator environments.
-# Optional tooling for script quality gates:
-brew install shellcheck bats-core ripgrep || true
+# Optional quality tooling for wrapper implementation/review
+brew install shellcheck shfmt bats-core jq || true
 ```
 
 ## Alternatives Considered
 
 | Recommended | Alternative | When to Use Alternative |
 |-------------|-------------|-------------------------|
-| POSIX shell wrapper | Python wrapper | Use Python only if orchestration needs structured JSON output and richer parsing |
-| Inline command list | Makefile task runner | Use `make` only if broader build/test workflows are reintroduced |
+| Plain shell mode flags in `scripts/verify-suite.sh` | Rewriting wrapper in Python/Go | Only if shell complexity becomes unmaintainable and portability constraints are re-approved |
+| Markdown matrix as canonical source | DB/JSON-only compatibility registry | Use only if future milestones require machine-driven matrix publication |
+| Manual evidence capture plus deterministic command refs | Fully automatic CI-only evidence ingestion | Use only after CI integration becomes in-scope |
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Interactive-only prompts in verification wrapper | Breaks automation and CI execution | Non-interactive flags and deterministic exit codes |
-| Hardcoded host-specific paths | Fails across systems | Parameterized paths with `$HOME` and repo-root detection |
-| Silent failure for optional checks | Hides drift and regressions | Fail-soft messages with explicit skipped-state output |
+| Auto-install dependencies during verify run | Violates read-only verification contract and can mask host issues | Emit actionable `SKIP` guidance and keep run side-effect free |
+| Inferred compatibility status labels | Breaks trust in matrix artifact | Record only observed run evidence with date and command reference |
+| One-off ad hoc output formats | Makes downstream parsing brittle | Define stable machine-readable contract and version it in docs |
 
 ## Stack Patterns by Variant
 
-**If running on macOS:**
-- Prefer Homebrew-provided tools when present
-- Keep BSD/GNU flag differences explicit in helper checks
+**If operator needs fast local checks:**
+- Use quick mode in the same wrapper entrypoint.
+- Keep a shared required-check subset so quick mode cannot drift from full mode contracts.
 
-**If running on Linux:**
-- Prefer distro-native utilities first
-- Keep command probes (`command -v`) before execution for optional tools
+**If maintainers need machine parsing:**
+- Emit machine-readable summary as an optional mode from the same execution graph.
+- Keep human-readable `PASS`/`FAIL`/`SKIP` output unchanged as default.
 
 ## Version Compatibility
 
 | Package A | Compatible With | Notes |
 |-----------|-----------------|-------|
-| `zsh` 5.8+ | Current `zsh/.zshrc` patterns | `zsh -n` and sourced checks expected to pass |
-| `tmux` 3.2+ | Current `tmux/.tmux.conf` contracts | Truecolor and keybinding checks rely on modern tmux options |
-| `vim` 8.2+ | Current `vim/.vimrc` fallback logic | Guarded startup path should still work with missing plugins |
+| `bash` 3.2+ | existing `scripts/verify-suite.sh` style | Compatible with macOS default shell runtime and Linux hosts |
+| `jq` 1.6+ | JSON output checks | Optional dependency; wrapper should still run without it |
+| `tmux` 3.2+ | current config load smoke command | Existing phase verification uses this baseline |
 
 ## Sources
 
-- Local runtime contracts: `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, `install.sh`
-- Existing verification guidance: `README.md`, `.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md`
-- Prior milestone outcomes: `.planning/MILESTONES.md`, `.planning/milestones/v1.0-ROADMAP.md`
+- `scripts/verify-suite.sh` — current wrapper contracts and check taxonomy
+- `.planning/phases/05-validation-wrapper-baseline/05-VERIFICATION.md` — evidence for required/optional semantics
+- `.planning/compatibility/v1.1-matrix.md` — current matrix schema and evidence model
+- `README.md` and `AGENTS.md` — operator/maintainer documentation contracts
 
 ---
-*Stack research for: dotfiles reliability automation milestone*
+*Stack research for: v1.2 automation expansion*
 *Researched: 2026-02-25*
