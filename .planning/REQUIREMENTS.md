@@ -20,8 +20,8 @@
 
 ### Tmux and Vim Stability
 
-- [ ] **TVIM-01**: `tmux` navigation, logging, and `aliasr` keybindings (`Prefix + U`, `Prefix + K`) work as documented.
-- [ ] **TVIM-02**: `vim` plugin bootstrap, theme fallback, and key mappings load without startup breakage.
+- [x] **TVIM-01**: `tmux` navigation, logging, and `aliasr` keybindings (`Prefix + U`, `Prefix + K`) work as documented.
+- [x] **TVIM-02**: `vim` plugin bootstrap, theme fallback, and key mappings load without startup breakage.
 
 ### Documentation and Verification
 
@@ -56,8 +56,8 @@
 | SHLL-02 | Phase 2 | Complete |
 | SHLL-03 | Phase 2 | Complete |
 | SHLL-04 | Phase 2 | Complete |
-| TVIM-01 | Phase 3 | Pending |
-| TVIM-02 | Phase 3 | Pending |
+| TVIM-01 | Phase 3 | Complete |
+| TVIM-02 | Phase 3 | Complete |
 | DOCS-01 | Phase 4 | Pending |
 | DOCS-02 | Phase 4 | Pending |
 
@@ -68,4 +68,4 @@
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after Phase 2 shell reliability completion*
+*Last updated: 2026-02-25 after Phase 3 tmux/vim stability completion*

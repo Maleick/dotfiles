@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Installation Baseline** - Verify installer safety, idempotency, and baseline checks. (completed 2026-02-25)
 - [x] **Phase 2: Shell Reliability Hardening** - Preserve OPSEC, Warp, aliasr, and helper command stability. (completed 2026-02-25)
-- [ ] **Phase 3: Tmux/Vim Workflow Stability** - Keep keybindings and editor workflows dependable.
+- [x] **Phase 3: Tmux/Vim Workflow Stability** - Keep keybindings and editor workflows dependable. (completed 2026-02-25)
 - [ ] **Phase 4: Documentation and Release Hygiene** - Align public docs and release metadata to shipped behavior.
 
 ## Phase Details
@@ -57,11 +57,11 @@ Plans:
   1. Tmux critical bindings and logging/recording paths behave as documented.
   2. Vim starts with intended plugin/theme fallback behavior.
   3. Core navigation and red-team mappings remain non-conflicting.
-**Plans**: 2 plans
+**Plans**: 2/2 plans complete
 
 Plans:
-- [ ] 03-01: Validate/fix tmux bindings, logging, and optional-tool behavior.
-- [ ] 03-02: Validate/fix vim plugin/mapping startup and fallback behavior.
+- [x] 03-01-PLAN.md — Validate/fix tmux bindings, logging, and optional-tool behavior.
+- [x] 03-02-PLAN.md — Validate/fix vim plugin/mapping startup and fallback behavior.
 
 ### Phase 4: Documentation and Release Hygiene
 **Goal**: Documentation and release metadata accurately reflect delivered behavior.
@@ -86,5 +86,5 @@ Phases execute in numeric order: 1 → 1.1 → 1.2 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Installation Baseline | 3/3 | Complete    | 2026-02-25 |
 | 2. Shell Reliability Hardening | 3/3 | Complete    | 2026-02-25 |
-| 3. Tmux/Vim Workflow Stability | 0/2 | Not started | - |
+| 3. Tmux/Vim Workflow Stability | 2/2 | Complete    | 2026-02-25 |
 | 4. Documentation and Release Hygiene | 0/2 | Not started | - |
