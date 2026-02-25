@@ -23,6 +23,8 @@ scripts/
 !scripts/
 scripts/*
 !scripts/verify-suite.sh
+!scripts/update-compat-matrix.sh
+!scripts/update_compat_matrix.py
 Makefile
 package.json
 package-lock.json
