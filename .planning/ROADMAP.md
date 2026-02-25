@@ -1,8 +1,8 @@
-# Roadmap: Red Team Dotfiles
+# Roadmap: Red Team Dotfiles Reliability Sprint
 
 ## Overview
 
-This roadmap strengthens the existing red-team dotfiles baseline by preserving core operator workflows first, then hardening shell/editor behavior, and finally tightening docs and verification so future changes can ship with lower regression risk.
+This roadmap delivers reliability hardening in a dependency-aware order: installer safety first, shell behavior stability second, tmux/vim workflow integrity third, and documentation/release hygiene last. Each phase maps directly to v1 requirements with observable completion criteria.
 
 ## Phases
 
@@ -12,71 +12,70 @@ This roadmap strengthens the existing red-team dotfiles baseline by preserving c
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Installation Baseline** - Lock in installer safety and reproducible bootstrap checks.
-- [ ] **Phase 2: Zsh Behavior Integrity** - Preserve OPSEC, Warp, and alias-driven shell workflow reliability.
-- [ ] **Phase 3: Tmux/Vim Workflow Stability** - Harden terminal multiplexer and editor behavior without breaking established bindings.
-- [ ] **Phase 4: Docs and Release Hygiene** - Align docs to real behavior and close drift before next milestone.
+- [ ] **Phase 1: Installation Baseline** - Verify installer safety, idempotency, and baseline checks.
+- [ ] **Phase 2: Shell Reliability Hardening** - Preserve OPSEC, Warp, aliasr, and helper command stability.
+- [ ] **Phase 3: Tmux/Vim Workflow Stability** - Keep keybindings and editor workflows dependable.
+- [ ] **Phase 4: Documentation and Release Hygiene** - Align public docs and release metadata to shipped behavior.
 
 ## Phase Details
 
 ### Phase 1: Installation Baseline
 **Goal**: Installer behavior is safe, repeatable, and verifiable on every run.
 **Depends on**: Nothing (first phase)
-**Requirements**: INST-01, INST-02, INST-03, QA-01
+**Requirements**: INST-01, INST-02, INST-03, VFY-01
 **Success Criteria** (what must be TRUE):
-  1. Running `install.sh` creates backups before replacing managed dotfiles.
-  2. Running `install.sh` multiple times keeps valid symlinks and working configs.
-  3. A local verification checklist exists and parse/load checks can be executed by an operator.
+  1. Running `install.sh` repeatedly preserves valid symlink targets and backups.
+  2. Installer output and post-install runtime state are deterministic.
+  3. Operators can execute a documented baseline verification checklist.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Validate and harden backup/symlink idempotency paths in `install.sh`.
-- [ ] 01-02: Define and document local verification commands for installer and config syntax.
-- [ ] 01-03: Execute baseline verification and capture expected outcomes in planning docs.
+- [ ] 01-01: Validate and harden backup/symlink idempotency behavior.
+- [ ] 01-02: Define and document installer + runtime verification checklist.
+- [ ] 01-03: Execute baseline checks and capture expected outcomes.
 
-### Phase 2: Zsh Behavior Integrity
-**Goal**: Shell startup and helper command behavior remain stable across edits.
+### Phase 2: Shell Reliability Hardening
+**Goal**: Shell startup and helper command surface remain stable across hosts and edits.
 **Depends on**: Phase 1
-**Requirements**: ZSH-01, ZSH-02, ZSH-03
+**Requirements**: SHLL-01, SHLL-02, SHLL-03, SHLL-04
 **Success Criteria** (what must be TRUE):
-  1. OPSEC-sensitive history settings remain active and documented.
-  2. Warp detection/prompt behavior still works as expected after reload.
-  3. `aliasr` and key helper aliases/functions run without regressions.
+  1. OPSEC history and prompt behavior remain intact after reload.
+  2. Warp-aware branch logic behaves correctly when `TERM_PROGRAM=WarpTerminal`.
+  3. `aliasr` and core helpers execute correctly with guarded fallbacks where needed.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Audit and stabilize critical shell options, prompt branches, and PATH ordering.
-- [ ] 02-02: Verify helper functions/aliases and fix compatibility regressions.
-- [ ] 02-03: Update shell help text or inline guidance where behavior changed.
+- [ ] 02-01: Stabilize shell options, prompt branches, and environment ordering.
+- [ ] 02-02: Validate helper commands and add safe compatibility guards.
+- [ ] 02-03: Update shell-specific guidance to match final behavior.
 
 ### Phase 3: Tmux/Vim Workflow Stability
-**Goal**: Tmux and Vim remain dependable for red-team terminal workflows.
+**Goal**: Multiplexer/editor behavior remains fast, predictable, and operator-safe.
 **Depends on**: Phase 2
-**Requirements**: TMX-01, TMX-02, VIM-01, VIM-02
+**Requirements**: TVIM-01, TVIM-02
 **Success Criteria** (what must be TRUE):
-  1. Tmux navigation, logging, and `aliasr` split-pane shortcuts behave as documented.
-  2. Vim loads with intended plugin/theme fallback behavior in terminal environments.
-  3. Core red-team and navigation mappings remain available and conflict-free.
-**Plans**: 3 plans
-
-Plans:
-- [ ] 03-01: Validate and adjust tmux bindings, logging paths, and optional-tool fallbacks.
-- [ ] 03-02: Validate vim plugin/mapping setup and improve fallback safety.
-- [ ] 03-03: Add/update focused manual verification notes for tmux and vim workflows.
-
-### Phase 4: Docs and Release Hygiene
-**Goal**: Public docs match shipped behavior and milestone is ready for controlled release.
-**Depends on**: Phase 3
-**Requirements**: DOC-01
-**Success Criteria** (what must be TRUE):
-  1. README and AGENTS describe current commands, bindings, and repo structure accurately.
-  2. No stale references to removed tooling remain in user-facing guidance.
-  3. Release notes/versioning updates reflect actual delivered changes.
+  1. Tmux critical bindings and logging/recording paths behave as documented.
+  2. Vim starts with intended plugin/theme fallback behavior.
+  3. Core navigation and red-team mappings remain non-conflicting.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: Reconcile README/AGENTS/CHANGELOG with implemented behavior.
-- [ ] 04-02: Prepare release hygiene pass (version/changelog consistency check).
+- [ ] 03-01: Validate/fix tmux bindings, logging, and optional-tool behavior.
+- [ ] 03-02: Validate/fix vim plugin/mapping startup and fallback behavior.
+
+### Phase 4: Documentation and Release Hygiene
+**Goal**: Documentation and release metadata accurately reflect delivered behavior.
+**Depends on**: Phase 3
+**Requirements**: DOCS-01, DOCS-02
+**Success Criteria** (what must be TRUE):
+  1. README and AGENTS accurately describe current commands and keybindings.
+  2. CHANGELOG and VERSION are consistent with shipped reliability work.
+  3. Operators can follow docs without hitting stale or missing references.
+**Plans**: 2 plans
+
+Plans:
+- [ ] 04-01: Reconcile README/AGENTS with runtime behavior.
+- [ ] 04-02: Finalize changelog/version hygiene for release readiness.
 
 ## Progress
 
@@ -86,6 +85,6 @@ Phases execute in numeric order: 1 → 1.1 → 1.2 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Installation Baseline | 0/3 | Not started | - |
-| 2. Zsh Behavior Integrity | 0/3 | Not started | - |
-| 3. Tmux/Vim Workflow Stability | 0/3 | Not started | - |
-| 4. Docs and Release Hygiene | 0/2 | Not started | - |
+| 2. Shell Reliability Hardening | 0/3 | Not started | - |
+| 3. Tmux/Vim Workflow Stability | 0/2 | Not started | - |
+| 4. Documentation and Release Hygiene | 0/2 | Not started | - |

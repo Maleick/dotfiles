@@ -4,7 +4,7 @@
 
 See: .planning/PROJECT.md (updated 2026-02-25)
 
-**Core value:** An operator can bootstrap and use a reliable red-team shell workflow in minutes, with critical behaviors staying stable release to release.
+**Core value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 **Current focus:** Phase 1: Installation Baseline
 
 ## Current Position
@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 Phase: 1 of 4 (Installation Baseline)
 Plan: 0 of 3 in current phase
 Status: Ready to plan
-Last activity: 2026-02-25 — Initialized project docs after generating codebase map
+Last activity: 2026-02-25 — Auto re-initialized project from `idea.md`
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -42,9 +42,9 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [Init]: Keep repo as plain dotfiles + installer, not app rewrite.
-- [Init]: Preserve aliasr and Warp compatibility as non-negotiable behaviors.
-- [Init]: Skip separate domain research; use codebase map as primary context.
+- [Reset]: Reinitialized project in auto mode from `idea.md`.
+- [Scope]: Reliability sprint stays terminal-first and source-of-truth driven.
+- [Process]: Research enabled and phases derived from requirement coverage.
 
 ### Pending Todos
 
@@ -52,11 +52,11 @@ None yet.
 
 ### Blockers/Concerns
 
-- Cross-platform command differences in shell helpers need explicit validation.
-- Documentation drift risk between README/AGENTS/CHANGELOG and actual config behavior.
+- Must validate cross-platform behavior for helper commands that differ by OS utilities.
+- Must keep docs synchronized after behavior changes to prevent operator drift.
 
 ## Session Continuity
 
-Last session: 2026-02-25 11:59
-Stopped at: Project initialization complete; ready for `$gsd-plan-phase 1`
+Last session: 2026-02-25 12:09
+Stopped at: Project re-initialization complete; ready for phase discussion/planning
 Resume file: None
