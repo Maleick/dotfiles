@@ -6,7 +6,7 @@ set -e
 DOTFILES_DIR="$(pwd)"
 BACKUP_DIR="$HOME/.dotfiles_backup_$(date +%Y%m%d%H%M%S)"
 
-echo "Creating backup directory at $BACKUP_DIR"
+echo "[start] Creating backup directory at $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
 # Function to create a symlink and backup the old file if needed.
@@ -32,15 +32,14 @@ link_file() {
     echo "[linked] $dest -> $src"
 }
 
-echo "Copying dotfiles to home directory..."
+echo "[start] Copying dotfiles to home directory..."
 
 # Symlink the main dotfiles directory
-ln -sfn "$DOTFILES_DIR" "$HOME/.dotfiles"
-echo "[linked] $HOME/.dotfiles -> $DOTFILES_DIR"
+link_file "$DOTFILES_DIR" "$HOME/.dotfiles"
 
 # Symlink individual configuration files
 link_file "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
 link_file "$DOTFILES_DIR/vim/.vimrc" "$HOME/.vimrc"
 link_file "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
 
-echo "Done."
+echo "[done] Dotfiles install completed."
