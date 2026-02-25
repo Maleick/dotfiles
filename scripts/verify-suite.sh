@@ -6,17 +6,20 @@ PASS_COUNT=0
 FAIL_COUNT=0
 SKIP_COUNT=0
 QUICK_MODE=0
+OUTPUT_JSON=0
 FORCE_FAIL_REQUIRED="${VERIFY_SUITE_FORCE_FAIL_REQUIRED:-0}"
 QUICK_SKIP_REASON_PREFIX="Skipped in quick mode (full-only required check):"
+RESULTS_FILE=""
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 usage() {
   cat <<'USAGE'
-Usage: ./scripts/verify-suite.sh [--quick] [--help]
+Usage: ./scripts/verify-suite.sh [--quick] [--json] [--help]
 
 Options:
   --quick   Run quick-mode verification with locked minimum required checks
+  --json    Emit deterministic machine-readable JSON output
   --help    Show this help text
 USAGE
 }
@@ -26,6 +29,9 @@ parse_args() {
     case "$1" in
       --quick)
         QUICK_MODE=1
+        ;;
+      --json)
+        OUTPUT_JSON=1
         ;;
       --help)
         usage
@@ -41,6 +47,11 @@ parse_args() {
   done
 }
 
+init_results_file() {
+  RESULTS_FILE="$(mktemp "${TMPDIR:-/tmp}/verify-suite-results.XXXXXX")"
+  trap 'rm -f "$RESULTS_FILE"' EXIT
+}
+
 status_line() {
   local status="$1"
   local check_id="$2"
@@ -51,7 +62,8 @@ status_line() {
 record_status() {
   local status="$1"
   local check_id="$2"
-  local message="$3"
+  local kind="$3"
+  local message="$4"
 
   case "$status" in
     PASS)
@@ -65,7 +77,11 @@ record_status() {
       ;;
   esac
 
-  status_line "$status" "$check_id" "$message"
+  printf '%s\t%s\t%s\t%s\n' "$status" "$check_id" "$kind" "$message" >>"$RESULTS_FILE"
+
+  if [ "$OUTPUT_JSON" != "1" ]; then
+    status_line "$status" "$check_id" "$message"
+  fi
 }
 
 run_required() {
@@ -74,14 +90,14 @@ run_required() {
   local cmd="$3"
 
   if [ "$FORCE_FAIL_REQUIRED" = "1" ] && [ "$check_id" = "req.install_syntax" ]; then
-    record_status "FAIL" "$check_id" "Forced required failure via VERIFY_SUITE_FORCE_FAIL_REQUIRED=1"
+    record_status "FAIL" "$check_id" "required" "Forced required failure via VERIFY_SUITE_FORCE_FAIL_REQUIRED=1"
     return
   fi
 
   if eval "$cmd" >/dev/null 2>&1; then
-    record_status "PASS" "$check_id" "$description"
+    record_status "PASS" "$check_id" "required" "$description"
   else
-    record_status "FAIL" "$check_id" "$description"
+    record_status "FAIL" "$check_id" "required" "$description"
   fi
 }
 
@@ -93,15 +109,15 @@ run_required_pattern() {
 
   if command -v rg >/dev/null 2>&1; then
     if rg -n "$pattern" "$file" >/dev/null 2>&1; then
-      record_status "PASS" "$check_id" "$description"
+      record_status "PASS" "$check_id" "required" "$description"
     else
-      record_status "FAIL" "$check_id" "$description"
+      record_status "FAIL" "$check_id" "required" "$description"
     fi
   else
     if grep -E "$pattern" "$file" >/dev/null 2>&1; then
-      record_status "PASS" "$check_id" "$description"
+      record_status "PASS" "$check_id" "required" "$description"
     else
-      record_status "FAIL" "$check_id" "$description"
+      record_status "FAIL" "$check_id" "required" "$description"
     fi
   fi
 }
@@ -113,16 +129,16 @@ run_optional() {
   local guidance="$4"
 
   if eval "$cmd" >/dev/null 2>&1; then
-    record_status "PASS" "$check_id" "$description"
+    record_status "PASS" "$check_id" "optional" "$description"
   else
-    record_status "SKIP" "$check_id" "$guidance"
+    record_status "SKIP" "$check_id" "optional" "$guidance"
   fi
 }
 
 run_quick_skip() {
   local check_id="$1"
   local description="$2"
-  record_status "SKIP" "$check_id" "$QUICK_SKIP_REASON_PREFIX $description"
+  record_status "SKIP" "$check_id" "required" "$QUICK_SKIP_REASON_PREFIX $description"
 }
 
 ensure_repo_root() {
@@ -157,15 +173,58 @@ run_optional_checks() {
   run_optional "opt.fzf" "fzf is available for session-switch helper checks" "command -v fzf >/dev/null 2>&1 && fzf --version >/dev/null 2>&1" "Install fzf to enable session-switch dependency checks"
 }
 
+emit_summary() {
+  if [ "$OUTPUT_JSON" = "1" ]; then
+    python3 - "$RESULTS_FILE" "$QUICK_MODE" <<'PY'
+import json
+import sys
+
+results_file = sys.argv[1]
+quick_mode = sys.argv[2] == "1"
+checks = []
+
+with open(results_file, "r", encoding="utf-8") as fh:
+    for raw in fh:
+        status, check_id, kind, message = raw.rstrip("\n").split("\t", 3)
+        checks.append(
+            {
+                "status": status,
+                "id": check_id,
+                "kind": kind,
+                "message": message,
+            }
+        )
+
+summary = {
+    "pass": sum(1 for c in checks if c["status"] == "PASS"),
+    "fail": sum(1 for c in checks if c["status"] == "FAIL"),
+    "skip": sum(1 for c in checks if c["status"] == "SKIP"),
+}
+summary["required_fail"] = any(c["status"] == "FAIL" and c["kind"] == "required" for c in checks)
+
+payload = {
+    "mode": "quick" if quick_mode else "full",
+    "format": "json",
+    "checks": checks,
+    "summary": summary,
+}
+print(json.dumps(payload, separators=(",", ":"), ensure_ascii=True))
+PY
+  else
+    printf 'SUMMARY | PASS=%s FAIL=%s SKIP=%s\n' "$PASS_COUNT" "$FAIL_COUNT" "$SKIP_COUNT"
+  fi
+}
+
 main() {
   parse_args "$@"
   ensure_repo_root
+  init_results_file
 
   run_minimum_required_checks
   run_full_only_required_checks
   run_optional_checks
 
-  printf 'SUMMARY | PASS=%s FAIL=%s SKIP=%s\n' "$PASS_COUNT" "$FAIL_COUNT" "$SKIP_COUNT"
+  emit_summary
   [ "$FAIL_COUNT" -eq 0 ]
 }
 
