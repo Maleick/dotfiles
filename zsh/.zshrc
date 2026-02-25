@@ -28,6 +28,16 @@ fi
 export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
 
 # ----------------------
+# Warp Runtime Detection
+# ----------------------
+if [[ "${TERM_PROGRAM:-}" == "WarpTerminal" ]]; then
+    export WARP_TERMINAL=1
+    export DISABLE_AUTO_TITLE="true"
+else
+    export WARP_TERMINAL=0
+fi
+
+# ----------------------
 # Red Team Shell Banner
 # ----------------------
 if command -v figlet &> /dev/null; then
@@ -124,7 +134,12 @@ fi
 
 if [ "$color_prompt" = yes ]; then
     # Red team prompt
-    PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{cyan}%~%f %F{red}$%f '
+    if [[ "${WARP_TERMINAL:-0}" == "1" ]]; then
+        # Warp already displays location context, keep prompt compact.
+        PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{red}$%f '
+    else
+        PROMPT='%F{red}⚡%f %F{%(#.red.green)}%n%f@%F{blue}%m%f %F{cyan}%~%f %F{red}$%f '
+    fi
     
     # Right prompt with exit code and job count
     RPROMPT='%(?.. %? %F{red}%B✘%b%f)%(1j. %j %F{yellow}%B⚙%b%f.)'
@@ -182,14 +197,18 @@ else
 fi
 unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    TERM_TITLE=$'\e]0;%n@%m: %~\a'
-    ;;
-*)
-    ;;
-esac
+# If this is an xterm set the title to user@host:dir (Warp manages title itself)
+if [[ "${WARP_TERMINAL:-0}" == "1" ]]; then
+    TERM_TITLE=""
+else
+    case "$TERM" in
+    xterm*|rxvt*)
+        TERM_TITLE=$'\e]0;%n@%m: %~\a'
+        ;;
+    *)
+        ;;
+    esac
+fi
 
 new_line_before_prompt=yes
 precmd() {
