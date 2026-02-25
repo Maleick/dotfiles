@@ -127,6 +127,22 @@ Wrapper contract:
 - Exits `0` only if required checks pass; exits non-zero when any required check fails.
 - Optional dependency checks (`asciinema`, `fzf`) fail soft with actionable `SKIP` guidance.
 
+### Compatibility Matrix (Phase 6 Coverage)
+
+Compatibility guidance is tracked in:
+
+- `.planning/compatibility/v1.1-matrix.md`
+
+How to use it:
+- Treat matrix rows as observed command-run outcomes, not inferred platform claims.
+- Interpret statuses as:
+  - `PASS`: observed run succeeded for the listed scope/environment.
+  - `FAIL`: observed run failed for the listed scope/environment.
+  - `SKIP`: not observed in that environment/session; read caveat before relying on it.
+- Use `Command Set Reference` plus `Last Validated` to confirm evidence provenance and recency.
+
+When verification/runtime/docs behavior changes, refresh matrix rows before milestone closeout so matrix expectations remain aligned with current contracts.
+
 ### Local Overrides (Optional)
 
 For machine-specific or sensitive configurations (API keys, local paths, etc.), create `~/.zshrc.local`:
