@@ -8,14 +8,24 @@ This project hardens and evolves a red-team-focused dotfiles repository so setup
 
 An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 
-## Current Milestone: v1.1 automation
+## Current State
 
-**Goal:** Automate reliability verification and publish an operator-safe compatibility matrix so environment validation is faster and repeatable.
+**Milestone `v1.1 automation` shipped on 2026-02-25.**
 
-**Target features:**
-- Single-command validation wrapper that runs shell/tmux/vim/docs checks and returns a clear pass/fail summary.
-- Compatibility matrix documenting expected behavior across macOS/Linux and common network/runtime conditions.
-- Documentation alignment so operators can choose the right checks per environment without ambiguity.
+Delivered outcomes:
+- One-command verification wrapper (`./scripts/verify-suite.sh`) with deterministic `PASS`/`FAIL`/`SKIP` semantics.
+- Evidence-backed compatibility matrix at `.planning/compatibility/v1.1-matrix.md`.
+- README/AGENTS guidance for matrix interpretation and maintenance policy.
+- Phase-level verification reports confirming completion of `AUTO-01`, `AUTO-02`, `AUTO-03`, `COMP-01`, and `COMP-02`.
+
+## Next Milestone Goals
+
+Pending definition via `$gsd-new-milestone`.
+
+Suggested starting areas:
+- Decide whether to prioritize `AUTO-04` quick-mode execution.
+- Decide whether to prioritize `AUTO-05` machine-readable output mode.
+- Evaluate `COMP-03` matrix generation automation from repeatable run evidence.
 
 ## Requirements
 
@@ -25,21 +35,18 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 - ✓ Shell reliability preserving OPSEC, Warp behavior, aliasr integration, and helper fallbacks (`SHLL-01`, `SHLL-02`, `SHLL-03`, `SHLL-04`) — v1.0
 - ✓ Tmux/Vim workflow stability with preserved keybinding and fallback contracts (`TVIM-01`, `TVIM-02`) — v1.0
 - ✓ Documentation/release metadata parity and repeatable verification checklist (`DOCS-01`, `DOCS-02`, `VFY-01`) — v1.0
+- ✓ Verification wrapper command and deterministic status/exit contracts (`AUTO-01`, `AUTO-02`, `AUTO-03`) — v1.1
+- ✓ Compatibility matrix baseline coverage and caveat-aware traceability (`COMP-01`, `COMP-02`) — v1.1
 
 ### Active
 
-- [ ] `AUTO-01`: Add optional command wrapper to run the full validation suite quickly.
-- [ ] `AUTO-02`: Add expanded compatibility matrix for multiple OS/network environments.
+- [ ] Next milestone scope not defined yet (run `$gsd-new-milestone`).
 
 ### Out of Scope
 
 - Converting this repo into a compiled application or service.
 - Storing secrets, tokens, or credential material in tracked files.
 - Introducing enterprise process overhead (sprint ceremonies, stakeholder workflows).
-
-## Context
-
-Milestone `v1.0` shipped on 2026-02-25 with all 4 planned phases complete (10 plans / 20 tasks). Runtime behavior is aligned across `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`, and release metadata is synchronized (`VERSION=2.1.1`, updated `CHANGELOG.md`, docs parity updates in `README.md` and `AGENTS.md`). Phase-level execution history remains in `.planning/phases/` and milestone archives in `.planning/milestones/`.
 
 ## Constraints
 
@@ -58,7 +65,24 @@ Milestone `v1.0` shipped on 2026-02-25 with all 4 planned phases complete (10 pl
 | Keep research enabled in auto mode | Captures ecosystem guidance before final roadmap structure | ✓ Good |
 | Preserve existing codebase map while resetting init docs | Avoids losing verified architectural context | ✓ Good |
 | Archive `v1.0` with milestone artifacts before new scope definition | Keeps active planning files concise while preserving traceable history | ✓ Good |
-| Start `v1.1` scope from carried-forward automation requirements (`AUTO-01`, `AUTO-02`) | Maintains continuity from validated v1.0 outcomes and reduces re-discovery overhead | ✓ Good |
+| Start `v1.1` scope from carried-forward automation requirements | Maintains continuity from validated v1.0 outcomes and reduces re-discovery overhead | ✓ Good |
+| Use evidence-backed compatibility matrix contract in v1.1 | Prevents inferred claims and keeps operator trust high | ✓ Good |
+| Archive `v1.1` without formal audit artifact | Explicitly accepted process debt to preserve delivery momentum | ⚠ Revisit |
+
+<details>
+<summary>v1.1 Development Context Archive</summary>
+
+- Milestone range: `v1.0..HEAD`
+- Phase coverage: 5-6
+- Plans complete: 4/4
+- Tasks complete: 8
+- Diff summary: 28 files changed, 1846 insertions(+), 314 deletions(-)
+- Key artifacts:
+  - `.planning/milestones/v1.1-ROADMAP.md`
+  - `.planning/milestones/v1.1-REQUIREMENTS.md`
+  - `.planning/compatibility/v1.1-matrix.md`
+
+</details>
 
 ---
-*Last updated: 2026-02-25 after v1.1 milestone kickoff*
+*Last updated: 2026-02-25 after v1.1 milestone archival*

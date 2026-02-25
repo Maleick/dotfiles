@@ -25,3 +25,28 @@ None recorded at milestone close.
 - Phase execution history: `.planning/phases/`
 
 ---
+
+## v1.1 automation milestone (Shipped: 2026-02-25)
+
+**Scope:** 2 phases, 4 plans, 8 tasks
+**Release focus:** verification automation and compatibility matrix coverage.
+
+### Key Accomplishments
+
+1. Added `./scripts/verify-suite.sh` as a deterministic repo-root validation wrapper.
+2. Shipped required/optional check semantics with strict `PASS`/`FAIL`/`SKIP` and non-zero required failure behavior.
+3. Published canonical compatibility artifact at `.planning/compatibility/v1.1-matrix.md` with evidence-backed baseline rows.
+4. Integrated matrix interpretation and maintenance policy into `README.md` and `AGENTS.md`.
+5. Completed and verified all v1.1 requirements: `AUTO-01`, `AUTO-02`, `AUTO-03`, `COMP-01`, `COMP-02`.
+
+### Known Gaps
+
+- Milestone archived without formal `.planning/v1.1-MILESTONE-AUDIT.md`; accepted as process debt by explicit completion choice.
+
+### Archive Artifacts
+
+- Roadmap archive: `.planning/milestones/v1.1-ROADMAP.md`
+- Requirements archive: `.planning/milestones/v1.1-REQUIREMENTS.md`
+- Phase execution history: `.planning/phases/`
+
+---
