@@ -45,9 +45,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Stabilize shell options, prompt branches, and environment ordering.
-- [ ] 02-02: Validate helper commands and add safe compatibility guards.
-- [ ] 02-03: Update shell-specific guidance to match final behavior.
+- [ ] 02-01-PLAN.md — Stabilize shell options, prompt branches, and environment ordering.
+- [ ] 02-02-PLAN.md — Validate helper commands and add safe compatibility guards.
+- [ ] 02-03-PLAN.md — Update shell-specific guidance to match final behavior.
 
 ### Phase 3: Tmux/Vim Workflow Stability
 **Goal**: Multiplexer/editor behavior remains fast, predictable, and operator-safe.
