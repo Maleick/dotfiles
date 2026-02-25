@@ -1,53 +1,48 @@
-# Requirements: Red Team Dotfiles
+# Requirements: Red Team Dotfiles Reliability Sprint
 
 **Defined:** 2026-02-25
-**Core Value:** An operator can bootstrap and use a reliable red-team shell workflow in minutes, with critical behaviors staying stable release to release.
+**Core Value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 
 ## v1 Requirements
 
-Requirements for the current milestone. Each maps to a roadmap phase.
-
 ### Installation
 
-- [ ] **INST-01**: `install.sh` creates timestamped backups before replacing existing `~/.zshrc`, `~/.tmux.conf`, and `~/.vimrc`.
-- [ ] **INST-02**: `install.sh` symlinks managed files from repo paths (`zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`) into `$HOME`.
-- [ ] **INST-03**: Re-running `install.sh` is idempotent and leaves a valid, usable shell/editor setup.
+- [ ] **INST-01**: Running `install.sh` creates timestamped backups before replacing target dotfiles.
+- [ ] **INST-02**: Running `install.sh` creates/refreshes correct symlinks for `~/.zshrc`, `~/.tmux.conf`, and `~/.vimrc`.
+- [ ] **INST-03**: Re-running `install.sh` does not break shell/editor startup behavior.
 
-### Zsh Workflow
+### Shell Reliability
 
-- [ ] **ZSH-01**: `zsh/.zshrc` preserves OPSEC history behavior (`hist_ignore_space`, dedupe, immediate append).
-- [ ] **ZSH-02**: Warp-aware behavior and prompt branching remain intact.
-- [ ] **ZSH-03**: `alias a='aliasr'` and documented red-team helper commands remain functional.
+- [ ] **SHLL-01**: `zsh/.zshrc` preserves OPSEC history settings and command behavior across reloads.
+- [ ] **SHLL-02**: Warp-aware prompt/runtime behavior remains functional.
+- [ ] **SHLL-03**: `aliasr` integration (`alias a='aliasr'`) remains available and documented.
+- [ ] **SHLL-04**: Core helper commands have platform-safe behavior or explicit guarded fallback paths.
 
-### Tmux Workflow
+### Tmux and Vim Stability
 
-- [ ] **TMX-01**: `tmux/.tmux.conf` keeps red-team session shortcuts and pane/window navigation behavior stable.
-- [ ] **TMX-02**: `tmux/.tmux.conf` preserves recording/logging and `aliasr` split-pane keybindings (`Prefix + U`, `Prefix + K`).
+- [ ] **TVIM-01**: `tmux` navigation, logging, and `aliasr` keybindings (`Prefix + U`, `Prefix + K`) work as documented.
+- [ ] **TVIM-02**: `vim` plugin bootstrap, theme fallback, and key mappings load without startup breakage.
 
-### Vim Workflow
+### Documentation and Verification
 
-- [ ] **VIM-01**: `vim/.vimrc` remains terminal-first with plugin declarations and fallback-safe theme logic.
-- [ ] **VIM-02**: Key mappings for red-team and navigation workflows remain available and non-conflicting.
-
-### Documentation & Verification
-
-- [ ] **DOC-01**: `README.md` and `AGENTS.md` accurately describe current commands, keybindings, and repository scope.
-- [ ] **QA-01**: A documented local verification checklist exists and covers syntax/load checks for installer, zsh, tmux, and vim configs.
+- [ ] **DOCS-01**: `README.md` and `AGENTS.md` match actual command/keybinding behavior.
+- [ ] **DOCS-02**: `CHANGELOG.md` and `VERSION` stay consistent with delivered reliability changes.
+- [ ] **VFY-01**: A repeatable local verification checklist exists for installer, shell, tmux, and vim checks.
 
 ## v2 Requirements
 
-### Tooling Enhancements
+### Automation Enhancements
 
-- **AUTO-01**: Add optional automated validation hooks (for example local task runner wrappers) without forcing CI dependency.
-- **AUTO-02**: Add structured compatibility test matrix for macOS/Linux shell differences.
+- **AUTO-01**: Add optional command wrapper to run full validation suite quickly.
+- **AUTO-02**: Add expanded compatibility matrix for multiple OS/network environments.
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Rewriting configs into a GUI settings app | Violates terminal-first and plain-text editability goals |
-| Bundling secrets or secret retrieval mechanisms in repo | Security boundary: secrets remain external to tracked files |
-| Mandatory cloud CI gate for all edits | Current workflow is local-first and intentionally lightweight |
+| Rewriting into GUI or compiled application | Not aligned with terminal-first operator workflow |
+| Committing secrets/credentials in tracked config/docs | Violates security boundary |
+| Enterprise multi-team process scaffolding | Not needed for solo operator execution |
 
 ## Traceability
 
@@ -56,15 +51,15 @@ Requirements for the current milestone. Each maps to a roadmap phase.
 | INST-01 | Phase 1 | Pending |
 | INST-02 | Phase 1 | Pending |
 | INST-03 | Phase 1 | Pending |
-| QA-01 | Phase 1 | Pending |
-| ZSH-01 | Phase 2 | Pending |
-| ZSH-02 | Phase 2 | Pending |
-| ZSH-03 | Phase 2 | Pending |
-| TMX-01 | Phase 3 | Pending |
-| TMX-02 | Phase 3 | Pending |
-| VIM-01 | Phase 3 | Pending |
-| VIM-02 | Phase 3 | Pending |
-| DOC-01 | Phase 4 | Pending |
+| VFY-01 | Phase 1 | Pending |
+| SHLL-01 | Phase 2 | Pending |
+| SHLL-02 | Phase 2 | Pending |
+| SHLL-03 | Phase 2 | Pending |
+| SHLL-04 | Phase 2 | Pending |
+| TVIM-01 | Phase 3 | Pending |
+| TVIM-02 | Phase 3 | Pending |
+| DOCS-01 | Phase 4 | Pending |
+| DOCS-02 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 12 total
@@ -73,4 +68,4 @@ Requirements for the current milestone. Each maps to a roadmap phase.
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after initial definition*
+*Last updated: 2026-02-25 after auto-mode re-initialization*
