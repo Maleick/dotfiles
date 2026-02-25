@@ -1,56 +1,52 @@
-# Red Team Dotfiles
+# Red Team Dotfiles Reliability Sprint
 
 ## What This Is
 
-Red Team Dotfiles is the source-of-truth repository for an operator-focused terminal environment built around `zsh`, `tmux`, and `vim`. It provides reproducible shell/editor ergonomics, red-team helper commands, and an idempotent installer that links managed configs into `$HOME`. The audience is a single operator who wants fast setup, predictable shortcuts, and low-friction daily usage across terminal-first workflows.
+This project hardens and evolves a red-team-focused dotfiles repository so setup and daily terminal workflows stay predictable. It targets a solo operator who relies on `zsh`, `tmux`, and `vim` as primary tooling. The repository remains the source of truth for install behavior, shell helpers, keybindings, and operator guidance.
 
 ## Core Value
 
-An operator can bootstrap and use a reliable red-team shell workflow in minutes, with critical behaviors staying stable release to release.
+An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 
 ## Requirements
 
 ### Validated
 
-- ✓ Installer backs up existing dotfiles and symlinks managed configs into `$HOME` (`install.sh`).
-- ✓ `zsh` environment includes OPSEC-conscious history behavior, Warp-aware prompt handling, and red-team helper aliases/functions (`zsh/.zshrc`).
-- ✓ `tmux` environment includes red-team navigation, logging/recording, and `aliasr` integration (`tmux/.tmux.conf`).
-- ✓ `vim` environment is terminal-first, plugin-managed, and includes red-team oriented mappings (`vim/.vimrc`).
-- ✓ Core usage and operator guidance are documented (`README.md`, `AGENTS.md`).
+(None yet — ship to validate)
 
 ### Active
 
-- [ ] Keep installation and reload workflows idempotent and safe across repeated runs.
-- [ ] Preserve OPSEC, Warp compatibility, and `aliasr` behaviors while evolving configs.
-- [ ] Introduce explicit verification checks for installer and config syntax so regressions are caught quickly.
-- [ ] Keep documentation synchronized with actual command names, keybindings, and current repo scope.
+- [ ] Keep installer behavior safe and idempotent across repeated runs.
+- [ ] Preserve OPSEC-conscious shell behavior, Warp compatibility, and `aliasr` integrations.
+- [ ] Add verification coverage for shell/tmux/vim load and syntax checks.
+- [ ] Keep docs aligned with actual commands, keybindings, and constraints.
 
 ### Out of Scope
 
-- Full migration to a compiled/package-managed application — this repo remains plain-text dotfiles for direct operator control.
-- Secret management implementation inside this repository — secret values and secret stores stay external by design.
-- Enterprise process overhead (multi-team ceremonies, sprint governance) — this workflow targets solo operator execution.
+- Converting this repo into a compiled application or service.
+- Storing secrets, tokens, or credential material in tracked files.
+- Introducing enterprise process overhead (sprint ceremonies, stakeholder workflows).
 
 ## Context
 
-This repository is intentionally slimmed down and currently contains managed configs for `zsh`, `tmux`, and `vim`, plus install/docs/version files. Mapping artifacts under `.planning/codebase/` establish current architecture, conventions, and concerns for planning. Existing docs note historical tooling not present in the current tree, so consistency and drift control are active concerns.
+The repository currently contains configuration sources in `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`, plus installer/version/docs files. A codebase map exists under `.planning/codebase/` and highlights technical debt around validation gaps and documentation drift. The project idea emphasizes reliability, repeatability, and operator trust over feature expansion.
 
 ## Constraints
 
-- **Behavioral compatibility**: Preserve critical workflows (`alias a='aliasr'`, tmux `Prefix + U/K`, OPSEC history options) — these are core operator habits.
-- **Terminal-first scope**: Keep all changes CLI-native and terminal-compatible — no GUI assumptions.
-- **Source-of-truth location**: Edit files inside repo paths (`zsh/`, `tmux/`, `vim/`) rather than `$HOME` symlink targets — avoids state drift.
-- **Safety**: Never write secrets to repo files or generated planning artifacts — prevents credential leaks.
-- **Incremental delivery**: Ship in phase-sized chunks with clear verifiable outcomes — enables fast correction loops.
+- **Compatibility**: Preserve existing operator workflows and keybindings (`alias a='aliasr'`, tmux `Prefix + U`/`Prefix + K`) — changing these breaks daily usage.
+- **Security**: Never commit secret values or credential payloads — protects operator and infrastructure exposure.
+- **Terminal-first**: All outcomes must work in terminal environments (macOS first, Linux-compatible where intended).
+- **Source-of-truth**: Changes are made in repo files, then linked into `$HOME` via `install.sh`.
+- **Incremental delivery**: Work is phased so each stage has observable reliability improvements.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Keep the repo as plain dotfiles + installer | Fast to audit, easy to patch, low coupling | ✓ Good |
-| Preserve `aliasr` and Warp-specific integrations as compatibility constraints | Existing operator workflow depends on these bindings/branches | ✓ Good |
-| Use `.planning/` artifacts to drive future phases | Makes requirements, roadmap, and execution state explicit and resumable | ✓ Good |
-| Skip domain research for initialization | Codebase map already captures in-repo truth for this project type | ✓ Good |
+| Keep repo as dotfiles + installer | Maximizes auditability and low-friction edits | ✓ Good |
+| Run initialization in auto mode from `idea.md` | User requested automatic rerun with explicit idea source | ✓ Good |
+| Keep research enabled in auto mode | Captures ecosystem guidance before final roadmap structure | ✓ Good |
+| Preserve existing codebase map while resetting init docs | Avoids losing verified architectural context | ✓ Good |
 
 ---
-*Last updated: 2026-02-25 after `$gsd-map-codebase` and `$gsd-new-project` initialization*
+*Last updated: 2026-02-25 after auto re-initialization from `idea.md`*
