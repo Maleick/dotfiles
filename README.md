@@ -46,6 +46,14 @@ source ~/.zshrc
 /help
 ```
 
+### Baseline Verification
+
+Use the Phase 1 checklist for repeatable installer and runtime baseline checks:
+
+- `.planning/phases/01-installation-baseline/01-VERIFICATION-CHECKLIST.md`
+
+The checklist includes syntax checks, tmux/vim startup sanity, installer rerun validation, and expected symlink targets.
+
 ### Local Overrides (Optional)
 
 For machine-specific or sensitive configurations (API keys, local paths, etc.), create `~/.zshrc.local`:
