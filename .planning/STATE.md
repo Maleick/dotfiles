@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: automation
-status: active
-last_updated: "2026-02-25T20:29:22Z"
+status: complete
+last_updated: "2026-02-25T21:08:00Z"
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 4
 ---
 
 # Project State
@@ -18,21 +18,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
-**Current focus:** Advance to Phase 6 compatibility matrix planning and execution
+**Current focus:** Milestone v1.1 complete; prepare milestone closeout and next-cycle routing
 
 ## Current Position
 
 Phase: 6 of 6 (Compatibility Matrix and Coverage)
-Plan: 0 of 2 in current phase
-Status: Phase 5 executed and verified; ready for Phase 6 discuss/planning
-Last activity: 2026-02-25 — Completed Phase 5 execution, verification, and closeout updates
+Plan: 2 of 2 in current phase
+Status: Phase 6 executed and verified; v1.1 scope complete
+Last activity: 2026-02-25 — Completed Phase 6 compatibility matrix/docs integration and verification
 
-Progress: [█████░░░░░] 50%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
+- Total plans completed: 14
 - Average duration: 1.6 min
 - Total execution time: 0.3 hours
 
@@ -45,9 +45,10 @@ Progress: [█████░░░░░] 50%
 | 3. Tmux/Vim Workflow Stability | 2 | 5 min | 2.5 min |
 | 4. Documentation and Release Hygiene | 2 | 5 min | 2.5 min |
 | 5. Validation Wrapper Baseline | 2 | 2 min | 1.0 min |
+| 6. Compatibility Matrix and Coverage | 2 | 2 min | 1.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02, 04-01, 04-02, 05-01, 05-02
+- Last 5 plans: 04-02, 05-01, 05-02, 06-01, 06-02
 - Trend: On pace
 
 *Updated after each plan completion*
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [Phase 5 Context]: Locked wrapper invocation, output semantics, and fail-soft optional dependency policy in `05-CONTEXT.md`.
 - [Phase 5 Execution]: Implemented `scripts/verify-suite.sh` baseline checks and optional dependency handling; aligned wrapper docs in `README.md` and `AGENTS.md`.
 - [Phase 5 Verification]: Verified `AUTO-01`/`AUTO-02`/`AUTO-03` as passed in `05-VERIFICATION.md`.
+- [Phase 6 Context]: Locked canonical compatibility artifact path, evidence-backed row schema, and docs linkage policy in `06-CONTEXT.md`.
+- [Phase 6 Execution]: Created `.planning/compatibility/v1.1-matrix.md` with baseline macOS/Linux rows, caveat tags, and freshness policy; integrated usage guidance in `README.md` and maintainer policy in `AGENTS.md`.
+- [Phase 6 Verification]: Verified `COMP-01` and `COMP-02` as passed in `06-VERIFICATION.md`.
 
 ### Pending Todos
 
@@ -90,6 +94,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-25 14:39
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-compatibility-matrix-and-coverage/06-CONTEXT.md
+Last session: 2026-02-25 15:08
+Stopped at: Phase 6 execution complete
+Resume file: .planning/phases/06-compatibility-matrix-and-coverage/06-VERIFICATION.md

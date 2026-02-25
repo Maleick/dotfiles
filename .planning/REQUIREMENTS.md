@@ -15,8 +15,8 @@ Requirements for the v1.1 milestone. Each maps to exactly one roadmap phase.
 
 ### Compatibility Matrix
 
-- [ ] **COMP-01**: Operator can reference a compatibility matrix covering baseline macOS and Linux behavior for install/shell/tmux/vim verification.
-- [ ] **COMP-02**: Compatibility matrix entries include last-validated command set and environment caveats (network/runtime differences).
+- [x] **COMP-01**: Operator can reference a compatibility matrix covering baseline macOS and Linux behavior for install/shell/tmux/vim verification.
+- [x] **COMP-02**: Compatibility matrix entries include last-validated command set and environment caveats (network/runtime differences).
 
 ## v2 Requirements
 
@@ -47,8 +47,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTO-01 | Phase 5 | Complete |
 | AUTO-02 | Phase 5 | Complete |
 | AUTO-03 | Phase 5 | Complete |
-| COMP-01 | Phase 6 | Pending |
-| COMP-02 | Phase 6 | Pending |
+| COMP-01 | Phase 6 | Complete |
+| COMP-02 | Phase 6 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 5 total
@@ -57,4 +57,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after Phase 5 completion*
+*Last updated: 2026-02-25 after Phase 6 completion*
