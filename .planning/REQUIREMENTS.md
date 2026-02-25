@@ -14,7 +14,7 @@ Requirements for the v1.2 milestone. Each maps to exactly one roadmap phase.
 
 ### Compatibility Evidence Automation
 
-- [ ] **COMP-03**: Maintainer can generate/update compatibility matrix rows from observed verification run evidence with canonical schema fields and validation date provenance.
+- [x] **COMP-03**: Maintainer can generate/update compatibility matrix rows from observed verification run evidence with canonical schema fields and validation date provenance.
 
 ## v3 Requirements
 
@@ -44,7 +44,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | AUTO-04 | Phase 7 | Complete |
 | AUTO-05 | Phase 7 | Complete |
-| COMP-03 | Phase 8 | Pending |
+| COMP-03 | Phase 8 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 3 total
@@ -53,4 +53,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after Phase 7 completion*
+*Last updated: 2026-02-25 after Phase 8 completion*

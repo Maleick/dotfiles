@@ -17,7 +17,7 @@
 | # | Phase | Goal | Requirements | Success Criteria |
 |---|-------|------|--------------|------------------|
 | 7 | ✅ Verification Wrapper Modes and Output Contracts | Add quick mode and machine-readable output while preserving default behavior contracts | `AUTO-04`, `AUTO-05` | 4 (completed 2026-02-25) |
-| 8 | Compatibility Matrix Evidence Automation | Generate and maintain matrix rows from observed verification evidence with schema/provenance guardrails | `COMP-03` | 4 |
+| 8 | ✅ Compatibility Matrix Evidence Automation | Generate and maintain matrix rows from observed verification evidence with schema/provenance guardrails | `COMP-03` | 4 (completed 2026-02-25) |
 
 ### Phase 7: Verification Wrapper Modes and Output Contracts
 
@@ -34,6 +34,8 @@
 4. Verification artifacts show non-zero exit behavior is preserved when required checks fail.
 
 ### Phase 8: Compatibility Matrix Evidence Automation
+
+**Status:** Complete (2026-02-25)
 
 **Goal:** Compatibility matrix rows can be generated/updated from observed verification evidence without inferred status claims.
 
@@ -52,4 +54,4 @@
 
 ## Next Step
 
-`$gsd-discuss-phase 8 --auto`
+`$gsd-complete-milestone v1.2`
