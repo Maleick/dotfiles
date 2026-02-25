@@ -13,7 +13,7 @@ This roadmap delivers reliability hardening in a dependency-aware order: install
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Installation Baseline** - Verify installer safety, idempotency, and baseline checks. (completed 2026-02-25)
-- [ ] **Phase 2: Shell Reliability Hardening** - Preserve OPSEC, Warp, aliasr, and helper command stability.
+- [x] **Phase 2: Shell Reliability Hardening** - Preserve OPSEC, Warp, aliasr, and helper command stability. (completed 2026-02-25)
 - [ ] **Phase 3: Tmux/Vim Workflow Stability** - Keep keybindings and editor workflows dependable.
 - [ ] **Phase 4: Documentation and Release Hygiene** - Align public docs and release metadata to shipped behavior.
 
@@ -45,9 +45,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Stabilize shell options, prompt branches, and environment ordering.
-- [ ] 02-02-PLAN.md — Validate helper commands and add safe compatibility guards.
-- [ ] 02-03-PLAN.md — Update shell-specific guidance to match final behavior.
+- [x] 02-01-PLAN.md — Stabilize shell options, prompt branches, and environment ordering.
+- [x] 02-02-PLAN.md — Validate helper commands and add safe compatibility guards.
+- [x] 02-03-PLAN.md — Update shell-specific guidance to match final behavior.
 
 ### Phase 3: Tmux/Vim Workflow Stability
 **Goal**: Multiplexer/editor behavior remains fast, predictable, and operator-safe.
@@ -85,6 +85,6 @@ Phases execute in numeric order: 1 → 1.1 → 1.2 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Installation Baseline | 3/3 | Complete    | 2026-02-25 |
-| 2. Shell Reliability Hardening | 0/3 | Not started | - |
+| 2. Shell Reliability Hardening | 3/3 | Complete    | 2026-02-25 |
 | 3. Tmux/Vim Workflow Stability | 0/2 | Not started | - |
 | 4. Documentation and Release Hygiene | 0/2 | Not started | - |

@@ -13,10 +13,10 @@
 
 ### Shell Reliability
 
-- [ ] **SHLL-01**: `zsh/.zshrc` preserves OPSEC history settings and command behavior across reloads.
-- [ ] **SHLL-02**: Warp-aware prompt/runtime behavior remains functional.
-- [ ] **SHLL-03**: `aliasr` integration (`alias a='aliasr'`) remains available and documented.
-- [ ] **SHLL-04**: Core helper commands have platform-safe behavior or explicit guarded fallback paths.
+- [x] **SHLL-01**: `zsh/.zshrc` preserves OPSEC history settings and command behavior across reloads.
+- [x] **SHLL-02**: Warp-aware prompt/runtime behavior remains functional.
+- [x] **SHLL-03**: `aliasr` integration (`alias a='aliasr'`) remains available and documented.
+- [x] **SHLL-04**: Core helper commands have platform-safe behavior or explicit guarded fallback paths.
 
 ### Tmux and Vim Stability
 
@@ -52,10 +52,10 @@
 | INST-02 | Phase 1 | Complete |
 | INST-03 | Phase 1 | Complete |
 | VFY-01 | Phase 1 | Complete |
-| SHLL-01 | Phase 2 | Pending |
-| SHLL-02 | Phase 2 | Pending |
-| SHLL-03 | Phase 2 | Pending |
-| SHLL-04 | Phase 2 | Pending |
+| SHLL-01 | Phase 2 | Complete |
+| SHLL-02 | Phase 2 | Complete |
+| SHLL-03 | Phase 2 | Complete |
+| SHLL-04 | Phase 2 | Complete |
 | TVIM-01 | Phase 3 | Pending |
 | TVIM-02 | Phase 3 | Pending |
 | DOCS-01 | Phase 4 | Pending |
@@ -68,4 +68,4 @@
 
 ---
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after auto-mode re-initialization*
+*Last updated: 2026-02-25 after Phase 2 shell reliability completion*
