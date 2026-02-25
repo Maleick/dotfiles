@@ -20,12 +20,41 @@ elif [[ -d "/usr/local/Homebrew" ]]; then
     export MANPATH="/usr/local/share/man${MANPATH+:$MANPATH}:"
     export INFOPATH="/usr/local/share/info:${INFOPATH:-}"
 fi
+
+# Keep PATH updates deterministic and avoid duplicate entries on repeated reloads.
+prepend_path_once() {
+    local candidate="$1"
+    if [[ -z "$candidate" ]]; then
+        return
+    fi
+    case ":$PATH:" in
+        *":$candidate:"*) ;;
+        *) export PATH="$candidate:$PATH" ;;
+    esac
+}
+
+append_path_once() {
+    local candidate="$1"
+    if [[ -z "$candidate" ]]; then
+        return
+    fi
+    case ":$PATH:" in
+        *":$candidate:"*) ;;
+        *) export PATH="$PATH:$candidate" ;;
+    esac
+}
+
+source_if_exists() {
+    local file_path="$1"
+    [[ -f "$file_path" ]] && source "$file_path"
+}
+
 # ----------------------
 # Python 3.13 Configuration
 # ----------------------
 # Prefer Python 3.13 for compatibility with PyO3-based tools (NetExec, aardwolf)
 # Must come AFTER Homebrew shellenv to override python@3.14
-export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
+prepend_path_once "/opt/homebrew/opt/python@3.13/bin"
 
 # ----------------------
 # Warp Runtime Detection
@@ -146,9 +175,9 @@ if [ "$color_prompt" = yes ]; then
 
     # enable syntax-highlighting
     if [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-        . /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        source_if_exists /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     elif [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-        . /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        source_if_exists /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     fi
     ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
     ZSH_HIGHLIGHT_STYLES[default]=none
@@ -282,9 +311,9 @@ alias strings='strings -a'
 
 # enable auto-suggestions based on the history
 if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    . /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    source_if_exists /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 elif [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    . /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    source_if_exists /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 # change suggestion color
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
@@ -438,19 +467,20 @@ echo "Type /help for a list of commands."
 # OpenJDK@17 Configuration (Cobalt Strike)
 # ----------------------
 # Required for Cobalt Strike client operations
-export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+prepend_path_once "/opt/homebrew/opt/openjdk@17/bin"
 export CPPFLAGS="-I/opt/homebrew/opt/openjdk@17/include"
 
 # Go and pdtm paths
-export PATH="$HOME/.pdtm/go/bin:$HOME/go/bin:$PATH"
+prepend_path_once "$HOME/go/bin"
+prepend_path_once "$HOME/.pdtm/go/bin"
 
 # pipx
-export PATH="$PATH:$HOME/.local/bin"
+append_path_once "$HOME/.local/bin"
 
 # Load local overrides
 # This file is NOT synced to git - create it manually on each machine
 if [[ -f "$HOME/.zshrc.local" ]]; then
-    source "$HOME/.zshrc.local"
+    source_if_exists "$HOME/.zshrc.local"
 fi
 
 # >>> VanguardForge env loader >>>
@@ -464,4 +494,7 @@ if [[ -f /opt/VanguardForge/load_env_from_secrets.sh ]]; then
     __load_vanguardforge_env
 fi
 unset -f __load_vanguardforge_env
+unset -f prepend_path_once
+unset -f append_path_once
+unset -f source_if_exists
 # <<< VanguardForge env loader <<<
