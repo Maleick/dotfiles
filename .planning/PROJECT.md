@@ -8,14 +8,19 @@ This project hardens and evolves a red-team-focused dotfiles repository so setup
 
 An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 
-## Current Milestone: v1.2 automation expansion
+## Current State (v1.2 Shipped)
 
-**Goal:** Extend verification automation and compatibility evidence workflows while preserving the read-only reliability contract.
+`v1.2` is shipped and archived. The codebase now includes:
+- Wrapper mode contracts in `./scripts/verify-suite.sh` (`default`, `--quick`, `--json`, `--quick --json`).
+- Canonical compatibility matrix at `.planning/compatibility/v1.1-matrix.md`.
+- Deterministic evidence automation via `./scripts/update-compat-matrix.sh` and `scripts/update_compat_matrix.py`.
+- Goal-backward verification artifacts through `.planning/phases/08-compatibility-matrix-evidence-automation/08-VERIFICATION.md`.
 
-**Target features:**
-- `AUTO-04`: Add quick-mode execution for fast local pre-commit checks.
-- `AUTO-05`: Add machine-readable verify output mode for tooling and log ingestion.
-- `COMP-03`: Add repeatable compatibility-matrix row generation from observed verification runs.
+## Next Milestone Goals
+
+- [ ] Define next milestone objective and scope with `$gsd-new-milestone`.
+- [ ] Generate fresh active requirements (`.planning/REQUIREMENTS.md`) for the next release cycle.
+- [ ] Decide whether to prioritize deferred automation (`AUTO-06`, `COMP-04`) or a new reliability focus area.
 
 ## Requirements
 
@@ -27,12 +32,13 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 - ✓ Documentation/release metadata parity and repeatable verification checklist (`DOCS-01`, `DOCS-02`, `VFY-01`) — v1.0
 - ✓ Verification wrapper command and deterministic status/exit contracts (`AUTO-01`, `AUTO-02`, `AUTO-03`) — v1.1
 - ✓ Compatibility matrix baseline coverage and caveat-aware traceability (`COMP-01`, `COMP-02`) — v1.1
+- ✓ Quick-mode wrapper contract with locked minimum required-check subset (`AUTO-04`) — v1.2
+- ✓ Machine-readable wrapper contract with deterministic per-check records (`AUTO-05`) — v1.2
+- ✓ Compatibility matrix row generation/update from observed verification evidence (`COMP-03`) — v1.2
 
 ### Active
 
-- [ ] `AUTO-04`: Quick-mode execution path for fast local pre-commit checks.
-- [ ] `AUTO-05`: Machine-readable output mode for CI/log ingestion.
-- [ ] `COMP-03`: Compatibility matrix row generation from repeatable observed verification runs.
+- [ ] No active milestone requirements yet (run `$gsd-new-milestone`).
 
 ### Out of Scope
 
@@ -43,10 +49,10 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 
 ## Context
 
-- v1.1 shipped deterministic wrapper verification (`./scripts/verify-suite.sh`) and canonical matrix documentation at `.planning/compatibility/v1.1-matrix.md`.
-- Next delivery should deepen automation without introducing new runtime feature families.
-- Existing reliability contracts in `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc` remain the source of truth.
-- Documentation and maintainer guidance (`README.md`, `AGENTS.md`) must stay synchronized with wrapper/matrix behavior.
+- v1.2 shipped wrapper mode expansion and matrix evidence automation while preserving runtime feature-family boundaries.
+- Active roadmap and requirements are intentionally collapsed for next-cycle setup.
+- Existing reliability contracts in `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc` remain source of truth.
+- Documentation and maintainer guidance (`README.md`, `AGENTS.md`) are aligned to shipped wrapper/matrix behavior.
 
 ## Constraints
 
@@ -61,29 +67,27 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Keep repo as dotfiles + installer | Maximizes auditability and low-friction edits | ✓ Good |
-| Run initialization in auto mode from `idea.md` | User requested automatic rerun with explicit idea source | ✓ Good |
-| Keep research enabled in auto mode | Captures ecosystem guidance before final roadmap structure | ✓ Good |
-| Preserve existing codebase map while resetting init docs | Avoids losing verified architectural context | ✓ Good |
-| Archive `v1.0` with milestone artifacts before new scope definition | Keeps active planning files concise while preserving traceable history | ✓ Good |
-| Start `v1.1` scope from carried-forward automation requirements | Maintains continuity from validated v1.0 outcomes and reduces re-discovery overhead | ✓ Good |
-| Use evidence-backed compatibility matrix contract in v1.1 | Prevents inferred claims and keeps operator trust high | ✓ Good |
-| Archive `v1.1` without formal audit artifact | Explicitly accepted process debt to preserve delivery momentum | ⚠ Revisit |
-| Start `v1.2` from deferred automation/matrix items (`AUTO-04`, `AUTO-05`, `COMP-03`) | Aligns new work to explicitly deferred backlog with low discovery risk | — Pending |
+| Keep research and checker gates enabled in auto planning flows | Maintains plan quality while preserving momentum | ✓ Good |
+| Preserve no-flag wrapper behavior while adding mode flags | Avoids breaking existing operator workflows | ✓ Good |
+| Use evidence-only matrix update model with strict schema guardrails | Prevents inferred compatibility claims and matrix drift | ✓ Good |
+| Archive `v1.1` and `v1.2` without formal audit artifacts | Delivery momentum favored over strict audit gate | ⚠ Revisit |
 
 <details>
-<summary>v1.1 Development Context Archive</summary>
+<summary>Milestone Archive Context</summary>
 
-- Milestone range: `v1.0..HEAD`
-- Phase coverage: 5-6
-- Plans complete: 4/4
-- Tasks complete: 8
-- Diff summary: 28 files changed, 1846 insertions(+), 314 deletions(-)
-- Key artifacts:
-  - `.planning/milestones/v1.1-ROADMAP.md`
-  - `.planning/milestones/v1.1-REQUIREMENTS.md`
-  - `.planning/compatibility/v1.1-matrix.md`
+### v1.1
+- Archive roadmap: `.planning/milestones/v1.1-ROADMAP.md`
+- Archive requirements: `.planning/milestones/v1.1-REQUIREMENTS.md`
+- Scope: 2 phases, 4 plans, 8 tasks
+
+### v1.2
+- Archive roadmap: `.planning/milestones/v1.2-ROADMAP.md`
+- Archive requirements: `.planning/milestones/v1.2-REQUIREMENTS.md`
+- Scope: 2 phases, 4 plans, 8 tasks
+- Git range: `v1.1..HEAD`
+- Diff summary: 31 files changed, 2250 insertions(+), 347 deletions(-)
 
 </details>
 
 ---
-*Last updated: 2026-02-25 after v1.2 milestone kickoff*
+*Last updated: 2026-02-25 after v1.2 milestone completion*

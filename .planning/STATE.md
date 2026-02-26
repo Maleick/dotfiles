@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: automation-expansion
-status: planning
-last_updated: "2026-02-25T22:49:59Z"
+status: milestone-complete
+last_updated: "2026-02-26T00:01:09Z"
 progress:
   total_phases: 2
   completed_phases: 2
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
-**Current focus:** Phase 8 executed and verified; ready for v1.2 milestone closeout
+**Current focus:** v1.2 archived; ready to start next milestone setup
 
 ## Current Position
 
-Phase: milestone closeout (v1.2)
-Plan: phases 7-8 complete; milestone archive pending
-Status: Ready for `$gsd-complete-milestone v1.2`
-Last activity: 2026-02-25 — Completed Phase 8 execution and verification for `COMP-03`
+Phase: milestone archived (v1.2)
+Plan: all v1.2 plans complete and archived
+Status: Ready for `$gsd-new-milestone`
+Last activity: 2026-02-25 — Archived milestone v1.2 and prepared fresh planning baseline
 
 Progress: [██████████] 100%
 
@@ -62,22 +62,11 @@ Progress: [██████████] 100%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [Milestone Kickoff]: Started v1.1 `automation` milestone centered on validation wrapper and compatibility matrix outcomes.
-- [Roadmap]: Mapped `AUTO-01`/`AUTO-02`/`AUTO-03` to Phase 5 and `COMP-01`/`COMP-02` to Phase 6.
-- [Phase 5 Execution]: Implemented `scripts/verify-suite.sh` baseline checks and optional dependency handling; aligned wrapper docs in `README.md` and `AGENTS.md`.
-- [Phase 5 Verification]: Verified `AUTO-01`/`AUTO-02`/`AUTO-03` as passed in `05-VERIFICATION.md`.
-- [Phase 6 Execution]: Created `.planning/compatibility/v1.1-matrix.md` with baseline macOS/Linux rows, caveat tags, and freshness policy; integrated usage guidance in `README.md` and maintainer policy in `AGENTS.md`.
-- [Phase 6 Verification]: Verified `COMP-01` and `COMP-02` as passed in `06-VERIFICATION.md`.
-- [Milestone v1.1 Completion]: Archived milestone artifacts, removed active requirements file for fresh next-cycle definition, and created local release tag `v1.1`.
-- [Audit Policy]: Proceeded without formal v1.1 audit artifact as accepted process debt, documented in milestone records.
-- [Milestone v1.2 Kickoff]: Carry forward deferred requirements `AUTO-04`, `AUTO-05`, and `COMP-03` into active scope.
-- [Milestone v1.2 Roadmap]: Start at Phase 7 and sequence wrapper modes before compatibility matrix generation.
-- [Phase 7 Context]: Locked wrapper mode/output decisions (`--quick`, `--json`, combined mode) while preserving default contract behavior.
-- [Phase 7 Execution]: Implemented `--quick`, `--json`, and `--quick --json` in `scripts/verify-suite.sh` while preserving default deterministic behavior.
-- [Phase 7 Verification]: Confirmed targeted smoke checks pass for default/quick/json/combined modes and forced required-failure semantics.
-- [Phase 8 Context]: Locked matrix evidence automation contracts (canonical path, row identity, schema/provenance enforcement, and fail-fast behavior).
-- [Phase 8 Execution]: Implemented `scripts/update-compat-matrix.sh` and `scripts/update_compat_matrix.py` for deterministic row update/insert from observed wrapper JSON evidence.
-- [Phase 8 Verification]: Verified `COMP-03` with deterministic update hash stability, new-key insertion checks, and malformed evidence/schema rejection paths.
+- [Milestone v1.2 Roadmap]: Sequenced wrapper mode expansion (Phase 7) before matrix evidence automation (Phase 8).
+- [Phase 7 Execution]: Shipped `--quick`, `--json`, and `--quick --json` in `scripts/verify-suite.sh` with backward-compatible default behavior.
+- [Phase 8 Execution]: Shipped deterministic matrix update tooling (`scripts/update-compat-matrix.sh`, `scripts/update_compat_matrix.py`) with strict schema/evidence guardrails.
+- [Phase 8 Verification]: Verified deterministic update and insert behavior plus malformed evidence/schema rejection paths.
+- [Milestone v1.2 Completion]: Archived roadmap and requirements artifacts, collapsed active planning docs, and created release tag `v1.2`.
 
 ### Pending Todos
 
@@ -85,10 +74,10 @@ None.
 
 ### Blockers/Concerns
 
-- Missing formal `.planning/v1.1-MILESTONE-AUDIT.md` was accepted at archival time and should be revisited in next milestone process hygiene.
+- Missing formal `.planning/v1.1-MILESTONE-AUDIT.md` and `.planning/v1.2-MILESTONE-AUDIT.md` remain accepted process debt and should be revisited in next milestone process hygiene.
 
 ## Session Continuity
 
-Last session: 2026-02-25 22:49
-Stopped at: Phase 8 execution complete
-Resume file: .planning/ROADMAP.md
+Last session: 2026-02-25 18:01
+Stopped at: Milestone v1.2 archived
+Resume file: .planning/PROJECT.md

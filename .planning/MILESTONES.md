@@ -50,3 +50,28 @@ None recorded at milestone close.
 - Phase execution history: `.planning/phases/`
 
 ---
+
+## v1.2 automation expansion milestone (Shipped: 2026-02-25)
+
+**Scope:** 2 phases, 4 plans, 8 tasks
+**Release focus:** wrapper mode contracts and compatibility matrix evidence automation.
+
+### Key Accomplishments
+
+1. Added quick-mode wrapper execution (`--quick`) with locked minimum required-check subset and explicit quick-mode skip visibility.
+2. Added deterministic machine-readable wrapper output (`--json`) and combined mode (`--quick --json`) while preserving no-flag behavior.
+3. Implemented deterministic matrix updater tooling (`./scripts/update-compat-matrix.sh`, `scripts/update_compat_matrix.py`) keyed by `Environment Profile` + `Check Scope`.
+4. Enforced strict matrix schema/provenance/status guardrails with fail-fast malformed evidence/schema rejection.
+5. Completed and verified `COMP-03` with targeted smoke evidence for deterministic update, insertion, and rejection paths.
+
+### Known Gaps
+
+- Milestone archived without formal `.planning/v1.2-MILESTONE-AUDIT.md`; accepted as process debt by completion choice.
+
+### Archive Artifacts
+
+- Roadmap archive: `.planning/milestones/v1.2-ROADMAP.md`
+- Requirements archive: `.planning/milestones/v1.2-REQUIREMENTS.md`
+- Phase execution history: `.planning/phases/`
+
+---
