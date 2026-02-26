@@ -5,7 +5,7 @@ milestone_name: automation-hardening
 status: planning
 last_updated: "2026-02-26T01:08:51Z"
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
-**Current focus:** Define v1.3 requirements and roadmap for automation hardening
+**Current focus:** Milestone v1.3 roadmap defined; ready to discuss Phase 9
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-26 — Milestone v1.3 automation hardening started
+Phase: 9 (not started)
+Plan: roadmap created, phase plans pending
+Status: Ready for `$gsd-discuss-phase 9 --auto`
+Last activity: 2026-02-26 — Created v1.3 roadmap (phases 9-10) with mapped requirements `AUTO-06`, `COMP-04`
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -67,6 +67,7 @@ Recent decisions affecting current work:
 - [Phase 8 Verification]: Verified deterministic update and insert behavior plus malformed evidence/schema rejection paths.
 - [Milestone v1.2 Completion]: Archived roadmap and requirements artifacts, collapsed active planning docs, and created release tag `v1.2`.
 - [Milestone v1.3 Kickoff]: Prioritized deferred `AUTO-06` and `COMP-04` for schema durability and coverage expansion.
+- [Milestone v1.3 Roadmap]: Sequenced schema versioning (Phase 9) before compatibility coverage expansion (Phase 10).
 
 ### Pending Todos
 
@@ -79,5 +80,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-26 01:08
-Stopped at: Milestone v1.3 kickoff started
-Resume file: .planning/REQUIREMENTS.md
+Stopped at: Milestone v1.3 roadmap created
+Resume file: .planning/ROADMAP.md
