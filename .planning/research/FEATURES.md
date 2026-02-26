@@ -1,68 +1,42 @@
-# Feature Research
+# Features Research — v1.3 Automation Hardening
 
-**Domain:** Dotfiles verification workflow automation expansion
-**Researched:** 2026-02-25
-**Confidence:** HIGH
+## Milestone Theme
 
-## Feature Landscape
+Harden machine-readable contracts and broaden compatibility evidence depth while preserving existing operator workflows.
 
-### Table Stakes (Users Expect These)
+## Table Stakes
 
-Features operators should get in this milestone because they were deferred explicitly from v1.1 scope.
+### AUTO-06 — JSON Schema Version Contract
 
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Quick-mode wrapper path (`AUTO-04`) | Operator needs faster pre-commit confidence loop | MEDIUM | Should preserve deterministic order for selected required checks |
-| Machine-readable output mode (`AUTO-05`) | Maintainers need parseable verify results in scripts/log pipelines | MEDIUM | Must coexist with current human-readable output contract |
-| Matrix row generation from observed runs (`COMP-03`) | Matrix maintenance is currently manual and easy to drift | MEDIUM | Needs strict evidence-only provenance and timestamp discipline |
-| Stable default wrapper behavior unchanged | Existing users rely on current command semantics | LOW | Default mode must remain backwards-compatible |
+- Add explicit version field in `--json` payload.
+- Document compatibility expectations for downstream parsers.
+- Preserve existing payload keys and semantics (`checks`, `summary`, `PASS/FAIL/SKIP`, required-failure signaling).
+- Add deterministic verification checks for schema fields and backward-compat behavior.
 
-### Differentiators (Competitive Advantage)
+### COMP-04 — Compatibility Coverage Expansion
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| Unified command with explicit mode flags | Prevents command sprawl and keeps operator mental model simple | LOW | Keep `./scripts/verify-suite.sh` as canonical entrypoint |
-| Matrix update helpers tied to wrapper output schema | Reduces documentation drift and trust debt | MEDIUM | Requires stable output field names |
-| Contract-level docs guidance for new modes | Improves maintainer handoff quality | LOW | README/AGENTS should document guarantees and caveats clearly |
+- Expand matrix coverage to additional Linux distro/terminal profile combinations.
+- Ensure each new row remains evidence-backed with caveat + command reference + last-validated date.
+- Keep row status vocabulary restricted to `PASS`/`SKIP`/`FAIL`.
+- Preserve canonical matrix target and freshness policy.
 
-### Anti-Features (Commonly Requested, Often Problematic)
+## Differentiators (Optional but Valuable)
 
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| Quick mode skipping essential required checks | Faster run time | Produces false confidence and weakens release hygiene | Define a locked required-check minimum set for quick mode |
-| Replacing human output with machine-only output | Easier automation consumption | Hurts operator debugging and interactive use | Keep human-readable default; add explicit machine mode |
-| Auto-generated matrix `PASS` labels without observed runs | Convenience | Violates evidence policy and can mislead operators | Require observed command artifacts and explicit caveat tags |
+- Coverage profile templates for common operator environments (e.g., Ubuntu + tmux, Kali + Warp alternatives).
+- Clear “not observed” guidance for environments without local evidence.
+- Stable profile naming conventions to reduce duplicate-key drift.
 
-## Feature Dependencies
+## Anti-Features / Keep Out of Scope
 
-```
-[AUTO-04 quick mode]
-    └──requires──> [Stable check catalog partitions]
-                       └──requires──> [Required check baseline contract]
+- CI-driven automatic publication pipelines.
+- Runtime feature-family changes in `zsh`, `tmux`, `vim`.
+- Large schema refactors that break existing `--json` consumers.
 
-[AUTO-05 machine output]
-    └──requires──> [Deterministic result model]
-                       └──requires──> [Stable field schema]
+## Complexity Notes
 
-[COMP-03 matrix generation]
-    └──requires──> [Observed wrapper/checklist evidence]
-                       └──requires──> [Canonical matrix schema contract]
-```
+- AUTO-06: low to medium (contract + docs + smoke checks).
+- COMP-04: medium (coverage strategy and deterministic evidence capture discipline).
 
-## Priority Signals for This Milestone
+## Dependency Relationships
 
-1. Preserve existing behavior first, then add modes.
-2. Keep output contracts explicit and testable.
-3. Keep matrix claims evidence-backed, with no inferred success labels.
-
-## Sources
-
-- `idea.md` (future v2+ ideas)
-- `.planning/PROJECT.md` (active milestone scope)
-- `.planning/milestones/v1.1-REQUIREMENTS.md` (deferred requirement lineage)
-- `scripts/verify-suite.sh` (current wrapper behavior)
-- `.planning/compatibility/v1.1-matrix.md` (existing matrix schema)
-
----
-*Feature research for: v1.2 automation expansion*
-*Researched: 2026-02-25*
+- AUTO-06 should land before COMP-04 evidence expansion to stabilize downstream parsing semantics for new coverage runs.
