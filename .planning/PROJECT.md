@@ -8,19 +8,13 @@ This project hardens and evolves a red-team-focused dotfiles repository so setup
 
 An operator can bootstrap and trust a stable red-team shell environment in minutes, without regressions in critical workflows.
 
-## Current State (v1.2 Shipped)
+## Current Milestone: v1.3 automation hardening
 
-`v1.2` is shipped and archived. The codebase now includes:
-- Wrapper mode contracts in `./scripts/verify-suite.sh` (`default`, `--quick`, `--json`, `--quick --json`).
-- Canonical compatibility matrix at `.planning/compatibility/v1.1-matrix.md`.
-- Deterministic evidence automation via `./scripts/update-compat-matrix.sh` and `scripts/update_compat_matrix.py`.
-- Goal-backward verification artifacts through `.planning/phases/08-compatibility-matrix-evidence-automation/08-VERIFICATION.md`.
+**Goal:** Strengthen automation contract durability by versioning machine-readable verification outputs and expanding compatibility evidence coverage depth.
 
-## Next Milestone Goals
-
-- [ ] Define next milestone objective and scope with `$gsd-new-milestone`.
-- [ ] Generate fresh active requirements (`.planning/REQUIREMENTS.md`) for the next release cycle.
-- [ ] Decide whether to prioritize deferred automation (`AUTO-06`, `COMP-04`) or a new reliability focus area.
+**Target features:**
+- `AUTO-06`: Add explicit JSON schema versioning and compatibility guarantees for wrapper output consumers.
+- `COMP-04`: Expand compatibility matrix coverage across additional Linux distro/terminal profile permutations with evidence-backed caveats.
 
 ## Requirements
 
@@ -38,7 +32,8 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 
 ### Active
 
-- [ ] No active milestone requirements yet (run `$gsd-new-milestone`).
+- [ ] `AUTO-06`: Wrapper JSON output includes explicit schema version contract and backward-compatible parsing guarantees.
+- [ ] `COMP-04`: Compatibility matrix covers additional observed Linux distro/terminal profiles with explicit caveats and freshness metadata.
 
 ### Out of Scope
 
@@ -46,13 +41,14 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 - Storing secrets, tokens, or credential material in tracked files.
 - Introducing enterprise process overhead (sprint ceremonies, stakeholder workflows).
 - Redesigning established operator keybindings or changing aliasr integration contracts.
+- CI-provider-specific publishing pipelines or fully automatic external matrix publication.
 
 ## Context
 
 - v1.2 shipped wrapper mode expansion and matrix evidence automation while preserving runtime feature-family boundaries.
-- Active roadmap and requirements are intentionally collapsed for next-cycle setup.
-- Existing reliability contracts in `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc` remain source of truth.
-- Documentation and maintainer guidance (`README.md`, `AGENTS.md`) are aligned to shipped wrapper/matrix behavior.
+- Current wrapper and matrix automation contracts are implemented in `scripts/verify-suite.sh`, `scripts/update-compat-matrix.sh`, and `scripts/update_compat_matrix.py`.
+- Canonical compatibility artifact remains `.planning/compatibility/v1.1-matrix.md`.
+- Remaining deferred backlog now centers on schema durability and broader evidence coverage depth.
 
 ## Constraints
 
@@ -70,6 +66,7 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 | Keep research and checker gates enabled in auto planning flows | Maintains plan quality while preserving momentum | ✓ Good |
 | Preserve no-flag wrapper behavior while adding mode flags | Avoids breaking existing operator workflows | ✓ Good |
 | Use evidence-only matrix update model with strict schema guardrails | Prevents inferred compatibility claims and matrix drift | ✓ Good |
+| Start v1.3 from deferred `AUTO-06` + `COMP-04` backlog | Continues validated automation trajectory with minimal re-discovery risk | — Pending |
 | Archive `v1.1` and `v1.2` without formal audit artifacts | Delivery momentum favored over strict audit gate | ⚠ Revisit |
 
 <details>
@@ -90,4 +87,4 @@ An operator can bootstrap and trust a stable red-team shell environment in minut
 </details>
 
 ---
-*Last updated: 2026-02-25 after v1.2 milestone completion*
+*Last updated: 2026-02-26 after v1.3 milestone kickoff*
