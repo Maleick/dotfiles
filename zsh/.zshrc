@@ -651,3 +651,20 @@ unset -f prepend_path_once
 unset -f append_path_once
 unset -f source_if_exists
 # <<< VanguardForge env loader <<<
+
+# Added by Antigravity
+export PATH="/Users/maleick/.antigravity/antigravity/bin:$PATH"
+
+# bun completions
+[ -s "/Users/maleick/.bun/_bun" ] && source "/Users/maleick/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+alias claude-mem='bun "/Users/maleick/.claude/plugins/cache/thedotmack/claude-mem/10.5.5/scripts/worker-service.cjs"'
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/maleick/.lmstudio/bin"
+# End of LM Studio CLI section
+
