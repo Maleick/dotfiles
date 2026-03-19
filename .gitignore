@@ -68,5 +68,12 @@ TEST_*.md
 ehthumbs.db
 Thumbs.db
 
+# ── Tool/agent artifacts ──
+.gsd/
+.bg-shell/
+.serena/
+.codex/
+.claude/settings.local.json
+
 # Only keep core dotfiles
 # zsh/, tmux/, vim/, install.sh, README.md, CHANGELOG.md, VERSION
