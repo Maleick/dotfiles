@@ -443,6 +443,12 @@ fi
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 
 # ----------------------
+# Editor Configuration
+# ----------------------
+export EDITOR="code --wait"
+export VISUAL="code --wait"
+
+# ----------------------
 # Red Team Operations
 # ----------------------
 
