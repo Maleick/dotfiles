@@ -11,7 +11,7 @@ Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red t
 - 🌐 **Network Tools**: IPv4/IPv6 IP detection with service redundancy
 - 🛡️ **OPSEC Aware**: Commands starting with space aren't logged
 - 🧰 **aliasr Integration**: `a` alias in zsh and tmux keybindings for the aliasr pentest launcher
-- 🧭 **Warp-Aware Runtime**: Shell detects Warp and keeps prompt/title behavior compatible
+- 🧭 **Terminal-Aware Runtime**: Shell detects terminal emulator (iTerm2, Warp, etc.) and adapts prompt/title behavior
 - 🧪 **Startup Hardened**: `zsh` startup is resilient under `nounset` with safe optional loaders
 - 🧱 **Helper Fallbacks**: Core helper commands use guarded fallback paths across host differences
 - 🎥 **Tmux Fail-Soft Ops**: Recording/history paths stay usable with clear fallback messaging
@@ -22,11 +22,13 @@ Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red t
 ## 🚀 Installation
 
 ### Prerequisites
+
 - [Zsh](https://www.zsh.org/) - Shell
-- [Tmux](https://github.com/tmux/tmux/wiki) - Terminal multiplexer  
+- [Tmux](https://github.com/tmux/tmux/wiki) - Terminal multiplexer
 - [Vim](https://www.vim.org/) - Text editor
 
 ### Quick Install
+
 ```bash
 # Clone the repository
 git clone https://github.com/Maleick/dotfiles.git /opt/dotfiles
@@ -37,11 +39,13 @@ cd /opt/dotfiles
 ```
 
 ### What it does
+
 1. Creates backup of existing dotfiles
 2. Symlinks zsh, tmux, and vim configurations
 3. Sets up red team aliases and functions
 
 ### Verify Installation
+
 ```bash
 # Restart your shell or run
 source ~/.zshrc
@@ -71,6 +75,7 @@ ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'localip >/dev/null && netinfo >/dev/null'
 ```
 
 Expected behavior:
+
 - Warp shell check prints `1`; non-Warp prints `0`.
 - `base64decode dGVzdA==` prints `test` on macOS and Linux.
 - `myip*`, `localip`, and `netinfo` use guarded fallbacks before failing.
@@ -108,6 +113,7 @@ rg -n "version-" README.md
 ```
 
 Expected outcomes:
+
 - All commands exit successfully.
 - Runtime contract claims in docs map to current source files.
 - `VERSION` and latest changelog release header are consistent.
@@ -121,6 +127,7 @@ Run the repo-root verification wrapper:
 ```
 
 Wrapper contract:
+
 - Runs non-interactively from repository root (read-only verification; does not run `install.sh`).
 - Default mode (no flags) prints deterministic per-check statuses: `PASS`, `FAIL`, `SKIP`.
 - Default mode prints a deterministic summary line with PASS/FAIL/SKIP counts.
@@ -141,6 +148,7 @@ Additional modes:
 ```
 
 Mode behavior notes:
+
 - `--quick` preserves required failure semantics and surfaces full-only required checks as explicit quick-mode `SKIP` entries.
 - `--json` emits deterministic per-check records plus deterministic summary counts.
 - `--quick --json` uses quick-mode check selection with JSON output.
@@ -169,6 +177,7 @@ Automated row update flow (Phase 8):
 ```
 
 Automation behavior:
+
 - Uses observed wrapper evidence only (`./scripts/verify-suite.sh --json` payloads).
 - Uses matrix row identity key `Environment Profile` + `Check Scope`.
 - Updates existing key rows in place; inserts new key rows deterministically.
@@ -182,6 +191,7 @@ Automation behavior:
   - `Last Validated`
 
 How to use it:
+
 - Treat matrix rows as observed command-run outcomes, not inferred platform claims.
 - Interpret statuses as:
   - `PASS`: observed run succeeded for the listed scope/environment.
@@ -193,26 +203,30 @@ When verification/runtime/docs behavior changes, refresh matrix rows before mile
 
 ### Local Overrides (Optional)
 
-For machine-specific or sensitive configurations (API keys, local paths, etc.), create `~/.zshrc.local`:
+For machine-specific or sensitive configurations (API keys, local paths, installer-added PATHs, etc.), create `~/.zshrc.local`:
 
 ```bash
 # Create local overrides file
 cat > ~/.zshrc.local << 'EOF'
 # Machine-specific configurations
 export MY_API_KEY="your-secret-key"
-export CUSTOM_PATH="/path/to/tool"
+
+# Tool paths added by installers (bun, LM Studio, etc.)
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 EOF
 
 chmod 600 ~/.zshrc.local
 ```
 
-**Note**: `.zshrc.local` is automatically ignored by git and won't be synced to the repository.
+**Important**: When package installers append lines to `~/.zshrc`, move them to `~/.zshrc.local` instead — this keeps the git-tracked dotfile portable across machines. `.zshrc.local` is sourced automatically and is not synced to the repository.
 
 ## 💻 Usage Examples
 
 ### Network Reconnaissance
+
 ```bash
-# External IP Detection (IPv4/IPv6) 
+# External IP Detection (IPv4/IPv6)
 myip                       # External IPv4 address (force IPv4)
 myip6                      # External IPv6 address
 myip-alt                   # Alternative service (ipinfo.io)
@@ -227,12 +241,14 @@ nmap-top-ports 192.168.1.1 # Scan top 1000 ports
 ```
 
 ### Web Servers & Tools
+
 ```bash
 webserver                  # HTTP server on port 8080
 https-server               # HTTPS server (needs cert.pem/key.pem)
 ```
 
 ### Encoding/Decoding
+
 ```bash
 base64encode "test data"   # dGVzdCBkYXRh
 base64decode "dGVzdCBkYXRh" # test data
@@ -241,6 +257,7 @@ rot13                      # ROT13 cipher
 ```
 
 ### Reverse Shells
+
 ```bash
 rev-shell bash 10.0.0.1 4444    # Bash reverse shell
 rev-shell python 10.0.0.1 4444  # Python reverse shell
@@ -248,6 +265,7 @@ rev-shell nc 10.0.0.1 4444      # Netcat reverse shell
 ```
 
 ### Tmux Features
+
 ```bash
 tmux                       # Start tmux session
 # Prefix + P              # Start/stop recording
@@ -256,6 +274,7 @@ tmux                       # Start tmux session
 ```
 
 ### aliasr Launcher
+
 ```bash
 a                          # Open aliasr TUI for red-team commands (requires aliasr installed)
 ```
