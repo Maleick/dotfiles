@@ -96,11 +96,11 @@ else
 endif
 
 " =============================================================================
-" Theme Configuration - Warp Optimized
+" Theme Configuration - Neriak (EverQuest dark elf city)
 " =============================================================================
 set background=dark
 
-" Try to set the best available colorscheme
+" Load a base colorscheme, then overlay Neriak colors
 silent! colorscheme catppuccin_mocha
 if exists("g:colors_name") && g:colors_name !=# 'catppuccin_mocha'
     silent! colorscheme dracula
@@ -108,6 +108,44 @@ if exists("g:colors_name") && g:colors_name !=# 'catppuccin_mocha'
         silent! colorscheme molokai
     endif
 endif
+
+" Neriak palette overrides
+" bg=#1E1B2E fg=#D4D0E8 purple=#7B6FDE cyan=#00DFFF
+" comment=#3D3760 selection=#352F50 bright=#EDE9FF
+highlight Normal       guibg=#1E1B2E guifg=#D4D0E8
+highlight CursorLine   guibg=#252240 cterm=NONE
+highlight CursorLineNr guifg=#00DFFF guibg=#252240
+highlight LineNr       guifg=#3D3760
+highlight Visual       guibg=#352F50
+highlight Search       guibg=#7B6FDE guifg=#1E1B2E
+highlight IncSearch    guibg=#00DFFF guifg=#1E1B2E
+highlight Comment      guifg=#3D3760 gui=italic
+highlight Statement    guifg=#7B6FDE gui=bold
+highlight Function     guifg=#00DFFF
+highlight String       guifg=#9B8FFF
+highlight Type         guifg=#B06FDE
+highlight Identifier   guifg=#00CFEF
+highlight Constant     guifg=#CC8FFF
+highlight Keyword      guifg=#7B6FDE
+highlight Special      guifg=#E8C547
+highlight PreProc      guifg=#00DFFF
+highlight StatusLine   guibg=#7B6FDE guifg=#1E1B2E gui=bold
+highlight StatusLineNC guibg=#3D3760 guifg=#D4D0E8
+highlight VertSplit    guifg=#3D3760 guibg=#1E1B2E
+highlight Pmenu        guibg=#352F50 guifg=#D4D0E8
+highlight PmenuSel     guibg=#7B6FDE guifg=#1E1B2E
+highlight PmenuSbar    guibg=#3D3760
+highlight PmenuThumb   guibg=#7B6FDE
+highlight TabLine      guibg=#3D3760 guifg=#D4D0E8
+highlight TabLineSel   guibg=#7B6FDE guifg=#1E1B2E gui=bold
+highlight TabLineFill   guibg=#1E1B2E
+highlight MatchParen   guibg=#352F50 guifg=#00DFFF gui=bold
+highlight Error        guifg=#FF5E7D guibg=NONE
+highlight WarningMsg   guifg=#E8C547
+highlight SignColumn   guibg=#1E1B2E
+highlight DiffAdd      guibg=#1a2e1a guifg=NONE
+highlight DiffChange   guibg=#2e2a1a guifg=NONE
+highlight DiffDelete   guibg=#2e1a1a guifg=#FF5E7D
 
 " Enhanced syntax highlighting
 set synmaxcol=200           " Limit syntax highlighting for performance
@@ -130,7 +168,7 @@ if exists(':NERDTreeToggle')
 endif
 
 " vim-airline
-let g:airline_theme='catppuccin_mocha'
+let g:airline_theme='distinguished'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1

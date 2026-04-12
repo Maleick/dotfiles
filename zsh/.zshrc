@@ -1,5 +1,5 @@
 # ~/.zshrc
-# Red Team dotfiles configuration
+# Neriak dotfiles configuration
 
 # ----------------------
 # Homebrew Configuration (macOS)
@@ -67,13 +67,9 @@ else
 fi
 
 # ----------------------
-# Red Team Shell Banner
+# Neriak Banner
 # ----------------------
-if command -v figlet &> /dev/null; then
-    figlet -f slant "Red Team Shell"
-else
-    echo "🔴 Red Team Shell Ready"
-fi
+print "\033[96mWhat happens in Neriak stays in Neriak\!\033[0m"
 
 setopt autocd              # change directory just by typing its name
 setopt correct            # auto correct mistakes
@@ -126,7 +122,7 @@ zstyle ':completion:*' group-name ''
 # Red team tool specific completions
 zstyle ':completion:*:*:nmap:*' file-patterns '*.xml:xml-files *.gnmap:gnmap-files *:all-files'
 
-# History configurations - Enhanced for Red Team operations
+# History configurations
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -576,7 +572,7 @@ echo "Type /help for a list of commands."
 # Display a list of aliases and functions
 /help() {
     echo "
-🔴 Red Team Shell - Available Commands:
+⚡ Neriak Shell - Available Commands:
 
 🚀 Web Servers:
     http-server / webserver: Start HTTP server (port 8000/8080)
