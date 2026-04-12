@@ -658,3 +658,15 @@ unset -f append_path_once
 unset -f source_if_exists
 # <<< VanguardForge env loader <<<
 
+
+# pnpm
+export PNPM_HOME="/Users/maleick/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+alias claude-mem='bun "/Users/maleick/.claude/plugins/cache/thedotmack/claude-mem/12.1.0/scripts/worker-service.cjs"'
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
