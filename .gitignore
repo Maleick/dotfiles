@@ -14,11 +14,28 @@
 .idea/
 
 # Over-engineering prevention
+assets/
+!assets/
+assets/*
+!assets/dotfiles-banner.svg
+docs/
+!docs/
+docs/*
+!docs/index.html
+!docs/CNAME
+wiki/
+!wiki/
+wiki/*
+!wiki/Home.md
+!wiki/Installation.md
+!wiki/Verification.md
+!wiki/Customization.md
+!wiki/Tmux.md
+!wiki/Vim.md
 .github/
 docker/
 test/
 tests/
-docs/
 scripts/
 !scripts/
 scripts/*
@@ -39,6 +56,8 @@ bootstrap.sh
 verify_install.sh
 
 # Documentation clutter
+CLAUDE.md
+soul.md
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 WARP.md
@@ -74,6 +93,7 @@ Thumbs.db
 .serena/
 .codex/
 .claude/settings.local.json
+.superpowers/
 
-# Only keep core dotfiles
-# zsh/, tmux/, vim/, install.sh, README.md, CHANGELOG.md, VERSION
+# Keep core dotfiles plus curated public docs/assets
+# zsh/, tmux/, vim/, install.sh, README.md, CHANGELOG.md, VERSION, assets/, docs/, wiki/

@@ -34,12 +34,12 @@
 - Not applicable - No app/server framework is defined; repository is configuration-driven (`zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`).
 
 **Testing:**
-- Not detected - No test runner configuration in repository files; `AGENTS.md` states no automated test/build system.
+- Smoke verification wrapper: `scripts/verify-suite.sh` with full, quick, JSON, and quick+JSON modes. No dedicated unit-test framework is configured.
 
 **Build/Dev:**
 - `install.sh` symlink workflow (version Not detected) - Local installation and backup process in `install.sh`.
 - `vim-plug` plugin bootstrap (version Not detected) - Plugin installation/update orchestration in `vim/.vimrc`.
-- `fzf` install hook via `Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }` in `vim/.vimrc`.
+- Static HTML/CSS (version Not applicable) - GitHub Pages landing page in `docs/index.html`.
 
 ## Key Dependencies
 
@@ -51,18 +51,16 @@
 - `zsh-syntax-highlighting` + `zsh-autosuggestions` (versions Not detected) - Optional runtime plugins sourced in `zsh/.zshrc`.
 
 **Infrastructure:**
-- `asciinema` (version Not detected) - Pane recording integration in `tmux/.tmux.conf`.
-- `fzf` (version Not detected) - Session switch integration in `tmux/.tmux.conf` and plugin dependency in `vim/.vimrc`.
 - Network/system CLIs (`lsof`, `ipconfig`, `route`, `scutil`, `awk`) (versions Not detected) - Helper command dependencies in `zsh/.zshrc`.
-- Optional external env loader script `/opt/VanguardForge/load_env_from_secrets.sh` sourced conditionally in `zsh/.zshrc`.
+- Clipboard CLIs (`pbcopy`, `wl-copy`, `xclip`, `clip.exe`) (versions Not detected) - Optional tmux copy-mode clipboard targets with tmux buffer fallback.
 
 ## Configuration
 
 **Environment:**
 - Runtime behavior configured through exported shell variables in `zsh/.zshrc` (PATH/HOMEBREW/CPPFLAGS/history/prompt settings).
 - Local machine overrides loaded from `$HOME/.zshrc.local` in `zsh/.zshrc`; operator guidance and example keys are in `README.md`.
-- Optional secret bootstrap from `/opt/VanguardForge/load_env_from_secrets.sh` in `zsh/.zshrc`.
 - Project semantic version is stored in `VERSION`.
+- GitHub Pages custom domain is stored in `docs/CNAME`.
 
 **Build:**
 - Installation/symlink logic is defined in `install.sh`.

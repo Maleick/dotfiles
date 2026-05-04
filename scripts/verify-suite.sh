@@ -122,6 +122,27 @@ run_required_pattern() {
   fi
 }
 
+run_required_absent_pattern() {
+  local check_id="$1"
+  local description="$2"
+  local file="$3"
+  local pattern="$4"
+
+  if command -v rg >/dev/null 2>&1; then
+    if rg -n "$pattern" "$file" >/dev/null 2>&1; then
+      record_status "FAIL" "$check_id" "required" "$description"
+    else
+      record_status "PASS" "$check_id" "required" "$description"
+    fi
+  else
+    if grep -E "$pattern" "$file" >/dev/null 2>&1; then
+      record_status "FAIL" "$check_id" "required" "$description"
+    else
+      record_status "PASS" "$check_id" "required" "$description"
+    fi
+  fi
+}
+
 run_optional() {
   local check_id="$1"
   local description="$2"
@@ -150,27 +171,38 @@ ensure_repo_root() {
 
 run_minimum_required_checks() {
   run_required "req.install_syntax" "install.sh parses cleanly" "bash -n install.sh"
+  run_required_pattern "req.install_script_dir" "install.sh resolves repo root from script location" "install.sh" 'BASH_SOURCE\[0\]'
   run_required "req.zsh_syntax" "zsh config parses cleanly" "zsh -n zsh/.zshrc"
+  run_required_absent_pattern "req.zsh_no_host_specific_tail" "zsh config keeps host-specific loaders in ~/.zshrc.local" "zsh/.zshrc" 'VanguardForge|PNPM_HOME|claude-mem|iterm2_shell_integration|rtk-wrapper'
   run_required "req.tmux_config" "tmux config loads without parse errors" "tmux -f tmux/.tmux.conf -L gsd-verify-suite start-server \\; kill-server"
+  run_required_pattern "req.tmux_clipboard_fallback" "tmux copy binding includes portable clipboard fallback" "tmux/.tmux.conf" 'pbcopy.*(wl-copy|xclip|clip\.exe|tmux load-buffer)|(wl-copy|xclip|clip\.exe|tmux load-buffer).*pbcopy'
+  run_required_absent_pattern "req.tmux_no_asciinema_fzf" "tmux config has no asciinema or fzf dependency" "tmux/.tmux.conf" 'asciinema|fzf'
+  run_required_absent_pattern "req.vim_no_fzf" "vim config has no fzf plugin dependency" "vim/.vimrc" 'junegunn/fzf|fzf#install|fzf\.vim|g:fzf'
   run_required "req.vim_startup" "vim starts headless with repo vimrc" "vim -Nu vim/.vimrc -n -es -c 'qa!'"
+  run_required "req.operator_docs_surface" "operator field kit docs, wiki, and Pages surfaces exist" "test -f assets/dotfiles-banner.svg && test -f docs/index.html && test -f docs/CNAME && test -f wiki/Home.md && test -f wiki/Installation.md && test -f wiki/Verification.md && test -f wiki/Customization.md && test -f wiki/Tmux.md && test -f wiki/Vim.md && grep -qx 'dotfiles.teamoperator.red' docs/CNAME"
 }
 
 run_full_only_required_checks() {
   if [ "$QUICK_MODE" = "1" ]; then
     run_quick_skip "req.vim_temp_home" "vim starts with temporary HOME context"
     run_quick_skip "req.readme_verify_section" "README keeps verification checklist section"
+    run_quick_skip "req.readme_operator_field_kit" "README presents Operator Field Kit identity and Pages link"
+    run_quick_skip "req.docs_no_asciinema_fzf" "current operator docs do not reference asciinema or fzf"
     run_quick_skip "req.agents_tmux_contract" "AGENTS keeps tmux contract notes"
+    run_quick_skip "req.agents_no_asciinema_fzf" "AGENTS does not require asciinema or fzf workflows"
     return
   fi
 
   run_required "req.vim_temp_home" "vim starts with temporary HOME context" "TMP_HOME=\"\$(mktemp -d)\" && HOME=\"\$TMP_HOME\" vim -Nu vim/.vimrc -n -es -c 'qa!' && rm -rf \"\$TMP_HOME\""
   run_required_pattern "req.readme_verify_section" "README keeps verification checklist section" "README.md" "Documentation & Release Verification Checklist"
-  run_required_pattern "req.agents_tmux_contract" "AGENTS keeps tmux contract notes" "AGENTS.md" "Prefix \\+ P|Prefix \\+ U|Prefix \\+ K|~/Logs"
+  run_required_pattern "req.readme_operator_field_kit" "README presents Operator Field Kit identity and Pages link" "README.md" "Operator Field Kit|dotfiles.teamoperator.red|assets/dotfiles-banner.svg"
+  run_required_absent_pattern "req.docs_no_asciinema_fzf" "current operator docs do not reference asciinema or fzf" "README.md" 'asciinema|fzf|Prefix \+ P'
+  run_required_pattern "req.agents_tmux_contract" "AGENTS keeps tmux contract notes" "AGENTS.md" "Prefix \\+ S|Prefix \\+ U|Prefix \\+ K|~/Logs"
+  run_required_absent_pattern "req.agents_no_asciinema_fzf" "AGENTS does not require asciinema or fzf workflows" "AGENTS.md" 'asciinema|fzf|Prefix \+ P'
 }
 
 run_optional_checks() {
-  run_optional "opt.asciinema" "asciinema is available for recording flow checks" "command -v asciinema >/dev/null 2>&1 && asciinema --version >/dev/null 2>&1" "Install asciinema to enable recording dependency checks"
-  run_optional "opt.fzf" "fzf is available for session-switch helper checks" "command -v fzf >/dev/null 2>&1 && fzf --version >/dev/null 2>&1" "Install fzf to enable session-switch dependency checks"
+  return 0
 }
 
 emit_summary() {

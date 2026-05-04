@@ -37,7 +37,8 @@
   - Shell history file in `zsh/.zshrc`: `~/.zsh_history`.
   - Completion cache in `zsh/.zshrc`: `~/.cache/zcompdump`.
   - Vim persistent undo directory in `vim/.vimrc`: `~/.vim/undodir`.
-  - Tmux logs and recordings in `tmux/.tmux.conf`: `$HOME/Logs/*.txt` and `$HOME/Logs/*.cast`.
+  - Vim plugins installed by vim-plug in `vim/.vimrc`: `~/.vim/plugged`.
+  - Tmux history logs in `tmux/.tmux.conf`: `$HOME/Logs/*.txt`.
   - Dotfile backups in `install.sh`: `~/.dotfiles_backup_<timestamp>`.
 
 **Caching:**
@@ -69,14 +70,14 @@
 - None detected in `README.md`, `AGENTS.md`, `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`.
 
 **Logs:**
-- Local session/pane capture via `asciinema` and tmux buffers in `tmux/.tmux.conf` (`$HOME/Logs`).
-  - Integration: local CLI pipeline (`pipe-pane`, `save-buffer`) in `tmux/.tmux.conf`.
+- Local pane history capture via tmux buffers in `tmux/.tmux.conf` (`$HOME/Logs`).
+  - Integration: local tmux commands (`capture-pane`, `save-buffer`) in `tmux/.tmux.conf`.
 
 ## CI/CD & Deployment
 
 **Hosting:**
-- Not applicable - Repository configures local dotfiles only (`install.sh` symlink flow into `$HOME`).
-  - Deployment: Manual/local execution of `./install.sh` documented in `README.md`.
+- GitHub Pages static site source in `docs/`, published at `https://dotfiles.teamoperator.red`.
+  - Deployment: GitHub Pages from the repository branch `docs/` folder.
   - Environment vars: Not applicable.
 
 **CI Pipeline:**
@@ -89,7 +90,7 @@
 **Development:**
 - Required env vars: Not detected as required in `README.md`, `zsh/.zshrc`, `install.sh`, and `AGENTS.md`.
 - Secrets location: Local override file `$HOME/.zshrc.local` sourced in `zsh/.zshrc`; example variable names are documented in `README.md`.
-- Additional secret source: Optional `/opt/VanguardForge/load_env_from_secrets.sh` loader in `zsh/.zshrc`.
+- Additional secret sources: Keep host-specific loaders in `$HOME/.zshrc.local`, not in the git-tracked `zsh/.zshrc`.
 - Mock/stub services: Not applicable.
 
 **Staging:**
@@ -108,7 +109,7 @@
 **Outgoing:**
 - Outbound HTTP requests to IP lookup providers are triggered by operator commands in `zsh/.zshrc` (`ifconfig.me`, `ipinfo.io/ip`, `icanhazip.com`).
   - Endpoint: Defined inline in `zsh/.zshrc` aliases/functions.
-  - Retry logic: Not detected.
+  - Retry logic: Provider fallback loops are present for `myip`/`myip6`.
 
 ---
 

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to WARP (warp.dev) when working with code in this repository.
+This file provides canonical guidance for agents working in this repository. Do not recreate `CLAUDE.md` or `soul.md`; those files are intentionally retired from this repo.
 
 ## Repository overview
 
@@ -8,7 +8,7 @@ This repo contains opinionated dotfiles for a red-team focused shell environment
 
 Key pieces:
 - `zsh/.zshrc` – primary shell configuration, including Warp-specific behavior, PATH/tool setup, aliases, and red-team helper functions.
-- `tmux/.tmux.conf` – tmux configuration optimized for Warp and red-team workflows, with recording/logging helpers and shortcuts.
+- `tmux/.tmux.conf` – tmux configuration optimized for iTerm2/modern terminals and red-team workflows, with history logging helpers and shortcuts.
 - `vim/.vimrc` – Vim configuration with `vim-plug`-first behavior and fail-soft startup guards when plugin tooling is unavailable.
 - `install.sh` – idempotent installer that backs up existing dotfiles and symlinks these configs into `$HOME`.
 - `README.md` – high-level feature overview and usage examples for shell aliases and functions.
@@ -18,13 +18,13 @@ Key pieces:
 
 ### Initial install / re-install
 
-From the repo root:
+From any current directory:
 - Install/sync dotfiles into `$HOME` (backs up existing files into `~/.dotfiles_backup_<timestamp>`):
-  - `./install.sh`
+  - `/path/to/dotfiles/install.sh`
 - After editing configs in this repo, re-run `./install.sh` to refresh the symlinks if necessary, then reload the shell:
   - `source ~/.zshrc`
 
-Be aware that every `./install.sh` run will move any existing `~/.zshrc`, `~/.vimrc`, and `~/.tmux.conf` into a new backup directory before re-linking.
+Be aware that every install run will move any existing `~/.zshrc`, `~/.vimrc`, and `~/.tmux.conf` into a new backup directory before re-linking unless the target already points at the same repo source.
 
 ### Verifying the environment
 
@@ -42,7 +42,6 @@ Once installed:
 Wrapper mode contract (maintainer-facing):
 - Keep no-flag default behavior backward compatible with full-mode output.
 - Keep required failure semantics non-zero across default, quick, json, and combined modes.
-- Keep optional dependency checks (`asciinema`, `fzf`) fail-soft with actionable guidance.
 - Keep output statuses constrained to `PASS` / `FAIL` / `SKIP`.
 
 ### Compatibility matrix maintenance
@@ -86,12 +85,12 @@ High-level structure (order matters in some sections):
   - Python 3.13 and OpenJDK 17 added to `PATH` for compatibility with offensive tooling (e.g., PyO3 tools, Cobalt Strike client).
   - Docker CLI completions, pdtm-related Go paths, and other tool-specific PATH adjustments near the end.
   - PATH mutations are guarded to avoid duplicate entries during repeated shell reloads.
-- **Warp-specific behavior**
+- **Terminal-specific behavior**
   - Detects Warp via `TERM_PROGRAM == "WarpTerminal"` and sets `WARP_TERMINAL=1` plus disables auto title for better integration.
   - Prompt logic branches on `WARP_TERMINAL` to keep the Warp prompt simpler (Warp handles directory display itself).
 - **Interactive shell behavior**
   - Zsh options (history, completion, keybindings, prompt substitution, etc.) tuned for productivity and red-team OPSEC (e.g., commands starting with a space are not logged, history deduplication).
-  - Completion system using a custom `fpath`, cached `compinit`, and specific completion styles for tools like `nmap` and `gobuster`.
+  - Completion system using a custom `fpath`, cached `compinit`, and specific completion styling for tools like `nmap`.
   - Syntax highlighting and autosuggestions configured if the relevant plugins are present on disk.
 - **Aliases and red-team helpers**
   - Standard colored `ls`/`grep`/`diff` family aliases plus convenience `ll`, `lt`, `lh`, etc.
@@ -113,25 +112,23 @@ When modifying this file:
 
 ## Tmux configuration architecture (`tmux/.tmux.conf`)
 
-The tmux config is focused on Warp compatibility, red-team session management, and integration with external tools.
+The tmux config is focused on iTerm2/modern-terminal compatibility, red-team session management, and integration with external tools.
 
 Key aspects:
 - **Terminal/behavior settings**
   - `default-terminal "tmux-256color"` and terminal overrides for truecolor.
-  - `set -s escape-time 0` and `set -s focus-events on` for responsive key handling and focus detection (recommended for aliasr and Warp).
+  - `set -s escape-time 0`, `set -s focus-events on`, and extended-key support for responsive key handling and focus detection.
   - Mouse mode enabled and history limit increased.
 - **Navigation and layout**
-  - Vi-style keybindings in copy mode and pane movement (`h/j/k/l`) plus resize bindings (`H/J/K/L`).
+  - Vi-style keybindings in copy mode and pane movement (`h/j/k/l`) plus resize bindings (`H/J/K/L`). Copy-mode yank uses the first available clipboard tool from `pbcopy`, `wl-copy`, `xclip`, `clip.exe`, then falls back to the tmux buffer.
   - Splits and new windows default to the current pane path.
 - **Status bar theme**
   - Custom “red team” color scheme and powerline-style separators.
-- **Recording, logging, and sessions**
-  - Asciinema recording toggle on `Prefix + P` (records per-pane casts into `~/Logs`) with fail-soft messaging if `asciinema` is missing.
+- **Logging and sessions**
   - `Prefix + S` saves pane history to `~/Logs` and ensures the log directory exists before write.
-  - Session management helpers: `Prefix + N` (new session), `Prefix + p/n` (prev/next window), `Prefix + s` (fzf-based session switcher).
+  - Session management helpers: `Prefix + N` (new session), `Prefix + p/n` (prev/next window), `Prefix + s` (built-in `choose-tree` session switcher).
 - **Red-team shortcuts and aliasr integration**
   - `Prefix + C-n` – prompt for an `nmap` target and open a new window running `nmap`.
-  - `Prefix + C-g` – prompt for a target and run `gobuster` with a default wordlist.
   - `Prefix + C-s` – open a new window running `python3 -m http.server 8080`.
   - **aliasr integration (added for this environment):**
     - `Prefix + U` – split the current window and run `aliasr send -pp` (opens aliasr and sends commands to the previously focused pane without pressing Enter).
@@ -139,7 +136,7 @@ Key aspects:
 
 When editing tmux config:
 - Preserve the aliasr keybindings and focus/terminal settings unless the user explicitly wants different keys.
-- Keep the logging/recording paths stable (`$HOME/Logs`) so references in documentation and `/help` remain accurate.
+- Keep the history logging path stable (`$HOME/Logs`) so references in documentation and `/help` remain accurate.
 
 ## Vim configuration architecture (`vim/.vimrc`)
 
@@ -150,7 +147,7 @@ High-level layout:
 - **Warp-specific handling** – if `TERM_PROGRAM` is `WarpTerminal`, enables truecolor and mouse; otherwise falls back to generic terminal-safe settings.
 - **Plugin management** – `plug#begin('~/.vim/plugged')` with:
   - Themes (e.g., `catppuccin`, `dracula`, `molokai`).
-  - General utilities (Git integration, commenting, NERDTree, airline, FZF, COC.nvim, language packs).
+  - General utilities (Git integration, commenting, NERDTree, airline, COC.nvim, language packs).
   - Red-team friendly plugins (markdown tooling for reports, Python indentation, etc.).
 - **Plugin bootstrap guards** – plugin manager bootstrap is guarded so startup degrades gracefully if `vim-plug` is not installed.
 - **Theme and airline setup** – prefers `catppuccin_mocha` but gracefully falls back to other themes.
@@ -182,4 +179,4 @@ Guidance for future agents:
   - Shell aliases/functions in `zsh/.zshrc` under the existing section headings.
   - Tmux shortcuts in `tmux/.tmux.conf` under the appropriate section (navigation, logging, red-team shortcuts).
   - Editor mappings or plugin changes in `vim/.vimrc` under the relevant plugin or keybinding sections.
-- There is currently **no automated test or build system** in this repo; validate changes manually by starting new shells/tmux sessions/Vim instances and exercising the affected commands.
+- There is no application build system in this repo, but `./scripts/verify-suite.sh` is the maintained automated smoke wrapper. Pair it with focused runtime checks by starting new shells/tmux sessions/Vim instances and exercising affected commands.

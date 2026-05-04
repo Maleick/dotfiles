@@ -17,21 +17,21 @@
 - Purpose: Install and update symlink targets in the user environment.
 - Location: `install.sh`
 - Contains: Backup creation, idempotent linking helper (`link_file`), and symlink orchestration.
-- Depends on: Shell utilities (`mkdir`, `mv`, `ln`) and current repository path.
-- Used by: Manual operator invocation (`./install.sh` from repository root).
+- Depends on: Shell utilities (`mkdir`, `mv`, `ln`) and the script-resolved repository path.
+- Used by: Manual operator invocation (`/path/to/dotfiles/install.sh`) from any current directory.
 
 **Shell Runtime Layer:**
 - Purpose: Configure Zsh behavior, PATH, completions, prompting, and red-team command helpers.
 - Location: `zsh/.zshrc`
 - Contains: Environment setup, aliases, shell functions (`quickscan`, `extract`, `rev-shell`, `/help`), optional plugin loaders.
-- Depends on: System binaries and optional local files (for example `$HOME/.zshrc.local`, `/opt/VanguardForge/load_env_from_secrets.sh`).
+- Depends on: System binaries and optional local file `$HOME/.zshrc.local` for machine-specific overrides and secrets.
 - Used by: Interactive Zsh startup via `~/.zshrc` symlink created by `install.sh`.
 
 **Tmux Runtime Layer:**
 - Purpose: Configure terminal multiplexing behavior, keybindings, session controls, and logging helpers.
 - Location: `tmux/.tmux.conf`
-- Contains: Terminal settings, pane/window navigation mappings, red-team shortcuts, `asciinema`/history capture bindings.
-- Depends on: `tmux`, optional `fzf`, and user filesystem paths like `$HOME/Logs`.
+- Contains: Terminal settings, pane/window navigation mappings, red-team shortcuts, and history capture bindings.
+- Depends on: `tmux`, optional clipboard tools (`pbcopy`, `wl-copy`, `xclip`, `clip.exe`), and user filesystem paths like `$HOME/Logs`.
 - Used by: Tmux server/client startup and config reload (`bind r source-file ~/.tmux.conf`).
 
 **Editor Runtime Layer:**
@@ -43,8 +43,8 @@
 
 **Documentation and Release Metadata Layer:**
 - Purpose: Define operator guidance, version history, and repository-scoped instructions.
-- Location: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `VERSION`, `.gitignore`
-- Contains: Usage docs, architecture guidance, changelog history, semantic version marker, repository inclusion/exclusion policy.
+- Location: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `VERSION`, `.gitignore`, `assets/`, `docs/`, `wiki/`
+- Contains: Usage docs, architecture guidance, changelog history, semantic version marker, repository inclusion/exclusion policy, README banner, GitHub Pages source, and source wiki pages.
 - Depends on: Not applicable.
 - Used by: Human maintainers and automation/orchestrator workflows that read repository docs.
 
@@ -52,7 +52,7 @@
 
 **Bootstrap Install Flow:**
 
-1. Operator runs `./install.sh` from `/opt/dotfiles`.
+1. Operator runs `/path/to/dotfiles/install.sh` from any current directory.
 2. `install.sh` creates backup directory at `~/.dotfiles_backup_<timestamp>`.
 3. Existing targets (`~/.tmux.conf`, `~/.vimrc`, `~/.zshrc`) are moved to backup via `link_file`.
 4. Source files `tmux/.tmux.conf`, `vim/.vimrc`, and `zsh/.zshrc` are symlinked into `$HOME`.
@@ -69,9 +69,9 @@
 **Tmux Operational Shortcut Flow:**
 
 1. Tmux loads `tmux/.tmux.conf`.
-2. User triggers binding (for example `Prefix + P`, `Prefix + U`, `Prefix + C-n`).
-3. Tmux executes inline command (`pipe-pane`, `split-window`, `new-window`, `command-prompt`).
-4. Optional artifacts are written to `$HOME/Logs` for recording/history capture.
+2. User triggers binding (for example `Prefix + S`, `Prefix + U`, `Prefix + C-n`).
+3. Tmux executes inline command (`capture-pane`, `split-window`, `new-window`, `command-prompt`).
+4. Optional history artifacts are written to `$HOME/Logs`.
 
 **State Management:**
 - Repository state is file-based in tracked config files (`zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, docs).
@@ -92,7 +92,7 @@
 
 **Keybinding-to-Command Dispatch:**
 - Purpose: Map tmux keystrokes to actionable operational commands.
-- Examples: `tmux/.tmux.conf` (`bind U split-window "aliasr send -pp"`, `bind C-s ... http.server`, `bind P ... asciinema`).
+- Examples: `tmux/.tmux.conf` (`bind U split-window "aliasr send -pp"`, `bind C-s ... http.server`, `bind S ... save-buffer`).
 - Pattern: Declarative keybinding definitions with direct shell command execution.
 
 **Plugin-Declared Editor Capability:**
@@ -127,16 +127,16 @@
 **Strategy:** Fail fast in installer path and degrade gracefully in runtime configs when optional dependencies are unavailable.
 
 **Patterns:**
-- `install.sh` uses `set -e` for immediate failure on bootstrap errors and explicit backup before replacement.
+- `install.sh` uses `set -e`, script-location path resolution, immediate failure on bootstrap errors, and explicit backup before replacement.
 - `zsh/.zshrc` performs argument checks in functions (`if (( $# < 1 )) ... return 1`) and guards optional sources with file checks.
-- Optional environment loader in `zsh/.zshrc` uses defensive sourcing with `|| true` to avoid blocking shell startup.
-- `tmux/.tmux.conf` uses `if-shell` branching for optional tools (for example `fzf` session switcher).
+- Machine-specific environment loaders belong in `$HOME/.zshrc.local`, keeping the tracked shell config portable.
+- `tmux/.tmux.conf` uses built-in tmux commands for session switching and history capture, minimizing optional dependency branches.
 - `vim/.vimrc` uses `silent! colorscheme ...` fallback chain to avoid hard failure when a theme is missing.
 
 ## Cross-Cutting Concerns
 
-**Logging:** Bootstrap progress logging is emitted via `echo` in `install.sh`; operational capture is handled via `tmux/.tmux.conf` bindings writing to `$HOME/Logs`.
-**Validation:** Input validation exists for several shell helpers in `zsh/.zshrc` through argument-count checks and usage messages.
+**Logging:** Bootstrap progress logging is emitted via `echo` in `install.sh`; pane history capture is handled via `tmux/.tmux.conf` bindings writing to `$HOME/Logs`.
+**Validation:** `scripts/verify-suite.sh` is the maintained smoke wrapper; input validation also exists for several shell helpers in `zsh/.zshrc` through argument-count checks and usage messages.
 **Authentication:** Not applicable for repository-internal execution paths in `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`.
 
 ---

@@ -44,7 +44,7 @@
 1. In `zsh/.zshrc`, place environment/bootstrap exports first (`Homebrew`, `PATH`, shell options).
 2. In `zsh/.zshrc`, place shell behavior config next (`setopt`, keybindings, completion, history).
 3. In `zsh/.zshrc`, place user command surface next (aliases and helper functions).
-4. In `zsh/.zshrc`, place local/optional environment loaders at the end (`~/.zshrc.local`, `/opt/VanguardForge/load_env_from_secrets.sh`).
+4. In `zsh/.zshrc`, place the local override loader at the end (`~/.zshrc.local`); machine-specific tool paths and external secret loaders belong in that local file, not in tracked config.
 
 **Grouping:**
 - Keep logical section headers for all major config blocks in `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`.
@@ -60,7 +60,7 @@
 - Use fail-fast shell behavior in executable scripts with `set -e`, as implemented in `install.sh`.
 - Validate function arguments early and return `1` with usage text in `zsh/.zshrc`.
 - Use safe optional loading with guarded existence checks in `zsh/.zshrc` (`if [[ -f ... ]]; then source ... fi`).
-- Use explicit soft-failure (`|| true`) only for optional integrations, as shown in `zsh/.zshrc` VanguardForge loader.
+- Use explicit soft-failure (`|| true`) only for optional integrations, preferably inside local override files rather than tracked shared config.
 
 **Error Types:**
 - Throw/exception classes are `Not applicable` for `install.sh` and `zsh/.zshrc`.

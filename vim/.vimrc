@@ -60,7 +60,7 @@ let maplocalleader = "\\"   " Set localleader key to backslash
 " =============================================================================
 " Plugin Management (vim-plug)
 " =============================================================================
-let g:dotfiles_has_plug = exists('*plug#begin') && exists('*plug#end')
+let g:dotfiles_has_plug = filereadable(expand('~/.vim/autoload/plug.vim'))
 if g:dotfiles_has_plug
 call plug#begin('~/.vim/plugged')
 
@@ -77,8 +77,6 @@ Plug 'scrooloose/nerdtree'             " File explorer
 Plug 'Xuyuanp/nerdtree-git-plugin'     " Git status in NERDTree
 Plug 'vim-airline/vim-airline'         " Status line
 Plug 'vim-airline/vim-airline-themes'  " Airline themes
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }  " Fuzzy finder
-Plug 'junegunn/fzf.vim'                " FZF vim integration
 
 " Language Support
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }  " Go development
@@ -174,16 +172,6 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#coc#enabled = 1
-
-" FZF settings (keybindings only activate if fzf plugin loaded)
-if isdirectory(expand('~/.vim/plugged/fzf'))
-    nnoremap <C-p> :Files<CR>
-    nnoremap <C-f> :Rg<CR>
-    nnoremap <leader>b :Buffers<CR>
-    nnoremap <leader>h :History<CR>
-    let g:fzf_preview_window = 'right:60%'
-    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
-endif
 
 " COC.nvim
 " TextEdit might fail if hidden is not set (set above in General UI).

@@ -607,7 +607,7 @@ echo "Type /help for a list of commands."
     ll, la, l, lt, lh: Enhanced ls variants
 
 🎥 Tmux (if available):
-    Prefix + P: Start/Stop asciinema recording
+    Prefix + S: Save pane history to ~/Logs
     Prefix + N: Create new session
     Prefix + r: Reload tmux config
     Prefix + U: Open aliasr (send to pane)
@@ -638,31 +638,6 @@ if [[ -f "$HOME/.zshrc.local" ]]; then
     source_if_exists "$HOME/.zshrc.local"
 fi
 
-# >>> VanguardForge env loader >>>
-__load_vanguardforge_env() {
-    setopt localoptions ksharrays
-    local -a BASH_SOURCE
-    BASH_SOURCE[0]='/opt/VanguardForge/load_env_from_secrets.sh'
-    source /opt/VanguardForge/load_env_from_secrets.sh >/dev/null 2>&1 || true
-}
-if [[ -f /opt/VanguardForge/load_env_from_secrets.sh ]]; then
-    __load_vanguardforge_env
-fi
-unset -f __load_vanguardforge_env
 unset -f prepend_path_once
 unset -f append_path_once
 unset -f source_if_exists
-# <<< VanguardForge env loader <<<
-
-
-# pnpm
-export PNPM_HOME="/Users/maleick/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-alias claude-mem='bun "/Users/maleick/.claude/plugins/cache/thedotmack/claude-mem/12.1.0/scripts/worker-service.cjs"'
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

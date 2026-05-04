@@ -1,0 +1,49 @@
+<svg width="1200" height="360" viewBox="0 0 1200 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Red Team Dotfiles Operator Field Kit</title>
+  <desc id="desc">A dark terminal-style banner for a portable zsh, tmux, and vim field kit.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#101820"/>
+      <stop offset="0.55" stop-color="#172331"/>
+      <stop offset="1" stop-color="#24131A"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF4D5E"/>
+      <stop offset="1" stop-color="#FF8A3D"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#314052" stroke-width="1" opacity="0.36"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="360" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="360" rx="24" fill="url(#grid)" opacity="0.48"/>
+  <path d="M0 300 C155 255 255 357 416 298 C571 241 635 274 768 240 C909 203 1005 224 1200 162 V360 H0 V300Z" fill="#FF4D5E" opacity="0.10"/>
+  <path d="M56 70 H1144 V290 H56 Z" stroke="#314052" stroke-width="2"/>
+  <path d="M84 104 H1116" stroke="#314052" stroke-width="2"/>
+  <circle cx="93" cy="87" r="6" fill="#FF4D5E"/>
+  <circle cx="115" cy="87" r="6" fill="#FF8A3D"/>
+  <circle cx="137" cy="87" r="6" fill="#00DFFF"/>
+  <text x="84" y="145" fill="#FF4D5E" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" letter-spacing="4">TEAMOPERATOR.RED / DOTFILES</text>
+  <text x="84" y="205" fill="#F4F7F8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="48" font-weight="700">Operator Field Kit</text>
+  <text x="86" y="247" fill="#B8C6D1" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22">portable zsh + tmux + vim for authorized red-team operations</text>
+  <g transform="translate(804 129)" filter="url(#glow)">
+    <rect x="0" y="0" width="278" height="112" rx="14" fill="#0B1117" stroke="#FF4D5E" stroke-width="2"/>
+    <text x="24" y="39" fill="#00DFFF" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">$ ./install.sh</text>
+    <text x="24" y="73" fill="#E8F1F2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">[linked] ~/.zshrc</text>
+    <text x="24" y="101" fill="#E8F1F2" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">[ready] /help</text>
+  </g>
+  <g fill="none" stroke="url(#red)" stroke-width="2" opacity="0.8">
+    <path d="M696 118 H744 V166 H696 Z"/>
+    <path d="M720 118 V92"/>
+    <path d="M720 166 V196"/>
+    <path d="M696 142 H666"/>
+    <path d="M744 142 H774"/>
+  </g>
+</svg>

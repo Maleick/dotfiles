@@ -5,11 +5,11 @@
 ## Tech Debt
 
 **Documentation and Runtime Drift (`README.md`, `AGENTS.md`, `CHANGELOG.md` vs runtime configs):**
-- Files: `README.md:10`, `README.md:14`, `README.md:16`, `AGENTS.md:53`, `AGENTS.md:95`, `CHANGELOG.md:13`, `zsh/.zshrc`, `tmux/.tmux.conf`
-- Issue: Documentation describes behaviors that are not present in runtime config (`WARP_TERMINAL` logic, `Prefix + C-g` gobuster binding, `myip4` command, `nounset` hardening).
-- Why: Config simplification and refactors were not fully synchronized with docs/changelog.
-- Impact: Operators and future maintainers can implement against incorrect assumptions, causing broken workflows and avoidable regressions.
-- Fix approach: Make `README.md`, `AGENTS.md`, and `CHANGELOG.md` match the current behavior in `zsh/.zshrc` and `tmux/.tmux.conf`, or reintroduce the missing behavior intentionally.
+- Files: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `zsh/.zshrc`, `tmux/.tmux.conf`
+- Current status: Partially mitigated by `scripts/verify-suite.sh` docs-anchor checks and refreshed `AGENTS.md` tmux/install guidance.
+- Remaining risk: Historical planning and changelog records may intentionally describe older behavior; do not treat them as current runtime contracts without checking source files.
+- Impact: Operators and future maintainers can implement against incorrect assumptions if stale historical notes are read as live guidance.
+- Fix approach: Keep current contracts in `README.md`, `AGENTS.md`, source configs, and `.planning/codebase/*`; preserve older phase evidence as history unless intentionally re-baselined.
 
 **Monolithic Configuration Surface (`zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`):**
 - Files: `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`
@@ -18,12 +18,10 @@
 - Impact: Higher regression risk and slower review/debug cycles for incremental edits.
 - Fix approach: Keep top-level files as entry points, but split optional sections into sourced fragments (for example `zsh/includes/*.zsh`, `tmux/conf.d/*.conf`, `vim/after/*.vim`) with section-level smoke checks.
 
-**Workspace Backup Artifact in Active Tree (`zsh/.zshrc.bak`):**
-- Files: `zsh/.zshrc.bak`, `.gitignore:48`
-- Issue: A stale backup config exists in the working tree while `*.bak` is ignored.
-- Why: Historical/manual backup retained locally.
-- Impact: Easy to edit the wrong file during maintenance and accidentally diverge from `zsh/.zshrc`.
-- Fix approach: Move `zsh/.zshrc.bak` outside `/opt/dotfiles` or document it as intentional local-only state.
+**Resolved: Workspace Backup Artifact in Active Tree (`zsh/.zshrc.bak`):**
+- Files: `.gitignore`
+- Resolution: No `zsh/.zshrc.bak` file is present in the repo tree; backup suffixes remain ignored.
+- Guard: Future backup snapshots should stay outside tracked source files.
 
 ## Known Bugs
 
@@ -35,29 +33,18 @@
 - Root cause: macOS-specific decode flag is hardcoded in shared shell config.
 - Blocked by: Not applicable.
 
-**Tmux copy-mode yank binding is macOS-only:**
-- Files: `tmux/.tmux.conf:74`
-- Symptoms: Copy/yank from tmux copy mode does not reach clipboard on hosts without `pbcopy`.
-- Trigger: `Prefix` + copy-mode + `y` on Linux/WSL without a `pbcopy` shim.
-- Workaround: Install a compatibility shim or replace binding with `xclip`/`wl-copy` equivalent.
-- Root cause: Clipboard command is hardcoded to `pbcopy`.
-- Blocked by: Not applicable.
-
-**Documented gobuster keybinding is missing at runtime:**
-- Files: `AGENTS.md:95`, `tmux/.tmux.conf`
-- Symptoms: `Prefix + C-g` behavior documented for gobuster is unavailable in tmux.
-- Trigger: Attempt to use documented `Prefix + C-g`.
-- Workaround: Run gobuster manually in a tmux pane/window.
-- Root cause: Docs/config drift between `AGENTS.md` and `tmux/.tmux.conf`.
-- Blocked by: Not applicable.
+**Resolved: tmux copy-mode yank binding was macOS-only:**
+- Files: `tmux/.tmux.conf`
+- Resolution: Copy-mode `y` now selects the first available clipboard tool from `pbcopy`, `wl-copy`, `xclip`, `clip.exe`, then falls back to `tmux load-buffer -`.
+- Guard: `scripts/verify-suite.sh` includes `req.tmux_clipboard_fallback`.
 
 ## Security Considerations
 
-**Automatic sourcing of external/local shell scripts:**
-- Files: `zsh/.zshrc:433`, `zsh/.zshrc:442`, `zsh/.zshrc:444`
-- Risk: Arbitrary code execution or secret exfiltration if `$HOME/.zshrc.local` or `/opt/VanguardForge/load_env_from_secrets.sh` is tampered with.
-- Current mitigation: Existence checks only; errors from `/opt/VanguardForge/load_env_from_secrets.sh` are suppressed.
-- Recommendations: Enforce strict file ownership/permissions checks before sourcing, and emit explicit warning logs on loader failure.
+**Automatic sourcing of local shell overrides:**
+- Files: `zsh/.zshrc`
+- Risk: Arbitrary code execution or secret exfiltration if `$HOME/.zshrc.local` is tampered with.
+- Current mitigation: Tracked shell config only sources `$HOME/.zshrc.local`; host-specific external loaders belong there and are excluded from git.
+- Recommendations: Enforce strict file ownership/permissions checks before sourcing and document local override hygiene for sensitive hosts.
 
 **Network-exposed helper servers with no guardrails:**
 - Files: `zsh/.zshrc:242`, `zsh/.zshrc:279`, `zsh/.zshrc:282`, `tmux/.tmux.conf:143`
@@ -65,9 +52,9 @@
 - Current mitigation: Operator awareness only.
 - Recommendations: Default bind to loopback (`127.0.0.1`) and require explicit opt-in for remote exposure.
 
-**Operational artifacts can capture sensitive activity:**
+**Operational history artifacts can capture sensitive activity:**
 - Files: `tmux/.tmux.conf:116`, `tmux/.tmux.conf:121`
-- Risk: `asciinema` casts and pane history dumps in `$HOME/Logs` can retain credentials, target data, and command history.
+- Risk: Pane history dumps in `$HOME/Logs` can retain credentials, target data, and command history.
 - Current mitigation: Not detected.
 - Recommendations: Create `$HOME/Logs` with restrictive permissions (`0700`), add redaction guidance, and consider optional encryption/rotation.
 
@@ -95,12 +82,10 @@
 
 ## Fragile Areas
 
-**Installer path resolution depends on current directory:**
-- Files: `install.sh:6`, `install.sh:32`, `install.sh:33`, `install.sh:34`
-- Why fragile: `DOTFILES_DIR="$(pwd)"` assumes execution from repository root.
-- Common failures: Symlinks can point to unintended directories if `install.sh` is invoked from elsewhere.
-- Safe modification: Resolve script directory with `${BASH_SOURCE[0]}` and `cd`-independent path normalization.
-- Test coverage: Not detected.
+**Resolved: installer path resolution depended on current directory:**
+- Files: `install.sh`, `scripts/verify-suite.sh`
+- Resolution: `DOTFILES_DIR` now resolves from `${BASH_SOURCE[0]}` so the installer can be invoked from any current directory.
+- Guard: `scripts/verify-suite.sh` includes `req.install_script_dir`.
 
 **Platform-sensitive shell commands embedded in common aliases/functions:**
 - Files: `zsh/.zshrc:233`, `zsh/.zshrc:240`, `zsh/.zshrc:258`, `zsh/.zshrc:343`, `zsh/.zshrc:345`
@@ -109,12 +94,10 @@
 - Safe modification: Add command capability checks and per-platform branches per function/alias.
 - Test coverage: Not detected.
 
-**Complex tmux command quoting in session switcher/recording logic:**
-- Files: `tmux/.tmux.conf:116`, `tmux/.tmux.conf:132`, `tmux/.tmux.conf:133`
-- Why fragile: Nested quoting and inline shell pipelines are difficult to reason about and easy to break with edits.
-- Common failures: Keybindings fail silently when `fzf` output is empty or command quoting changes.
-- Safe modification: Move complex shell snippets into external scripts with explicit argument handling.
-- Test coverage: Not detected.
+**Resolved: complex tmux command quoting in session-switch and capture logic:**
+- Files: `tmux/.tmux.conf`, `scripts/verify-suite.sh`
+- Resolution: Removed external capture and fuzzy session-switch pipelines; session switching now uses built-in `choose-tree`, and history capture uses tmux buffer commands.
+- Guard: `scripts/verify-suite.sh` includes `req.tmux_no_asciinema_fzf`.
 
 ## Scaling Limits
 
@@ -128,7 +111,7 @@
 **Single-user, manual dependency bootstrap model:**
 - Files: `README.md:20`, `install.sh`, `tmux/.tmux.conf`, `vim/.vimrc`
 - Current capacity: Not detected.
-- Limit: Onboarding many hosts/operators requires repeated manual dependency installs (`tmux`, `vim-plug`, `aliasr`, `fzf`, `asciinema`, `nmap`).
+- Limit: Onboarding many hosts/operators requires repeated manual dependency installs (`tmux`, `vim-plug`, `aliasr`, `nmap`).
 - Symptoms at limit: Environment inconsistencies and setup failures across machines.
 - Scaling path: Add a non-destructive preflight checker for required binaries and plugin prerequisites.
 
@@ -142,18 +125,17 @@
 
 **External binary/runtime assumptions for core workflows:**
 - Files: `zsh/.zshrc`, `tmux/.tmux.conf`, `README.md`
-- Risk: Missing tools (`aliasr`, `asciinema`, `fzf`, `nmap`, `gobuster`, `python3`) cause command/keybinding failures.
+- Risk: Missing tools (`aliasr`, `nmap`, `python3`) cause command/keybinding failures.
 - Impact: Inconsistent operator experience and troubleshooting overhead.
 - Migration plan: Add startup/preflight dependency checks with clear remediation hints.
 
 ## Missing Critical Features
 
 **Automated validation for dotfile changes:**
-- Files: `AGENTS.md:144`, `.gitignore:19`, `.gitignore:20`
-- Problem: No automated shell/tmux/vim smoke checks are present in-repo.
-- Current workaround: Manual testing (`source ~/.zshrc`, tmux reload, Vim restart).
-- Blocks: Safe refactoring and reliable cross-platform maintenance.
-- Implementation complexity: Medium.
+- Files: `scripts/verify-suite.sh`, `README.md`, `AGENTS.md`
+- Current status: Present. The wrapper checks install syntax/path contract, zsh syntax, host-specific zsh tail absence, tmux config load, tmux clipboard fallback, absence of removed optional tmux/Vim dependencies, Vim startup, docs anchors, and public docs surface files.
+- Remaining gap: The wrapper is still a smoke suite, not a full unit/integration framework for every helper behavior.
+- Implementation complexity for broader coverage: Medium.
 
 **Non-destructive compatibility test command:**
 - Files: `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`
@@ -173,7 +155,7 @@
 
 **Installer safety and idempotency paths:**
 - Files: `install.sh`
-- What's not tested: Repeated installs, non-root invocation path behavior, and backup correctness under varied destination states.
+- What's not tested: Repeated installs and backup correctness under varied destination states. Non-root invocation path behavior is guarded by `req.install_script_dir`.
 - Risk: Symlink mis-targeting or unintended file moves can go unnoticed.
 - Priority: High.
 - Difficulty to test: Medium.
@@ -187,7 +169,7 @@
 
 **Tmux keybinding behavior with optional dependencies:**
 - Files: `tmux/.tmux.conf`
-- What's not tested: `Prefix + P`, `Prefix + s`, `Prefix + U`, `Prefix + K`, and clipboard bindings across environments.
+- What's not tested: `Prefix + S`, `Prefix + s`, `Prefix + U`, and `Prefix + K` behavior across environments. Clipboard fallback presence is guarded by `req.tmux_clipboard_fallback`.
 - Risk: Silent failures in core workflows.
 - Priority: Medium.
 - Difficulty to test: Medium.

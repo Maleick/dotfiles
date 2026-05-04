@@ -1,8 +1,16 @@
 # Red Team Dotfiles
 
-[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](VERSION)
+[![Red Team Dotfiles - Operator Field Kit](assets/dotfiles-banner.svg)](assets/dotfiles-banner.svg)
 
-Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red team operations and penetration testing. No over-engineering, just the essentials.
+[![Version](https://img.shields.io/badge/version-2.1.1-ff4d5e.svg?style=flat)](VERSION)
+[![Docs](https://img.shields.io/badge/docs-dotfiles.teamoperator.red-00dfff.svg?style=flat)](https://dotfiles.teamoperator.red)
+[![Shell](https://img.shields.io/badge/shell-zsh-ff8a3d.svg?style=flat)](zsh/.zshrc)
+[![Tmux](https://img.shields.io/badge/tmux-operator%20workflows-ff4d5e.svg?style=flat)](tmux/.tmux.conf)
+[![Vim](https://img.shields.io/badge/vim-terminal%20ready-00dfff.svg?style=flat)](vim/.vimrc)
+
+**Operator Field Kit** for **zsh**, **tmux**, and **vim** tailored for authorized red-team operations. Portable shell ergonomics, OPSEC-aware defaults, tmux workflow shortcuts, and terminal-first Vim behavior without extra runtime dependencies.
+
+[Docs](https://dotfiles.teamoperator.red) • [Wiki](https://github.com/Maleick/dotfiles/wiki) • [Install](#-installation) • [Verification](#validation-wrapper)
 
 ## ✨ Features
 
@@ -12,9 +20,9 @@ Clean and focused dotfiles for **zsh**, **tmux**, and **vim** tailored for red t
 - 🛡️ **OPSEC Aware**: Commands starting with space aren't logged
 - 🧰 **aliasr Integration**: `a` alias in zsh and tmux keybindings for the aliasr pentest launcher
 - 🧭 **Terminal-Aware Runtime**: Shell detects terminal emulator (iTerm2, Warp, etc.) and adapts prompt/title behavior
-- 🧪 **Startup Hardened**: `zsh` startup is resilient under `nounset` with safe optional loaders
+- 🧪 **Startup Hardened**: `zsh` startup uses guarded optional loaders and fail-soft helper paths
 - 🧱 **Helper Fallbacks**: Core helper commands use guarded fallback paths across host differences
-- 🎥 **Tmux Fail-Soft Ops**: Recording/history paths stay usable with clear fallback messaging
+- 🧾 **Tmux History Capture**: `Prefix + S` saves pane history to `~/Logs`
 - 📝 **Vim Startup Fallbacks**: Vim starts cleanly even when optional plugin tooling is unavailable
 - ⚡ **Fast & Clean**: Minimal overhead, maximum functionality
 - 🔧 **Cross-Platform**: Works on macOS, Linux, and WSL2
@@ -98,8 +106,8 @@ ZDOTDIR=/opt/dotfiles/zsh zsh -i -c 'base64decode dGVzdA=='
 
 # 3) Tmux checks
 tmux -f /opt/dotfiles/tmux/.tmux.conf -L gsd-docs-check start-server \; kill-server
-rg -n '^bind (P|S|U|K|s) ' tmux/.tmux.conf
-rg -n 'Logs|asciinema|fzf' tmux/.tmux.conf
+rg -n '^bind (S|U|K|s) ' tmux/.tmux.conf
+rg -n 'Logs|choose-tree|aliasr' tmux/.tmux.conf
 
 # 4) Vim checks
 vim -Nu /opt/dotfiles/vim/.vimrc -n -es -c 'qa!'
@@ -132,7 +140,7 @@ Wrapper contract:
 - Default mode (no flags) prints deterministic per-check statuses: `PASS`, `FAIL`, `SKIP`.
 - Default mode prints a deterministic summary line with PASS/FAIL/SKIP counts.
 - Exits `0` only if required checks pass; exits non-zero when any required check fails.
-- Optional dependency checks (`asciinema`, `fzf`) fail soft with actionable `SKIP` guidance.
+- Tmux uses built-in history capture and `choose-tree` session switching.
 
 Additional modes:
 
@@ -268,7 +276,6 @@ rev-shell nc 10.0.0.1 4444      # Netcat reverse shell
 
 ```bash
 tmux                       # Start tmux session
-# Prefix + P              # Start/stop recording
 # Prefix + S              # Save pane history
 # Prefix + U / K          # Open aliasr in split pane (send-only / send+execute)
 ```

@@ -5,7 +5,7 @@
 ## Test Framework
 
 **Runner:**
-- Automated test runner is `Not detected` in `/opt/dotfiles`.
+- Maintained smoke runner: `./scripts/verify-suite.sh` from the repository root.
 - Test config files (`jest.config.*`, `vitest.config.*`, BATS config) are `Not detected` in `/opt/dotfiles`.
 
 **Assertion Library:**
@@ -14,10 +14,12 @@
 
 **Run Commands:**
 ```bash
-cd /opt/dotfiles && bash -n install.sh                                  # Parse-check `install.sh`
-cd /opt/dotfiles && zsh -n zsh/.zshrc                                   # Parse-check `zsh/.zshrc`
-cd /opt/dotfiles && tmux -f tmux/.tmux.conf start-server \; source-file tmux/.tmux.conf \; kill-server  # Parse-check `tmux/.tmux.conf`
-cd /opt/dotfiles && ./install.sh                                         # Manual install smoke test from `README.md`
+cd /path/to/dotfiles && ./scripts/verify-suite.sh                       # Full automated smoke wrapper
+cd /path/to/dotfiles && ./scripts/verify-suite.sh --quick                # Quick automated smoke wrapper
+cd /path/to/dotfiles && bash -n install.sh                               # Focused parse-check for `install.sh`
+cd /path/to/dotfiles && zsh -n zsh/.zshrc                                # Focused parse-check for `zsh/.zshrc`
+cd /path/to/dotfiles && tmux -f tmux/.tmux.conf start-server \; source-file tmux/.tmux.conf \; kill-server  # Focused parse-check for `tmux/.tmux.conf`
+/path/to/dotfiles/install.sh                                             # Manual install smoke test from any cwd
 source ~/.zshrc && /help                                                 # Manual command-surface validation from `README.md`
 ```
 
@@ -25,7 +27,7 @@ source ~/.zshrc && /help                                                 # Manua
 
 **Location:**
 - Dedicated automated test directories/files are `Not detected` in `/opt/dotfiles`.
-- Current verification is manual and anchored to runtime config files `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, and install script `install.sh`.
+- Current automated verification is centralized in `scripts/verify-suite.sh`; focused runtime checks still target `zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, and `install.sh`.
 
 **Naming:**
 - Unit test naming convention is `Not detected` in `/opt/dotfiles`.
@@ -35,6 +37,7 @@ source ~/.zshrc && /help                                                 # Manua
 **Structure:**
 ```
 /opt/dotfiles/
+  scripts/verify-suite.sh
   install.sh
   zsh/.zshrc
   tmux/.tmux.conf
@@ -48,15 +51,17 @@ source ~/.zshrc && /help                                                 # Manua
 **Suite Organization:**
 ```text
 Automated describe/it suite structure is Not applicable in `/opt/dotfiles`.
-Manual validation flow follows docs in `README.md` and `AGENTS.md`:
+Validation flow follows the wrapper plus docs in `README.md` and `AGENTS.md`:
 1) Apply changes in repo files (`zsh/.zshrc`, `tmux/.tmux.conf`, `vim/.vimrc`, `install.sh`).
-2) Re-run `./install.sh`.
-3) Reload/restart target runtime (`source ~/.zshrc`, tmux reload, new Vim session).
-4) Execute affected commands interactively (for example `/help`, `quickscan`, tmux keybinds).
+2) Run `./scripts/verify-suite.sh` or `./scripts/verify-suite.sh --quick` from repo root.
+3) Re-run `/path/to/dotfiles/install.sh` when symlink refresh is needed.
+4) Reload/restart target runtime (`source ~/.zshrc`, tmux reload, new Vim session).
+5) Execute affected commands interactively (for example `/help`, `quickscan`, tmux keybinds).
 ```
 
 **Patterns:**
-- Use syntax parsing checks before runtime checks (`bash -n install.sh`, `zsh -n zsh/.zshrc`, tmux source-file parse for `tmux/.tmux.conf`).
+- Use the verification wrapper for baseline checks; it covers install script syntax, zsh syntax, tmux config load, tmux clipboard fallback, removed optional dependency guards, Vim startup, docs anchors, and public docs surface files.
+- Use syntax parsing checks before runtime checks for focused debugging (`bash -n install.sh`, `zsh -n zsh/.zshrc`, tmux source-file parse for `tmux/.tmux.conf`).
 - Validate behavior in real sessions as directed by `AGENTS.md` (new shell/tmux/Vim instance).
 - Use direct command smoke tests from `README.md` examples (for example `/help`, `myip`, `webserver`) after reload.
 
@@ -105,11 +110,11 @@ Not applicable in `/opt/dotfiles` (coverage tooling not detected).
 ## Test Types
 
 **Unit Tests:**
-- Automated unit tests are `Not detected` in `/opt/dotfiles`.
-- Equivalent lightweight checks are syntax/parse commands for `install.sh`, `zsh/.zshrc`, and `tmux/.tmux.conf`.
+- Automated unit-test framework is `Not detected` in `/opt/dotfiles`.
+- Equivalent lightweight checks are wrapper-required checks and syntax/parse commands for `install.sh`, `zsh/.zshrc`, `tmux/.tmux.conf`, and `vim/.vimrc`.
 
 **Integration Tests:**
-- Integration behavior is manually validated by running `./install.sh` and verifying symlinked runtime behavior for `~/.zshrc`, `~/.tmux.conf`, and `~/.vimrc`.
+- Integration behavior is validated by `./scripts/verify-suite.sh`, plus manual `/path/to/dotfiles/install.sh` runs when symlink behavior itself changes.
 - Manual integration verification steps are documented in `README.md` and `AGENTS.md`.
 
 **E2E Tests:**
