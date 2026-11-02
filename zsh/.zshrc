@@ -175,6 +175,8 @@ if [ "$color_prompt" = yes ]; then
     elif [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
         source_if_exists /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     fi
+    # Keep startup safe when the optional syntax-highlighting plugin is absent.
+    typeset -gA ZSH_HIGHLIGHT_STYLES
     ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
     ZSH_HIGHLIGHT_STYLES[default]=none
     ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
